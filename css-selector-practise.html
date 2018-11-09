@@ -6,8 +6,8 @@
     <style>
       /* YOUR STYLE GOES HERE */
       /* 不得改变页面的任何html结构 */
-      /* 第一个p，红色 */
-      body > :first-child {
+      /* 第一个p，红色 ">"代表直接关系*/
+      body > p:first-child {
         color: red;
       }
       /* p标签:鼠标的放在上面时，被点击时，处于聚焦时 */
@@ -52,37 +52,35 @@
       div.a p + ul li:nth-child(n + 4):nth-child(-n + 7) {
         color: red;
       }
+
       /**
          让25及以内的元素为红色
          让65及以上的元素为绿色
          让35-50的元素为蓝色
       */
-      div.b p + p + p + ul:nth-child(4) li:nth-child(-n + 25) {
+      div.b ul:nth-child(4) li:nth-child(-n + 25) {
         color: red;
       }
-      div.b p + p + p + ul:nth-child(4) li:nth-child(n + 35):nth-child(-n + 50) {
+      div.b ul:nth-child(4) li:nth-child(n + 35):nth-child(-n + 50) {
         color: green;
       }
-      div.b p + p + p + ul:nth-child(4) li:nth-child(n + 65) {
+      div.b ul:nth-child(4) li:nth-child(n + 65) {
         color: blue;
       }
+
       /*质数、合数、1的选择,只选择有规律的合数*/
-      div.b p + ul:nth-child(2) li:nth-child(2n),
-      li:nth-child(3n),
-      li:nth-child(5n),
-      li:nth-child(7n) {
-        color: #c04851;
+      .b ul:nth-child(2) > li {
+        color: #c02c38;
       }
-      /*把合数去掉2，3，5，7这些质数*/
-      div.b p + ul:nth-child(2) li:nth-child(2),
-      li:nth-child(3),
-      li:nth-child(5),
-      li:nth-child(7) {
-        color: initial;
+      .b ul:nth-child(2) li:nth-child(2n + 4),
+      .b ul:nth-child(2) li:nth-child(3n + 6),
+      .b ul:nth-child(2) li:nth-child(5n + 8),
+      .b ul:nth-child(2) li:nth-child(7n + 14) {
+        color: #1772b4;
       }
       /* 特殊的1不属于合数和质数的颜色 */
       div.b p + ul:nth-child(2) li:nth-child(1) {
-        color: blueviolet;
+        color: #f7eb46;
       }
     </style>
   </head>
