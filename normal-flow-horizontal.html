@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>normal-flow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="" />
+    <script src=""></script>
+    <style>
+      .center-div {
+        height: 200px;
+        width: 200px;
+        background-color: #15231b;
+        margin: 0 auto;
+        overflow: auto;
+        color: aliceblue;
+      }
+
+      .margin-div {
+        height: 196px;
+        width: 196px;
+        margin: auto;
+        border: 3px solid saddlebrown;
+      }
+      p {
+        height: 196px;
+        margin: 0;
+      }
+      p:hover {
+        margin-left: -50px;
+        margin-right: -50px;
+        background-color: lightgreen;
+      }
+      .right-div {
+        margin-right: 0;
+        margin-left: auto;
+        height: 100px;
+        width: 100px;
+        background-color: rgb(58, 121, 194);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="center-div"><span>div 居中</span></div>
+      <div class="margin-div">
+        <p>
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque
+          asperiores numquam minima veniam delectus nostrum facere sint?
+          Voluptatibus, harum culpa.
+        </p>
+      </div>
+      <div class="right-div"><div>div 居右</div></div>
+    </main>
+  </body>
+</html>
