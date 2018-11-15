@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>CSS-block-layout</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="" />
+    <script src=""></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+    .mian{
+        margin: auto;
+        width: 600px;
+    }
+    .mian p{
+        margin-bottom: 15px;
+    }
+    header{
+        margin-bottom:15px;
+        background-color: #000;        
+    }
+    .hello{
+        margin: 0 calc(50% - 300px);
+        color: #fff;
+    }
+  .products li{
+        box-sizing: border-box;
+        width: 180px;
+        height: 40px;
+        border: 3px solid black;
+        background-color: pink;
+        list-style: none;
+        margin-left: 0;
+        margin-right: 30px;
+        margin-bottom: 15px;
+        text-align: center;
+        line-height: 34px;
+    }
+    .products li:hover{
+        background-color: red;
+    }
+    .products li:nth-child(n+5){
+         margin-left: 210px;
+    }
+    .products li:nth-child(n+9){
+         margin-left: 420px;
+    }
+    .products li:nth-child(4n+5){
+         margin-top: -220px;
+    }
+
+    .link li{
+        border-bottom: 1px dashed black; 
+        list-style: none;
+        margin-bottom: -1px;
+    }
+    ul.link{
+        overflow: hidden;
+        list-style-position: outside;
+    }
+    footer{
+        margin-top: 15px;
+        background-color: #ee82ee;
+    }
+    footer p{
+        text-align: center;
+    }
+    </style>
+</head>
+<body>
+    <header><p class="hello">hello world请调整浏览器窗口大小查看效果</p></header>
+    <div class="mian">
+        <div>
+            <p>页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px 页面主体 宽度600px</p>
+        </div>
+        <ul class="products">
+            <li>宽180高40</li>
+            <li>水平间隙30px</li>
+            <li>垂直间隙15px</li>
+            <li>边框宽度3px</li>
+            <li>产品</li>
+            <li>产品</li>
+            <li>产品</li>
+            <li>产品</li>
+            <li>产品</li>
+            <li>产品</li>
+            <li>产品</li>
+            <li>产品</li>
+        </ul>
+        <ul class="link">
+            <li>link</li>
+            <li>link</li>
+            <li>link</li>
+            <li>link</li>
+            <li>link</li>
+        </ul>
+    </div>
+    <footer>
+        <p>
+            &copy;版权有所有<br>
+            本页所有布局均使用块元素
+        </p>
+    </footer>
+</body>
+</html>

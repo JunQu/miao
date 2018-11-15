@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>QQ-mail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="" />
+    <script src=""></script>
+    <style>
+    *{
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        word-spacing: -6px;/*清除inline-block的间隙*/
+    }
+    html,body{
+        height: 100%;
+        font-size: 16px;
+        font-family: "lucida Grande",Verdana,"Microsoft YaHei";
+    }
+
+    nav{
+        height: 66px;
+        width: 100%;
+        color: #FFFFFF;
+        border-color: black;
+        text-align: center;
+        padding-top: 15px;
+        background-color:  #364D68;
+    }
+
+    /* 侧边菜单栏 */
+    aside{
+        display: inline-block;
+        width: 200px;
+        height: calc(100% - 66px);/*消除滚动条*/
+        background-color: #E8EBEF;
+        padding-left: 15px;
+    }
+    aside ul{
+        list-style-type: none;/* 去除列表的圆点 */
+    }
+    a{
+        text-decoration: none;/* 这两项是去除下划线和链接字的蓝色 */
+        color: inherit;
+    }
+    p{
+        word-spacing: 0px;/*消除内部文字影响*/
+    }
+
+    /* 邮件主体页面 */
+    div.mail-main{
+        display: inline-block;
+        vertical-align: top;
+        height: calc(100% - 66px);
+        width: calc(100% - 200px);
+        padding-left: 12px;
+        background-color: #FFFFFF;
+    }
+    /* 复选框与文字对齐 */
+    .mail-main div input{
+        vertical-align: middle;
+        margin-top: 1px;
+        margin-bottom: 1px;
+    } 
+    </style>
+</head>
+<body>
+    <nav><p>1987年9月14日21时07分,中国第一封电子邮件从北京发往德国,“越过长城，走向世界” <br>
+        Across the Great Wall we can reach every corner in the world.</p>
+    </nav>
+    <aside>
+        <ul>
+          <li><a href="#">写信</a></li>
+          <li><a href="#">收件箱</a></li>
+          <li><a href="#">通讯录</a></li>
+          <li><a href="#">群邮件</a></li>
+          <li><a href="#">草稿箱</a></li>
+          <li><a href="#">已发送</a></li>
+          <li><a href="#">已删除</a></li>
+          <li><a href="#">垃圾箱</a></li>
+       </ul>
+    </aside>
+    <div class="mail-main">
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+         <div><input type="checkbox" name="mian" id="1"><a href="#">QQ邮箱管理员</a></div>
+    </div>
+</body>
+</html>

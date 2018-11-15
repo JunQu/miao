@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>CSS-Simple-Grid</title>
+    <meta name="viewport"  content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="" />
+    <script src=""></script>
+    <style>
+    *{
+        background-color: rgba(0,0,0,0.1);
+    }
+    ul{
+        margin: 0;
+        padding: 0;
+    }
+    li{
+        width: 100px;
+        height: 100px;
+        border: 1px solid black;
+        list-style: none;
+        display: flow-root;
+        background-color: #c21f30;
+    }
+    li:nth-child(n+4){
+        margin-left: 100px;
+        background-color: #15559a;
+    }
+    li:nth-child(n+7){
+        margin-left: 200px;
+        background-color: #2c9678;
+    }
+    :nth-child(3n+4){
+        margin-top: -306px;
+    }
+div{
+    height: 100%;
+    /* width: 100%; */
+    background-color: rgba(0,0,0,0);
+    text-align: center;
+}
+  li  div:hover{
+        position: relative;
+        z-index: 5;
+        background-color: rgba(0,0,0,0.2);
+        margin-left: -10px;
+        margin-right: -10px;
+        margin-top: -10px;
+        height: calc(100% + 20px);
+    }
+    </style>
+</head>
+<body>
+    <div>
+        <ul>
+            <li><div></div></li>
+            <li><div></div></li>
+            <li><div></div></li>
+            <li><div></div></li>
+            <li><div></div></li>
+            <li><div></div></li>
+            <li><div></div></li>
+            <li><div></div></li>
+            <li><div></div></li>
+        </ul>
+    </div>
+</body>
+</html>
