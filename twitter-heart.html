@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Twitter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="" />
+    <script src=""></script>
+    <style>
+        /* 垂直居中处理 */
+       .twitter{
+           border-radius: 50%;
+           height: 100px;
+           width: 100px;
+           position: absolute;
+           margin: auto;
+           top: 0; left: 0; bottom: 0;right: 0;
+       }
+
+       /* 引入图片 */
+       .heart{
+           width: 100%;
+           height: 100%;
+           cursor: pointer;
+           background-image: url(/img/web_heart_animation_edge.png);
+       }
+
+       /* 设置动画 设置checkbox可以让动画选中时持续，取消同时没有动画，借鉴地址https://www.cnblogs.com/huangzhilong/p/5052540.html */
+       .box:checked + .heart{
+           background-position: -2800px 0;
+           transition: background 0.8s steps(28);
+       }
+    </style>
+</head>
+<body>
+    <div class="twitter">
+        <label>
+            <input type="checkbox" name="heart" hidden class="box">
+            <div class="heart"></div>
+        </label>
+    </div>
+</body>
+</html>
