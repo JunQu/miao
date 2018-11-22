@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>last</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="" />
+    <script src=""></script>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+        font-family: 'BebasNeueRegular', 'Arial Narrow', Arial, sans-serif;
+        background: #fff url(img/background.jpg) repeat top right;
+        background-color: cornflowerblue;/* 备用颜色，假如背景图片不显示则会出现这个颜色的背景 */
+      }
+
+      header h1 {
+        text-align: center;
+        margin-top: 30px;
+        color: rgba(26, 89, 120, 0.9);
+      }
+      header h1 > span {
+        color: #7cbcd6;
+      }
+
+      main.picture {
+        position: relative;
+        margin: 0 auto;
+        box-sizing: border-box;
+        border: 20px solid #fff;
+        height: 550px;
+        width: 800px;/* 为什么一定是1.46倍数才刚好 */
+        overflow: hidden;
+        font-size: 0;
+        resize: horizontal;
+      }
+
+      .grey-picture {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        background: url(img/compressed_image.jpg), #e0e0e0;
+        background-blend-mode: luminosity;/* 图像灰度处理，把图像颜色与灰色混合 */
+        background-size: cover;
+        overflow: hidden;
+      }
+      /* 下面是主要实现的功能，拖动图片并覆盖底层 */
+      .normal-picture {
+        position: absolute;
+        box-sizing: border-box;
+        min-width: 3%;
+        max-width: 100%;
+        height: 100%;
+        background: url(img/compressed_image.jpg);
+        background-color: #28b3fc;
+        background-size: cover;
+        box-shadow: 0 5px 10px -2px rgba(0, 0, 0, 1);
+        overflow: hidden;
+        resize: horizontal;
+      }
+      
+      /* 该伪类是真的伪装 XD*/
+      .normal-picture::after{
+          position: absolute;
+          content: '123';
+          height: 17px;
+          width: 16px;
+          right: 0px;
+          bottom: 0px;
+          background-image: url(img/ew.png);
+          background-color: rgba(0, 0, 0, 0.4);
+          cursor: ew-resize;/* 鼠标左右方向的标志 */
+      }
+
+      footer{
+        color: #fff;
+        background-color: #3A3F44;
+        text-align: center;
+        margin-top: 13px;/*  为了不出现滚动条 */
+      }
+      footer span.copyleft{
+        display: inline-block;
+        transform: rotate(180deg);
+        font-size: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="lasttest">
+      <header>
+        <h1>Picture Comparison With <span>CSS Only</span></h1>
+      </header>
+      <main class="picture">
+        <div class="grey-picture"><div class="normal-picture"></div></div>
+      </main>
+      <footer>
+        <div><span class="copyleft">&copy;</span> - 2018</div>
+      </footer>
+    </div>
+  </body>
+</html>
