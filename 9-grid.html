@@ -33,7 +33,7 @@
         border: 5px solid red;
       }
 
-      /* inline-block版 ，缩放超过50%有bug    */
+      /* inline-block版 */
       ul.solution2 {
         margin: 20px auto;
         padding: 0;
@@ -60,7 +60,6 @@
         position: relative;
         border-color: red;
       }
-
 
       /*  表格做法，没有解决，本质还是利用定位覆盖，表格唯一起的作用可能是边框合并 */
       .table {
@@ -94,7 +93,37 @@
       }
       .table-td > span:hover {
         border: 5px solid red;
-        margin: -5px 0 0 -5px;/* 消除偏移 */
+        margin: -5px 0 0 -5px; /* 消除偏移 */
+      }
+
+      /* 表格方法真正的解决 */
+
+      .table2 {
+        display: table;
+        box-sizing: border-box;
+        margin: 20px auto;
+        width: 170px;
+        /* height: 170px; */
+        background-color: rgba(0, 0, 0, 0.1);
+        border-collapse: collapse;
+        text-align: center;
+        line-height: 50px;
+        overflow: hidden;
+      }
+      .table-tr2 {
+        display: table-row;
+        border: 5px solid black;
+      }
+      .table-col {
+        display: table-column;
+        border: 5px solid black;
+      }
+      .table-td2 {
+        display: table-cell;
+        cursor: pointer;
+      }
+      .table-td2:hover {
+        border: 5px solid red;
       }
     </style>
   </head>
@@ -141,6 +170,28 @@
           <div class="table-td"><span>7</span></div>
           <div class="table-td"><span>8</span></div>
           <div class="table-td"><span>9</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="solution4">
+      <div class="table2">
+        <div class="table-col"></div>
+        <div class="table-col"></div>
+        <div class="table-col"></div>
+        <div class="table-tr2">
+          <div class="table-td2">1</div>
+          <div class="table-td2">2</div>
+          <div class="table-td2">3</div>
+        </div>
+        <div class="table-tr2">
+          <div class="table-td2">4</div>
+          <div class="table-td2">5</div>
+          <div class="table-td2">6</div>
+        </div>
+        <div class="table-tr2">
+          <div class="table-td2">7</div>
+          <div class="table-td2">8</div>
+          <div class="table-td2">9</div>
         </div>
       </div>
     </div>

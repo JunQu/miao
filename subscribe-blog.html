@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="" />
+    <script src=""></script>
+    <style>
+        /* 第一种利用了line-height和font-size ，还可以类似的利用padding-topo*/
+      /* div.main{
+           display: block;
+           box-sizing: border-box;
+           margin: 0 auto;
+           width: 320px;
+           height: 200px;
+           border-bottom: 3px solid red;
+           border-radius: 5px;
+           background-color:#656c7a;
+           line-height: 377px;
+           transition: 2s;
+       }
+       div.main:hover{
+           font-size: 80px;
+           line-height: 300px;
+           background-color: aqua;
+       } */
+
+       /* 表格方法，利用表格vertical-align: bottom; 不需要改变line-height */
+      div.main {
+        display: table-cell;
+        box-sizing: border-box;
+        width: 320px;
+        height: 200px;
+        border-bottom: 3px solid red;
+        border-radius: 5px;
+        background-color: #656c7a;
+        vertical-align: bottom;
+        transition: 2s;
+      }
+      div.main:hover {
+        font-size: 75px;
+        background-color: cornflowerblue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="task"><div class="main">订阅博客</div></div>
+  </body>
+</html>
