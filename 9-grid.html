@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="" />
+    <script src=""></script>
+    <style>
+      /* 浮动版  */
+      ul.solution1 {
+        margin: 0 auto;
+        padding: 0;
+        list-style-type: none;
+        overflow: hidden;
+        width: 170px;
+        background-color: rgba(0, 0, 0, 0.1);
+        padding-bottom: 5px;
+      }
+      ul.solution1 > li {
+        float: left;
+        margin-right: -5px;
+        margin-bottom: -5px;
+        border: 5px solid;
+        width: 50px;
+        line-height: 50px;
+        text-align: center;
+        cursor: pointer;
+      }
+      ul.solution1 > li:hover {
+        position: relative;
+        border: 5px solid red;
+      }
+
+      /* inline-block版 ，缩放超过50%有bug    */
+      ul.solution2 {
+        margin: 20px auto;
+        padding: 0;
+        width: 170px;
+        background-color: rgba(0, 0, 0, 0.1);
+        list-style-type: none;
+        font-size: 0; /*清除间隙*/
+        overflow: hidden;
+        padding-bottom: 5px;
+      }
+      ul.solution2 > li {
+        display: inline-block;
+        margin-right: -5px;
+        margin-bottom: -5px;
+        border: 5px solid;
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        font-size: 16px;
+        line-height: 50px;
+        cursor: pointer;
+      }
+      ul.solution2 > li:hover {
+        position: relative;
+        border-color: red;
+      }
+
+
+      /*  表格做法，没有解决，本质还是利用定位覆盖，表格唯一起的作用可能是边框合并 */
+      .table {
+        display: table;
+        box-sizing: border-box;
+        margin: 20px auto;
+        width: 170px;
+        height: 170px;
+        background-color: rgba(0, 0, 0, 0.1);
+        border-collapse: collapse;
+        overflow: hidden;
+      }
+      .table-tr {
+        display: table-row;
+      }
+      .table-td {
+        position: relative;
+        display: table-cell;
+        cursor: pointer;
+        border: 5px inset black;
+      }
+      .table-td > span {
+        position: absolute;
+        /* display: block; */
+        height: 50px;
+        width: 50px;
+        top: 0;
+        left: 0;
+        text-align: center;
+        line-height: 50px;
+      }
+      .table-td > span:hover {
+        border: 5px solid red;
+        margin: -5px 0 0 -5px;/* 消除偏移 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="solution1">
+      <ul class="solution1">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+      </ul>
+    </div>
+    <div class="solution2">
+      <ul class="solution2">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+      </ul>
+    </div>
+    <div class="solution3">
+      <div class="table">
+        <div class="table-tr">
+          <div class="table-td"><span>1</span></div>
+          <div class="table-td"><span>2</span></div>
+          <div class="table-td"><span>3</span></div>
+        </div>
+        <div class="table-tr">
+          <div class="table-td"><span>4</span></div>
+          <div class="table-td"><span>5</span></div>
+          <div class="table-td"><span>6</span></div>
+        </div>
+        <div class="table-tr">
+          <div class="table-td"><span>7</span></div>
+          <div class="table-td"><span>8</span></div>
+          <div class="table-td"><span>9</span></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
