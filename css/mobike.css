@@ -1,0 +1,811 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+::selection {
+  background: rgba(226, 61, 14, 0.1);
+}
+html {
+  font-size: 100%;
+  background: #fff;
+  text-size-adjust: none;
+  text-rendering: optimizelegibility;
+  image-rendering: optimizequality;
+}
+body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft Yahei',
+    'WenQuanYi Micro Hei', Arial, Verdana, sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.42857143;
+  background-color: #fff;
+}
+.clearfix::before,
+.clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 400;
+}
+
+a,
+button {
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease,
+    opacity 0.2s ease;
+  text-decoration: none;
+  color: black;
+}
+
+ul {
+  list-style-type: none;
+}
+.container-md {
+  position: relative;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+/* 以上内容纯属抄袭 */
+
+/* 整个大页面区域 */
+.header {
+  position: relative;
+  width: 100%;
+  background-color: #fff;
+  background-position: 72% 72%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+/* 轮播图 */
+.swiper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.slider-item {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  animation-name: slider;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+  background-size: cover;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+/* 动画关键，让其他的变成透明 */
+.slider-item + .slider-item {
+  opacity: 0;
+}
+/*设置动画，请根据实际需要修改秒数*/
+.slider-item {
+  animation-duration: 20s;
+}
+.slider-item1 {
+  animation-delay: -1s;
+}
+.slider-item2 {
+  animation-delay: 3s;
+}
+.slider-item3 {
+  animation-delay: 7s;
+}
+.slider-item4 {
+  animation-delay: 11s;
+}
+.slider-item5 {
+  animation-delay: 15s;
+}
+/* .slider-item6 {
+  animation-delay: 19s;
+} */
+
+@keyframes slider {
+  0% {
+    opacity: 0;
+    z-index: 2;
+  }
+  5% {
+    opacity: 1;
+    z-index: 1;
+  }
+  20% {
+    opacity: 1;
+    z-index: 1;
+  }
+  25% {
+    opacity: 0;
+    z-index: 0;
+  }
+  100% {
+    opacity: 0;
+    z-index: 0;
+  }
+}
+/*设置背景，响应式请利用媒体查询根据断点修改路径*/
+.slider-item1 {
+  background-image: url(../img/mobike/hero-bg-3.jpg);
+  background-position: 57% 47%;
+}
+.slider-item2 {
+  background-image: url(../img/mobike/hero-bg-4.jpg);
+  background-position: 72% 72%;
+}
+.slider-item3 {
+  background-image: url(../img/mobike/hero-bg-5.jpg);
+  background-position: 57% 61%;
+}
+.slider-item4 {
+  background-image: url(../img/mobike/hero-bg-6.jpg);
+  background-position: 38% 31%;
+}
+.slider-item5 {
+  background-image: url(../img/mobike/hero-bg-8.jpg);
+  background-position: 54% 66%;
+}
+/* .slider-item6 {
+  background-image: url(../img/mobike/hero-bg-8.jpg);
+  background-position: 51% 44%;
+} */
+
+/* 导航栏 */
+.global-navigation-wrap {
+  position: relative;
+  box-sizing: border-box;
+  height: 80px;
+  width: 100%;
+  color: #fff;
+  z-index: 100;
+  transition: background 0.4s ease;
+  /* background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)); */
+  /* background: linear-gradient(rgba(74, 62, 62, 0.6) 0%, rgba(74, 62, 62, 0) 100%); */
+  background: linear-gradient(rgba(59, 54, 48, 0.6) 0%, rgba(59, 54, 48, 0) 100%);
+  /* background: linear-gradient(rgba(123, 94, 81, 0.6) 0%, rgba(123, 94, 81, 0) 100%); */
+  display: flow-root;
+}
+.global-navigation {
+  position: relative;
+  height: 80px;
+  margin-right: -20px;
+  margin-left: -20px;
+  padding-top: 1vmax;
+  padding-bottom: 1vmax;
+  align-items: center;
+  font-weight: 400;
+  display: flow-root;
+}
+.global-navigation .logo-links {
+  font-size: 1.4em;
+}
+.global-navigation .logo-links a {
+  float: left;
+  position: relative;
+  display: block;
+  width: 698px;
+  padding: 0.35714286em 20px;
+  line-height: 1;
+  z-index: 999;
+  /* overflow: hidden; */
+}
+.global-navigation .logo-links a svg {
+  margin-bottom: -1px;
+}
+.global-navigation ul li {
+  list-style: none;
+}
+/* display:none 会导致页面重绘，破坏页面结构*/
+.nav-links {
+  /* display: none; */
+  visibility: hidden;
+}
+/* 右边的文字导航 */
+@media screen and (min-width: 1081px) {
+  .nav-links {
+    float: right;
+    visibility: visible;
+    width: calc(100% - 698px);
+    color: #fff;
+  }
+  .nav-links > li {
+    position: relative;
+    display: inline-block;
+    margin-top: 16px;
+  }
+  .nav-links > li > a {
+    padding: 0.5em 20px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    color: #fff;
+  }
+  .nav-links .nav-hassubnav > a {
+    cursor: default;
+  }
+}
+/* 产品下的小导航 */
+.subnav-products {
+  position: absolute;
+  display: none;
+  top: 100%;
+  min-width: 240px;
+  padding: 15px 0 0;
+  color: #000;
+  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1);
+  opacity: 1;
+  font-size: 20px;
+  transition: opacity 0.2s ease;
+}
+.nav-hassubnav:hover > .subnav-products {
+  display: block;
+}
+.subnav-products::after {
+  content: ' ';
+  position: absolute;
+  top: 3px;
+  left: 34px;
+  width: 0;
+  height: 0;
+  margin-left: -6px;
+  pointer-events: none;
+  border: solid transparent;
+  border-width: 6px;
+  border-color: rgba(255, 255, 255, 0);
+  border-bottom-color: #fff;
+}
+.subnav-products li a:hover > .subnav-title {
+  color: tomato;
+}
+.subnav-products li a {
+  position: relative;
+  display: block;
+  padding: 8px 20px;
+  color: #000;
+  background-color: #fff;
+}
+
+.subnav-products li:first-child a {
+  margin-top: 0;
+  padding-top: 15px;
+  border-radius: 4px 4px 0 0;
+}
+.subnav-title {
+  transition: color 0.2s ease;
+}
+.subnav-desc {
+  font-size: 14px;
+  opacity: 0.5;
+}
+.subnav-products li:last-child a {
+  padding-bottom: 15px;
+  box-sizing: border-box;
+  border-radius: 0 0 4px 4px;
+}
+.mobile-link {
+  visibility: hidden;
+}
+/* 手机导航的开关，永远隐藏在页面 */
+#mobile-link-check {
+  /* visibility: hidden; */
+  display: none;
+}
+/* 手机的导航 */
+@media screen and (max-width: 1080px) {
+  .global-navigation .mobile-link {
+    position: absolute;
+    visibility: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 0 10px;
+    background: rgba(226, 61, 14, 0.9);
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.4s ease, background 1s ease 0.4s;
+    opacity: 0;
+  }
+  .global-navigation .mobile-link li {
+    position: relative;
+    display: block;
+    transform: translateY(0);
+  }
+  .global-navigation .mobile-link li:first-child {
+    height: 80px;
+  }
+  .global-navigation .mobile-link li > a {
+    display: block;
+    padding: 1em 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    color: #fff;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  .mobile-link li:last-child span {
+    transition: margin-left 0.3s 0.1s ease;
+  }
+  .global-navigation .mobile-link li:last-child:hover span {
+    margin-left: 3px;
+  }
+  .mobile-open {
+    position: absolute;
+    display: block;
+    top: 20px;
+    right: 0;
+    z-index: 9999;
+  }
+  /* 手机导航开关和动画 */
+  .mobile-open .mobile-open-on {
+    position: relative;
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    padding: 0 10px;
+    cursor: pointer;
+  }
+  .mobile-open-on::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    width: 20px;
+    height: 2px;
+    border-radius: 3px;
+    text-shadow: 0 0 black;
+    background: #eee;
+    transition: transform 0.4s ease, top 0.4s ease, background 0.2s ease;
+  }
+  .mobile-open-on::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 24px;
+    width: 20px;
+    height: 2px;
+    border-radius: 3px;
+    background: #eee;
+    transition: transform 0.4s ease, top 0.4s ease, background 0.2s ease;
+  }
+  /* 动画运动部分，这个页面的transition的时间属性，大多数参照官网，不会设计 */
+  .mobile-ctrl:checked ~ .mobile-open > .mobile-open-on::before {
+    top: 20px;
+    transform: rotate(-45deg);
+  }
+  .mobile-ctrl:checked ~ .mobile-open > .mobile-open-on::after {
+    top: 20px;
+    transform: rotate(45deg);
+  }
+  /* 实现淡入淡动画出需要这两个同时隐藏和出现 */
+  .mobile-ctrl:checked ~ .mobile-link {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+/* 中间的那小部分 */
+.hero-landing {
+  height: calc(100vh - 80px - 180px);
+  min-height: 640px;
+  padding-top: 10vmin;
+  padding-bottom: 10vmin;
+}
+.hero-landing .hero-wrap {
+  position: relative;
+  margin-top: 175px;
+  color: #fff;
+  z-index: 50;
+}
+.hero-landing .hero-wrap h1 {
+  margin-bottom: 20px;
+  margin-left: -2px;
+  font-size: 420%;
+  font-weight: bold;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  transition: color 0.2s ease;
+}
+/* 那个最大按钮 */
+.hero-landing .hero-wrap .hero-btn {
+  display: inline-block;
+  line-height: 1.42857143;
+  text-align: center;
+  border-radius: 6px;
+  border: none;
+  color: #fff;
+  vertical-align: middle;
+  font-size: 22px;
+  font-weight: bold;
+  white-space: nowrap;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 14px 26px;
+  letter-spacing: 0.1em;
+  box-shadow: rgba(102, 77, 79, 0.6) 0px 6px 30px 0px;
+  opacity: 1;
+  cursor: pointer;
+}
+.hero-landing .hero-wrap .hero-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+@media screen and (max-width: 1080px) {
+  .hero-landing {
+    height: calc(60vh - 1vmax * 2 - 3ex);
+    min-height: 320px;
+    padding-top: 16vmin;
+    padding-bottom: 16vmin;
+  }
+  .hero-landing .hero-wrap {
+    margin-top: 35px;
+  }
+  .hero-landing .hero-wrap h1 {
+    font-size: 2.8em;
+  }
+}
+/* 底部新闻，但是目前在官网被visibility: hidden; */
+/* 但我要保留，想了半天的效果啊，做着做着你就没了，早点下线我就不做了，啊啊啊啊啊啊 */
+.headline-news {
+  position: relative;
+  z-index: 40;
+  padding: 10px;
+  width: 100%;
+  background: rgba(106, 73, 76, 0.4);
+  transition: transform 0.4s ease 0.2s, background-color 0.2s ease;
+  overflow: hidden;
+}
+.headline-news a {
+  display: block;
+  color: #fff;
+  align-items: center;
+}
+.flex-item {
+  font-size: 0;
+}
+/* 经过不断的测试，还是inlineblock最好（除了flex） */
+.headline-news a .headline-icon {
+  display: inline-block;
+  border-radius: 4px;
+  height: 18px;
+  width: 52px;
+  text-align: center;
+  line-height: 18px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: normal;
+  font-style: normal;
+  text-transform: uppercase;
+  background: linear-gradient(to bottom, #ec614f 0%, #ff2e2e 100%);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+  vertical-align: middle;
+}
+/* 两个middle通过排列组合测试出来的 */
+.headline-news a .headline-text {
+  display: inline-block;
+  font-size: 16px;
+  margin-left: 0.4em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  vertical-align: middle;
+}
+@media screen and (max-width: 475px) {
+  .headline-news a .headline-text {
+    width: 63vw;
+    word-wrap: break-word;
+    word-break: normal;
+  }
+}
+/* 四个小格子方块 */
+.hero-promos > a {
+  float: left;
+  box-sizing: border-box;
+  width: 25%;
+  min-height: 260px;
+  padding: 2.4vw;
+  border: 1px solid #fff;
+  border-top-width: 2px;
+  border-bottom: none;
+  text-align: center;
+  color: #fff;
+  background-image: url(../img/mobike/promo-03.jpg);
+  background-color: bisque;
+  background-position: center center;
+  background-size: cover;
+}
+.hero-promos > a:first-child {
+  border-left: none;
+  background-image: url(../img/mobike/promo-01.jpg);
+}
+.hero-promos > a:nth-child(2) {
+  background-image: url(../img/mobike/promo-02.jpg);
+}
+.hero-promos > a:last-child {
+  border-right: none;
+  background-image: url(../img/mobike/promo-04.jpg);
+}
+.hero-promos > a .promo-text h3 {
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+/* 加上有点多余，但是还是加上大于1080的吧 */
+@media screen and (min-width: 1080px) {
+  .hero-promos > a {
+    width: 25%;
+  }
+}
+@media screen and (max-width: 1080px) and (min-width: 640px) {
+  .hero-promos > a {
+    width: 50%;
+  }
+  .hero-promos > a:nth-child(2) {
+    border-right: none;
+  }
+  .hero-promos > a:nth-child(3) {
+    border-left: none;
+  }
+}
+@media screen and (max-width: 640px) {
+  .hero-promos > a {
+    width: 100%;
+    border-left: none;
+    border-right: none;
+  }
+}
+
+/* 生活区，微信小程序，红包车之类的 */
+.mobi-life {
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  overflow: hidden;
+}
+.life-link {
+  float: left;
+  /* height: 140px; */
+  width: 33.333333%;
+  min-width: 217px;
+  padding: 45px 0;
+  font-size: 0;
+}
+.wx-ico {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  background-image: url(../img/mobike/icon-wechat.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  vertical-align: bottom; /* 对齐图片文字 */
+  font-size: 0;
+}
+.rp-ico {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  background-image: url(../img/mobike/icon-rp.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  vertical-align: bottom;
+}
+.credit-ico {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  background-image: url(../img/mobike/icon-credit.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  vertical-align: bottom;
+}
+.life-link {
+  padding: 45px 0;
+}
+.life-link .life-text > h4 {
+  vertical-align: top;
+  text-align: left;
+}
+.life-text {
+  display: inline-block;
+  font-size: 16px;
+  text-align: center;
+}
+.life-link:nth-child(2) {
+  text-align: center;
+}
+.life-link:last-child {
+  text-align: right;
+}
+/* 在第二个与第三个会存在大片空白 */
+@media screen and (max-width: 715px) {
+  .life-links .life-link {
+    min-width: 220px;
+    padding: 20px 0;
+    vertical-align: top;
+    text-align: left;
+  }
+}
+
+/* footer部分开始 */
+.main-contain {
+  padding: 45px 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.footer-company {
+  float: left;
+  min-width: 280px;
+}
+.company-logo {
+  display: block;
+  height: 36px;
+  width: 160px;
+  margin-bottom: 10px;
+  background: url(../img/mobike/logo-text.svg) no-repeat;
+  background-size: contain;
+  text-indent: -999px;
+}
+.footer-company > li {
+  line-height: 2.3;
+}
+.footer-company > li {
+  line-height: 2.3;
+}
+
+/* 实现很差，不知道它的计算方式，和原版差距很大 */
+.footer-list-wrapper > div {
+  float: left;
+  margin-bottom: 0;
+  margin-left: 8vw;
+  vertical-align: top;
+}
+.footer-list-wrapper {
+  float: right;
+}
+.footer-list-wrapper > div:first-child {
+  margin-left: 0;
+}
+.footer-list > h3 {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.footer-list ul li {
+  line-height: 2;
+}
+.footer-list ul li > a:hover {
+  color: tomato;
+}
+/* 不想再弄了，可以做个好优化，重复代码过多 另外这部分我觉得他没有仔细实现*/
+@media screen and (max-width: 770px) and (min-width: 580px) {
+  .footer-main .footer-list-wrapper {
+    width: calc(100% - 280px);
+    float: left;
+  }
+  .footer-main .footer-list-wrapper .footer-list {
+    width: 50%;
+    min-height: 132px;
+    margin-left: 0;
+    margin-bottom: 40px;
+  }
+  /* 垃圾实现方式，但是容易理解 */
+  .footer-main .footer-list-wrapper .footer-list:last-child,
+  .footer-main .footer-list-wrapper .footer-list:nth-last-child(2) {
+    margin-bottom: 0;
+  }
+}
+@media screen and (max-width: 580px) {
+  .footer-main .footer-company {
+    margin-bottom: 40px;
+  }
+  .footer-main .footer-list-wrapper {
+    width: 100%;
+  }
+  .footer-main .footer-list-wrapper .footer-list {
+    width: 50%;
+    min-height: 132px;
+    margin-left: 0;
+    margin-bottom: 40px;
+  }
+  /* 垃圾实现方式，但是容易理解 */
+  .footer-main .footer-list-wrapper .footer-list:last-child,
+  .footer-main .footer-list-wrapper .footer-list:nth-last-child(2) {
+    margin-bottom: 0;
+  }
+}
+
+/* 备案和电信信息区 */
+.footer-notice {
+  border-top: 1px solid #eee;
+}
+.notice-links {
+  padding: 45px 0;
+}
+
+.icp {
+  float: left;
+  box-sizing: border-box;
+  font-size: 12px;
+  line-height: 2.3;
+  margin-top: 4px;
+  color: #aaa;
+}
+.beian-icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  vertical-align: -3px;
+  font-size: 0;
+  background: url(../img/mobike/beian-icon.png), no-repeat;
+  background-size: contain;
+}
+/* 诚信经营的图片区域，在小于400px时，并不是很理想 */
+.notice-badges {
+  position: relative;
+  float: right;
+  width: 60px;
+  height: 59px;
+  text-align: center;
+  align-items: center;
+  background-size: contain;
+}
+.notice-badges > img {
+  margin-top: 9px;
+  width: 40px;
+  height: 40px;
+}
+
+/* media无法对伪元素生效 */
+.notice-camou::before {
+  content: '诚信经营 放心消费';
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 3px;
+  bottom: 67px;
+  right: -18px;
+  width: 160px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.8);
+  clear: both;
+}
+
+.notice-camou::after {
+  content: '';
+  position: absolute;
+  bottom: 55px;
+  right: 22px;
+  height: 10px;
+  width: 20px;
+  padding: 0;
+  border-top: 12px solid rgba(0, 0, 0, 0.8);
+  border-bottom: 0;
+  border-left: 10px solid rgba(0, 0, 0, 0);
+  border-right: 10px solid rgba(0, 0, 0, 0);
+}
+.notice-camou {
+  display: none;
+}
+.notice-badges:hover > .notice-camou {
+  display: block;
+}
+/* 小小的完成了？ 是的，新手第一次较为完整的完成一个页面。可怕的是我小米还没开始，摩拜就花了四天，，这个速度小米官网有点遥遥无期，希望能完成吧，嗯（/坚定），希望吧 */
