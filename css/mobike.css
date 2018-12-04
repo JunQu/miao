@@ -549,14 +549,15 @@ ul {
     width: 25%;
   }
 }
+/* 最笨的实现方式 */
 @media screen and (max-width: 1080px) and (min-width: 640px) {
   .hero-promos > a {
     width: 50%;
   }
-  .hero-promos > a:nth-child(2) {
+  .hero-promos > a:nth-child(2n) {
     border-right: none;
   }
-  .hero-promos > a:nth-child(3) {
+  .hero-promos > a:nth-child(2n+3) {
     border-left: none;
   }
 }
@@ -582,39 +583,25 @@ ul {
   padding: 45px 0;
   font-size: 0;
 }
-.wx-ico {
+.life-ico{
   display: inline-block;
   width: 50px;
   height: 50px;
   margin-right: 10px;
-  background-image: url(../img/mobike/icon-wechat.png);
   background-repeat: no-repeat;
   background-position: center center;
   background-size: contain;
   vertical-align: bottom; /* 对齐图片文字 */
   font-size: 0;
 }
+.wx-ico {
+  background-image: url(../img/mobike/icon-wechat.png);
+}
 .rp-ico {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  margin-right: 10px;
   background-image: url(../img/mobike/icon-rp.png);
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: contain;
-  vertical-align: bottom;
 }
 .credit-ico {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  margin-right: 10px;
   background-image: url(../img/mobike/icon-credit.png);
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: contain;
-  vertical-align: bottom;
 }
 .life-link {
   padding: 45px 0;
@@ -738,7 +725,7 @@ ul {
 .notice-links {
   padding: 45px 0;
 }
-
+/* icp备案信息 */
 .icp {
   float: left;
   box-sizing: border-box;
@@ -788,7 +775,6 @@ ul {
   background-color: rgba(0, 0, 0, 0.8);
   clear: both;
 }
-
 .notice-camou::after {
   content: '';
   position: absolute;
