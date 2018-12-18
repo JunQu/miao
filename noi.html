@@ -344,7 +344,7 @@ if(p&1){
 var result;
 var p = prompt("请输入一个数字");
 result = p.charCodeAt();
-if(p&1){
+if(result&1){
     console.log("YES");
 }else{
     console.log("NO");
@@ -428,13 +428,13 @@ switch (p)
 case 1:
 case 3:
 case 5:
-  console.log("YES");
+  console.log("NO");
   break;
 case 2:
 case 4:
 case 6:
 case 7:
-  console.log("NO");
+  console.log("YES");
   break;
 }
 </script>
@@ -508,9 +508,9 @@ console.log(result);
 <script id="ch0104/17" type="1.4.17">
 var p = Number(prompt("请输入一个数字"));
 const foo = function(year){
-    return (year % 4 !== 0 || year % 100 ? true: year % 400 ? false : true) ? "Y" : "N";
+    //return (year % 4 !== 0 || year % 100 ? true: year % 400 ? false : true) ? "Y" : "N";
     // return year % 4 === 0 && year % 100 !== 0|| year % 400 === 0? "This year is a leap year" : "This year is not a leap year";
-    // return year % 4 === 0 && year % 100 !== 0|| year % 400 === 0? "This year is a leap year" : "This year is not a leap year";
+    return year % 4 === 0 && year % 100 !== 0|| year % 400 === 0? "Y" : "N";
 }
 console.log(foo(p))
 </script>
