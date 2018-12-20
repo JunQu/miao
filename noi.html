@@ -580,3 +580,200 @@ if(p3 < p1*p2){
 console.log(result);
 </script>
 
+<!-- 105 -->
+
+<script id="ch0105/09" type="1.5.9">
+var result = 0;
+var m = prompt("请输入一个数字");
+var n = prompt("请输入一个数字");
+for(let i = n;i<= m;i++){
+    if(i&1){
+        result += i;
+    }
+}
+console.log(result);
+</script>
+
+<script id="ch0105/10" type="1.5.10">
+var result = 0;
+var m = prompt("请输入一个数字");
+var n = prompt("请输入一个数字");
+for(let i = n;i<= m;i++){
+    if(i%17 === 0){
+        result += i;
+    }
+}
+console.log(result);
+</script>
+
+<script id="ch0105/13" type="1.5.13">
+var result;
+var p1 = prompt("请输入一个数字");
+var p2 = prompt("请输入一个数字");
+result = p1 ** p2;
+console.log(result);
+</script>
+
+<script id="ch0105/14" type="1.5.14">
+var result;
+var p1 = Number(prompt("请输入一个数字"));
+var p2 = Number(prompt("请输入一个数字"));
+result = p1 * 1.1**p2;
+console.log(result);
+</script>
+
+<script id="ch0105/15" type="1.5.15">
+var result;
+var p1 = Number(prompt("请输入一个数字"));
+var p2 = Number(prompt("请输入一个数字"));
+var p3 = Number(prompt("请输入一个数字"));
+result = p2 * ((1+p1/100)**p3);
+console.log(result);
+</script>
+
+<script id="ch0105/16" type="1.5.16">
+var result = 0;
+var N = Number(prompt("请输入一个数字"));
+var K = Number(prompt("请输入一个数字"));
+for(let i = 1; i <= 20;i++){
+    if(200*((1+k/100)**i) < k*i){
+        result = i;
+    }
+}
+if(result === 0){
+    result = "Impossible";
+}
+console.log(result);
+</script>
+
+<script id="ch0105/17" type="1.5.17">
+var result;
+var n = Number(prompt("请输入一个数字"));
+result = 1/Math.sqrt(5)*((1/2 + Math.sqrt(5)/2)**n - (1/2 - Math.sqrt(5)/2)**n);//此方法在29项以上需要处理精度问题
+console.log(result);
+</script>
+
+
+<script id="ch0105/20" type="1.5.20">
+var result1,result2;
+var p = Number(prompt("请输入一个数字"));
+result1 = (p * 2.99609375);
+result2 = p * (0.001953125);
+console.log(result);
+</script>
+
+<script id="ch0105/21" type="1.5.21">
+var p = Number(prompt("请输入一个数字"));
+while(p !== 1){
+    if(p&1){
+        console.log(p+"*"+3+"+"+1+"="+(p*3+1));
+        p = p * 3 + 1;
+    }else{
+        console.log(p+"/"+2+"="+p/2);
+        p /=2
+    }
+}
+console.log("End");
+</script>
+
+<script id="ch0105/25" type="1.5.25">
+var p = Number(prompt("请输入一个数字"));
+var x,y,z;
+for(let i = 90;i < 343;i++){
+    z = i%7;
+    y = ~~(i/7)%7;
+    x = ~~(~~(i/7))/7%7;
+    if(24*x-y-40*z === 0){
+        console.log(i);
+        console.log(x+""+y+""+z);
+        console.log(z+""+y+""+z);
+    }
+}
+</script>
+
+<script id="ch0105/26" type="1.5.26">
+var p = Number(prompt("请输入一个数字"));
+var tmp = p%10 - ~~((p%100)/10) - ~~((p%1000)/100) - ~~(p/1000);
+if(!tmp){
+
+}
+</script>
+
+<script id="ch0105/27" type="1.5.27">
+var result = 0;
+var p = Number(prompt("请输入一个数字"));
+for(let i=1; ;i++){
+    result = result + 1/i;
+    if(result > p){
+        console.log(i);
+        break;
+    }
+}
+
+</script>
+
+<script id="ch0105/28" type="1.5.28">
+var result="";
+var p = Number(prompt("请输入一个数字"));
+while(p > 0){
+    result= result+p%10+" ";
+    p=~~(p/10);
+}
+console.log(result);
+</script>
+
+<script id="ch0105/29" type="1.5.29">
+var result = 0;
+var p = Number(prompt("请输入一个数字"));
+if(p === 0){
+    console.log(p);
+}else{
+    while(p !== 0){
+        result= result*10+p%10;
+        p=~~(p/10);
+    }
+}
+console.log(result);
+</script>
+
+<script id="ch0105/30" type="1.5.30">
+var m = Number(prompt("请输入一个数字"));
+var k = Number(prompt("请输入一个数字"));
+if(m%19){
+    console.log("NO");
+}else{
+    var count = 0;
+    while(m!==0){
+        if(m%10 === 3){
+            count++;
+        }
+        m=~~(m/10);
+    }
+    if(count === k){
+        console.log("YES");
+    }else{
+        console.log("NO");
+    }
+}
+</script>
+
+<script id="ch0105/31" type="1.5.31">
+var result = '';
+var n = Number(prompt("请输入一个数字"));
+var m = Number(prompt("请输入一个数字"));
+//假如有2e10的灯数，那如何找出规律
+/**
+ * 首先考虑n=m的特殊情况，这个题目很快的就可以发现与它的约数个数有关，因为假如它约数个数（包括1和本身）
+ * 是偶数，那么它一定会是开启的状态，假如它是奇数那么它一定处于关闭的状态，于是我想到求每一个数的约数个数，
+ * 发现是可以的，约数个数有约数个数定理，然而找约数个数需要找质数，这感觉是个大麻烦。于是其实想到我不一定要
+ * 确切的知道它的个数，只需要它约数个数的奇偶性就行了，那么就很好办了，很显然只有平方数才会有奇数个约数，那
+ * 在n=m的情况问题就能被解决，只要找所有的平方数，一看样例，好吧，我应该早点看的。
+ * 但是还有1<m<n的情况，并没有发现一个好的方法,假如你有好的方法请分享出来。
+ */
+var tmp = Math.floor(Math.sqrt(m));//当m===n的情况
+for (let i = 1; i <= tmp; i++) {
+    result = result + i*i +",";
+}
+console.log(result.replace(/,$/,""));
+</script>
+
