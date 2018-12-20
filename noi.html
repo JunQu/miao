@@ -584,10 +584,10 @@ console.log(result);
 
 <script id="ch0105/09" type="1.5.9">
 var result = 0;
-var m = prompt("请输入一个数字");
-var n = prompt("请输入一个数字");
+var n = Number(prompt("请输入一个数字"));
+var m = Number(prompt("请输入一个数字"));
 for(let i = n;i<= m;i++){
-    if(i&1){
+    if(i%2 !== 0){
         result += i;
     }
 }
@@ -596,9 +596,9 @@ console.log(result);
 
 <script id="ch0105/10" type="1.5.10">
 var result = 0;
-var m = prompt("请输入一个数字");
-var n = prompt("请输入一个数字");
-for(let i = n;i<= m;i++){
+var n = Number(prompt("请输入一个数字"));
+var m = Number(prompt("请输入一个数字"));
+for(let i=n;i<= m;i++){
     if(i%17 === 0){
         result += i;
     }
@@ -618,7 +618,7 @@ console.log(result);
 var result;
 var p1 = Number(prompt("请输入一个数字"));
 var p2 = Number(prompt("请输入一个数字"));
-result = p1 * 1.1**p2;
+result = (p1 * (1.001**p2)).toFixed(4);
 console.log(result);
 </script>
 
@@ -627,17 +627,18 @@ var result;
 var p1 = Number(prompt("请输入一个数字"));
 var p2 = Number(prompt("请输入一个数字"));
 var p3 = Number(prompt("请输入一个数字"));
-result = p2 * ((1+p1/100)**p3);
+result = ~~(p2 * ((1+p1/100)**p3));
 console.log(result);
 </script>
 
 <script id="ch0105/16" type="1.5.16">
 var result = 0;
-var N = Number(prompt("请输入一个数字"));
-var K = Number(prompt("请输入一个数字"));
+var n = Number(prompt("请输入一个数字"));
+var k = Number(prompt("请输入一个数字"));
 for(let i = 1; i <= 20;i++){
-    if(200*((1+k/100)**i) < k*i){
+    if(200*((1+k/100)**(i-1)) <= n*i){
         result = i;
+        break;
     }
 }
 if(result === 0){
@@ -677,7 +678,6 @@ console.log("End");
 </script>
 
 <script id="ch0105/25" type="1.5.25">
-var p = Number(prompt("请输入一个数字"));
 var x,y,z;
 for(let i = 90;i < 343;i++){
     z = i%7;
@@ -686,16 +686,17 @@ for(let i = 90;i < 343;i++){
     if(24*x-y-40*z === 0){
         console.log(i);
         console.log(x+""+y+""+z);
-        console.log(z+""+y+""+z);
+        console.log(z+""+y+""+x);
     }
 }
 </script>
 
 <script id="ch0105/26" type="1.5.26">
+var count = 0;
 var p = Number(prompt("请输入一个数字"));
 var tmp = p%10 - ~~((p%100)/10) - ~~((p%1000)/100) - ~~(p/1000);
 if(!tmp){
-
+count++;
 }
 </script>
 
@@ -713,13 +714,11 @@ for(let i=1; ;i++){
 </script>
 
 <script id="ch0105/28" type="1.5.28">
-var result="";
 var p = Number(prompt("请输入一个数字"));
 while(p > 0){
-    result= result+p%10+" ";
+    console.log(p%10);
     p=~~(p/10);
 }
-console.log(result);
 </script>
 
 <script id="ch0105/29" type="1.5.29">
