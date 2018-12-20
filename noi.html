@@ -685,8 +685,8 @@ for(let i = 90;i < 343;i++){
     x = ~~(~~(i/7))/7%7;
     if(24*x-y-40*z === 0){
         console.log(i);
-        console.log(x+""+y+""+z);
-        console.log(z+""+y+""+x);
+        console.log(100*x+10*y+z);
+        console.log(100*z+10*y+x);
     }
 }
 </script>
@@ -694,10 +694,14 @@ for(let i = 90;i < 343;i++){
 <script id="ch0105/26" type="1.5.26">
 var count = 0;
 var p = Number(prompt("请输入一个数字"));
-var tmp = p%10 - ~~((p%100)/10) - ~~((p%1000)/100) - ~~(p/1000);
-if(!tmp){
-count++;
+for(let i = 0;i< p; i++){
+    var q = Number(prompt("请输入一个数字"));
+    var tmp = q%10 - ~~((q%100)/10) - ~~((q%1000)/100) - ~~(q/1000);
+    if(tmp > 0){
+        count++;
+    }
 }
+console.log(count);
 </script>
 
 <script id="ch0105/27" type="1.5.27">
