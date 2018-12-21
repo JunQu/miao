@@ -931,7 +931,17 @@ for(let i=0;i <p1;i++){
 console.log(result);
 </script>
 
-
+<script id="ch0105/43" type="1.5.43">
+var result;
+var p = Number(prompt("请输入一个数字"));
+//由于题目：已知正整数 n 是两个不同的质数的乘积，那么直接相除就可以。。。
+for(let i=2;i< Math.sqrt(p);i++){
+    if(p%i === 0){
+        result = p / i;
+    }
+}
+console.log(result);
+</script>
 
 <script id="ch0105/45" type="1.5.45">
 var p = Number(prompt("请输入一个数字"));
