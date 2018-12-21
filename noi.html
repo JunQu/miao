@@ -780,3 +780,152 @@ for (let i = 1; i <= tmp; i++) {
 console.log(result.replace(/,$/,""));
 </script>
 
+<script id="ch0105/32" type="1.5.32">
+var result = 0;
+var s = Number(prompt("请输入一个数字"));
+var p = 1;
+var q = 2;
+for(let i=0;i<s;i++){
+    result = result + q/p;
+    q = p + q;
+    p = q - p;
+}
+console.log(result.toFixed(4));
+</script>
+
+<script id="ch0105/33" type="1.5.33">
+var result;
+var p = Number(prompt("请输入一个数字"));
+for(let i=1;i<= p;i++){
+    result = result + 1/(i*(-1)**(i-1));
+}
+console.log(result.toFixed(4));
+</script>
+
+<script id="ch0105/34" type="1.5.34">
+var result = 1;
+var p = Number(prompt("请输入一个数字"));
+for(let i=p; i > 1;i--){
+    result = result*i+1;
+}//秦九韶算法果然厉害
+console.log(result);
+</script>
+
+<script id="ch0105/35" type="1.5.35">
+var result = 1;
+var p = Number(prompt("请输入一个数字"));
+for(let i = p; i> 0; i--){
+    result = result * (1/i) +1
+}
+console.log(result.toFixed(10));
+</script>
+
+<script id="ch0105/36" type="1.5.36">
+var result = 1;
+var x = Number(prompt("请输入一个数字"));
+var n = Number(prompt("请输入一个数字"));
+for(let i = 0; i < n ; i++){
+    result = result * x +1;
+}
+console.log(result.toFixed(2));
+</script>
+
+<script id="ch0105/37" type="1.5.37">
+var m = Number(prompt("请输入一个数字"));
+var n = Number(prompt("请输入一个数字"));
+var x = Number(prompt("请输入一个数字"));
+m = (~~(x/m)+1)* m;//其实条件没有说明从一个战斗到另一个战斗算不算连续，样例也很难看出
+while(m > 0){
+    if(m-n){
+        n++;
+    }
+    m -= n;
+}
+console.log(n);
+</script>
+
+<script id="ch0105/38" type="1.5.38">
+var result;
+var p = Number(prompt("请输入一个数字"));
+console.log(result);
+</script>
+
+<script id="ch0105/39" type="1.5.39">
+var result = 0;
+var p = Number(prompt("请输入一个数字"));
+for(let i= 1; i <= p;i++){
+    if(i%7){
+        var tmp = i;
+        var count = 0;
+        while(tmp%10){
+            if(tmp%10 === 7){
+                count++;
+            }
+            tmp=~~(tmp/10);
+        }
+        if(count === 0){
+            result = result + i**2;
+        }
+    }else{
+       continue;
+    }
+}
+console.log(result);
+</script>
+
+<script id="ch0105/40" type="1.5.40">
+var result = 0;
+var p = Number(prompt("请输入一个数字"));
+for(let i=1;i<p;i++){
+    var tmp = i;
+    while(tmp%10){
+        if(tmp%10 === 1){
+            result++;
+            continue;
+        }
+        tmp = ~~(tmp/10);
+    }
+}
+console.log(result);
+</script>
+
+<script id="ch0105/42" type="1.5.42">
+var result = "";
+var p1 = Number(prompt("请输入一个数字"));
+var p2 = Number(prompt("请输入一个数字"));
+var p3 = prompt("请输入一个数字");
+var p4 = Number(prompt("请输入一个数字"));
+var tmp = "";
+var str = "";
+for(let j=0;j<p2;j++){
+    tmp += p3;
+}
+if(p4 === 0){
+    for(let k =0; k < p2-2;k++){
+        str += " ";
+    }
+}
+for(let i=0;i <p1;i++){
+    if(p4===1){
+        result = result + tmp +"\n";
+    }else{
+        if(i===0 || i===p1-1){
+            result = result + tmp +"\n";
+        }else{
+            result = result + p3 + str + p3 +"\n";
+        }
+    }
+}
+console.log(result);
+</script>
+
+
+
+<script id="ch0105/45" type="1.5.45">
+var p = Number(prompt("请输入一个数字"));
+var n = Math.floor((Math.sqrt(1+8*p)-1)/2);//n为领了连续领相同规律工资的天数
+var result = n * (n+1) * (2*n+1)/6;//求出n天工资
+let t= p - n*(n+1)/2;//求出n天后剩余的天数
+result = result + t*(n+1);//得出总的工资
+console.log(result);
+</script>
