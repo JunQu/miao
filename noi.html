@@ -1005,6 +1005,7 @@ console.log(result);
     var n = Number(prompt("请输入一个数字"));
     var s = 1;//取出最高位的基数
     var result = true;
+	var tmp = n;
     if(n===0){
         console.log(0);
     }
@@ -1037,7 +1038,6 @@ console.log(result);
     }
     var result = (1 + 1 + 2*m + ~~(3*(m+1)/5) + y + ~~(y/4) - ~~(y/100) + ~~(y/400)) % 7; 
 	console.log(result);
-    }
 </script>
 <script id="complete-number" sample-input="6" sample-output="YES" comment="判断一个数是否为完全数">
     
@@ -1063,7 +1063,8 @@ console.log(result);
     
 </script>
 <script id="sqrt" sample-input="2" sample-output="1.414" comment="不使用Math.sqrt，求一个非负数的平方根，至少精确到小数点后3位">
-        var x1 = n;
+    var n = Number(prompt("请输入一个数字"));
+    var x1 = n;
     var x2 = n/2;
     while(x1 -x2 > 0.00001 || x1 - x2 < -0.00001){
         x1 = x2;
