@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>画图</title>
+  <style>
+    canvas {
+      border: 2px solid #f0f;
+      display: block;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas width="400" height="300"></canvas>
+</body>
+<script>
+  var canvas = document.querySelector('canvas')
+  canvas.style.imageRendering = 'pixelated'
+  var ctx = canvas.getContext('2d')
+
+  function dot(x, y, color = 'black') {
+    ctx.fillStyle = color
+    ctx.fillRect(x, y, 1, 1)
+  }
+  /**
+   * YOUR TASK
+画图的题：
+画一条实线
+画一条一个实点一个空点的虚线
+画一条两个实点两个空点的虚线
+画一条三个实点两个空点的虚线
+画一条45度的斜线
+画一条跨越画布左上角和右下角的对角线
+画一个空心矩形
+画一个实心矩形
+画一个rgb色彩空间的某一面
+画一个空心的圆
+画一个实心的圆
+画一个大小合适的sin(x)的图像
+   */
+</script>
+<script>
+  // YOUR CODE GOES BELOW
+  // 实线
+  for (let i = 0; i < 400; i++) {
+    dot(i,5)
+  }
+  //一条一个实点一个空点的虚线
+  for(let i = 0;i < 200;i++){
+    dot(2*i,10);
+  }
+  // 一条两个实点两个空点的虚线
+  for (let i = 0; i < 400; i++) {
+    if(i%4 === 0 || i%4 === 1){
+      dot(i,15);
+    }
+  }
+  // 三个实点两个空点的虚线
+  for(let i = 0; i < 400; i++){
+    if (i%5 === 0 || i%5 === 1 || i%5 === 2) {
+      dot(i,20);
+    }
+  }
+  // 一条45度的斜线
+  for(let i = 0;i < 300;i+= 0.5){
+    dot(i,i);
+  }
+  //条跨越画布左上角和右下角的对角线
+  for(let i = 0; i < 400;i+= 0.5){
+    dot(i,(300/400)*i);
+  }
+  // 一个空心矩形
+  for(let x= 50; x <= 100;x++){
+    dot(x,50);
+    dot(x,100);
+    var y = 0;
+    if(x === 50 || x === 100){
+      for(let y = 50;y<100;y++){
+        dot(x,y);
+      }
+    }
+  }
+  // 一个实心矩形
+  for (let x = 10; x < 100; x++) {
+   for (let y = 120; y < 180; y++) {
+     dot(x,y,color = 'rgba(0,0,0,0.4)');
+   }
+  }
+  // 一个rgb色彩空间的某一面
+  for (let x = 351; x > 300; x--) {
+   for (let y = 50; y < 101; y++) {
+     var a = (x-300) * 5;
+     var b = (y-50) * 5;
+     var icolor = 'rgb('+a+',0,'+b+')';
+     dot( x, y, icolor);
+   }
+  }
+  // 一个空心的圆 
+  // 圆心（200，150）开始的点（150，100）
+  // 6.28 = C / r
+  for (let i = 0; i < 6.28; i += 0.01) {
+    var r = 100;
+    var x = r * Math.sin(i) + 200;
+    var y = r * Math.cos(i) + 150;
+    dot(x,y);
+  }
+  // 一个实心的圆
+  for (let i = 0; i < 6.28; i += 0.01) {
+    for(let j = 0; j < 30; j++){
+      var r = j;
+      var x = r * Math.sin(i) + 200;
+      var y = r * Math.cos(i) + 150;
+      dot(x,y,'rgba('+(i+15)*10+',0,'+(j+10)*6+',0.3)');
+    }
+  }
+  // 一个大小合适的sin(x)的图像
+  for (let i = 0; i < 400; i += 0.01) {
+      dot(i*10, 280+Math.sin(i)*10);
+  }
+</script>
+</html>
