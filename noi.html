@@ -951,3 +951,140 @@ let t= p - n*(n+1)/2;//求出n天后剩余的天数
 result = result + t*(n+1);//得出总的工资
 console.log(result);
 </script>
+
+
+<script id="sort" sample-input="4 1 7" sample-output="1 4 7" comment="输入三个数，把此三个数按升序输出">
+
+</script>
+
+题目：水仙花数。水仙花数是指一个N位的十进制数，其各位数的N次方的和等于它自己。
+如：153 =　1的三次方+5的三次方+3的三次方，则153就是一个水仙花数
+或：1634 =　1的四次方+6的四次方+3的四次方+4的四次方
+因为1634是一个四位数。
+找出100到100000以内所有的水仙花数。
+<script id="narcissistic " sample-input="153" sample-output="YES" comment="判断一个数是否为水仙花数">
+         var i = Number(prompt("请输入一个数字"));
+		 var s= i;
+         var tmp = i;
+         var n = 0;
+         var result = 0;
+         while(tmp){ //计算它有多少位，确定n次方
+             tmp =~~(tmp/10);
+             n++;
+         }
+         while(s){//对每一位进行计算
+             result = result + (s%10)**n;
+             s =~~(s/10);
+         }
+         if(result === i){
+             console.log("YES");
+         }else{
+		     console.log("NO");
+		 }
+</script>
+<script id="narcissistics" sample-input="" sample-output="" comment="找出100到10000以内所有的水仙花数">
+    for (let i = 100; i <= 10000; i++) {
+         var s=i;
+         var tmp = i;
+         var n = 0;
+         var result = 0;
+         while(tmp){ //计算它有多少位，确定n次方
+             tmp =~~(tmp/10);
+             n++;
+         }
+         while(s){//对每一位进行计算
+             result = result + (s%10)**n;
+             s =~~(s/10);
+         }
+         if(result === i){
+             console.log(i);
+         }
+    }
+</script>
+<script id="palindrom" sample-input="12321" sample-output="YES" comment="判断一个非负整数是否为回文数字">
+    var n = Number(prompt("请输入一个数字"));
+    var s = 1;//取出最高位的基数
+    var result = true;
+    if(n===0){
+        console.log(0);
+    }
+    while(tmp > 10){
+        tmp /= 10;
+        s *= 10;
+    }
+
+    while(n){
+        if(n%10 !== Math.trunc(n/s)){ //最高位与最后一位进行比较
+            result = false;
+        }
+        n = n%s ;//去除最高位
+        n = Math.trunc(n/10);//去掉最后一位
+        s /= 100;//这里因为n去掉两位，所以s跟着去掉两位
+    }
+    if(result){
+        console.log("YES")
+    }else{
+        console.log("NO");
+    }//这个方法好处是不会溢出（反转原数字可能超出范围的问题）
+</script>
+
+<script id="weekday" sample-input="2018 6" sample-output="5" comment="输入年份与月份，给出该年该月的第一天是星期几">
+    var y = Number(prompt("请输入一个数字"));
+	var m = Number(prompt("请输入一个数字"));
+    if(m < 3) {
+        m += 12;
+        y--;//为了计算1月和2月出现的问题
+    }
+    var result = (1 + 1 + 2*m + ~~(3*(m+1)/5) + y + ~~(y/4) - ~~(y/100) + ~~(y/400)) % 7; 
+	console.log(result);
+    }
+</script>
+<script id="complete-number" sample-input="6" sample-output="YES" comment="判断一个数是否为完全数">
+    
+</script>
+<script id="complete-numbers" sample-input="" sample-output="" comment="输出10000以内所有的完全数">
+    
+</script>
+<script id="prime" sample-input="7" sample-output="YES" comment="判断一个数是否为素数">
+    
+</script>
+<script id="primes" sample-input="" sample-output="" comment="输出100以内所有的素数">
+    
+</script>
+<script id="itob" sample-input="123" sample-output="123" comment="数字转换成字符串，即实现Number函数的功能，不可使用+号或者Number函数">
+    
+</script>
+<script id="lcf&lcm" sample-input="12 9" sample-output="36 3" comment="给定两个数，求它们的最小公倍数和最大公约数">
+    
+</script>
+
+题目：敲7。输出1到100以内所有7的倍数以及数字中包含7的数，如7（7的倍数），37（不是倍数但数位中包含7）都需要输出，依次类推
+<script id="7" sample-input="" sample-output="" comment="敲7，输出7的倍数或数位中含有7的数如（21，27）">
+    
+</script>
+<script id="sqrt" sample-input="2" sample-output="1.414" comment="不使用Math.sqrt，求一个非负数的平方根，至少精确到小数点后3位">
+        var x1 = n;
+    var x2 = n/2;
+    while(x1 -x2 > 0.00001 || x1 - x2 < -0.00001){
+        x1 = x2;
+        x2 = (x1 + n/x1)/2;
+    }//这题抄自网上，运用牛顿法迭代计算数值
+    console.log(x1);
+</script>
+
+给定M和N，求从M个物体中选出N个的排列与组合的数量：
+Ｃ（ｍ，ｎ）
+Ａ（ｍ，ｎ）
+<script id="c&a">
+    
+</script>
+
+题目：给定一个数，对其进行四舍五入，如1.4输出1，1.6输出2
+<script id="round">
+    var n = Number(prompt("请输入一个数字"));
+    if(n%1 >= 0.5){
+        console.log(~~n + 1);
+    }else{
+        console.log(~~n);
+    }
+</script>
