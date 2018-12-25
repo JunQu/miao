@@ -954,7 +954,24 @@ console.log(result);
 
 
 <script id="sort" sample-input="4 1 7" sample-output="1 4 7" comment="输入三个数，把此三个数按升序输出">
-
+var a = Number(prompt("请输入一个数字"));
+var b = Number(prompt("请输入一个数字"));
+var c = Number(prompt("请输入一个数字"));
+const isort = function(a,b,c){
+    if(a>b){
+        b = a + 0 * (a=b);
+    }
+    if(b>c){
+        b = c + 0 * (c=b);
+    }
+    if(a>b){
+        a = b + 0 * (b=a);
+    }
+    console.log(a);
+    console.log(b);
+    console.log(c);
+}
+console.log(isort(a,b,c));
 </script>
 
 题目：水仙花数。水仙花数是指一个N位的十进制数，其各位数的N次方的和等于它自己。
@@ -1040,27 +1057,99 @@ console.log(result);
 	console.log(result);
 </script>
 <script id="complete-number" sample-input="6" sample-output="YES" comment="判断一个数是否为完全数">
-    
+    var n = Number(prompt("请输入一个数字"));
+    const isPerfectNumber = function(n){
+    var result = 0;
+    for (let i = 1; i < n/2+1; i++) {
+        if(n%i === 0){
+            if(i === n/i){
+                result = result + n/i + i;
+            }else{
+                result = result + i;
+            }
+        }
+    }
+    return result === n;
+}
+if(isPerfectNumber(n)){
+    console.log("YES")
+}else{
+    console.log("NO");
+}
 </script>
 <script id="complete-numbers" sample-input="" sample-output="" comment="输出10000以内所有的完全数">
-    
+  for(let i = 5; i < 10000 ; i++){
+    if(isPerfectNumber(i)){
+        console.log(i);
+    }
+  }
 </script>
 <script id="prime" sample-input="7" sample-output="YES" comment="判断一个数是否为素数">
-    
+  var n = Number(prompt("请输入一个数字"));
+  const isPrime = function(n){
+    if(n <= 1 || n % 1){
+        return false;
+    }
+    if(n === 2){
+        return 2;
+    }
+    let r = true;
+    for(let i = 2;i < Math.sqrt(n);i++){
+        if(n%i === 0){
+            r = false;
+        }
+    }
+    return r;
+ }
+ if(isPrime(n)){
+    console.log("YES")
+}else{
+    console.log("NO");
+}
 </script>
 <script id="primes" sample-input="" sample-output="" comment="输出100以内所有的素数">
-    
+     for(let i = 5; i < 100 ; i++){
+    if(isPrime(i)){
+        console.log(i);
+    }
+  }
 </script>
 <script id="itob" sample-input="123" sample-output="123" comment="数字转换成字符串，即实现Number函数的功能，不可使用+号或者Number函数">
     
 </script>
 <script id="lcf&lcm" sample-input="12 9" sample-output="36 3" comment="给定两个数，求它们的最小公倍数和最大公约数">
-    
+var m = Number(prompt("请输入一个数字"));
+var n = Number(prompt("请输入一个数字"));
+const gcd = function(m,n){
+    var r = 1;
+    while(r){
+        r = m%n;
+        m = n;
+        n = r;
+    }
+    return m;
+}
+var result = gcd(m,n)
+console.log(result)
+console.log(m*n/result)
 </script>
 
 题目：敲7。输出1到100以内所有7的倍数以及数字中包含7的数，如7（7的倍数），37（不是倍数但数位中包含7）都需要输出，依次类推
 <script id="7" sample-input="" sample-output="" comment="敲7，输出7的倍数或数位中含有7的数如（21，27）">
-    
+       for(let i = 7; i <= 100;i++){
+        if(i%7){
+            var tmp = i;
+            while(tmp){
+                if(tmp%10 === 7){
+                    console.log(i);
+                    break;
+                }
+                tmp = ~~(tmp/10);
+            }
+        }else{
+            console.log(i);
+        }
+    }
 </script>
 <script id="sqrt" sample-input="2" sample-output="1.414" comment="不使用Math.sqrt，求一个非负数的平方根，至少精确到小数点后3位">
     var n = Number(prompt("请输入一个数字"));
