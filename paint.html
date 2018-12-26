@@ -88,8 +88,8 @@
    }
   }
   // 一个rgb色彩空间的某一面
-  for (let x = 351; x > 300; x--) {
-   for (let y = 50; y < 101; y++) {
+  for (let x = 351; x > 300; x -= 0.1) {
+   for (let y = 50; y < 101; y += 0.1) {
      var a = (x-300) * 5;
      var b = (y-50) * 5;
      var icolor = 'rgb('+a+',0,'+b+')';
@@ -111,7 +111,7 @@
       var r = j;
       var x = r * Math.sin(i) + 200;
       var y = r * Math.cos(i) + 150;
-      dot(x,y,'rgba('+(i+15)*10+',0,0,0.3)');
+      dot(x,y,'rgba('+(i+15)*10+',0,0,0.5)');
     }
   }
   // 一个大小合适的sin(x)的图像
