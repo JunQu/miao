@@ -1,0 +1,1456 @@
+*{
+    box-sizing: border-box;
+}
+
+.main{
+    width: 100%;
+    height: 100%;
+}
+.hd-box{
+    position: relative;
+    height: 58px;
+    /* background-color: #fff; */
+}
+/* 顶部导航栏 */
+.site-topbar{
+    /* position: relative; */
+    height: 40px;
+    width: 100%;
+    background-color: #333;
+    border: none;
+}
+
+.site-topbar  a{
+    display: inline-block;
+    font-size: 12px;
+    line-height: 40px;
+    color: #b0b0b0;
+}
+.site-topbar  a:hover{
+    color: #fff;
+}
+.site-topbar .sep{
+    margin:.5em;
+    color: #424242;
+    font-size: 12px;
+    line-height: 40px;
+}
+.topbar-nav{
+    float: left;
+    height: 40px;
+    font-size: 0;
+}
+
+.download-app{
+    position: relative;
+}
+.download-app::after{
+    content: '';
+    position: absolute;
+    top: 30px;
+    left: 15px;
+    border: 10px solid #fff;
+    border-top: 0;
+    border-left-color: rgba(0,0,0,0);
+    border-right-color: rgba(0,0,0,0);
+    visibility: hidden;
+    z-index: 900;
+}
+.download-app-main{
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    margin-left: -55px;
+    width: 124px;
+    height: 150px;
+    padding: 18px 0 14px 0;
+    background-color: #fff;
+    box-shadow: rgb(170, 170, 170) 0px 2px 5px;
+    z-index: 100;
+    visibility: hidden;
+    z-index: 900;
+}
+.download-app-image{
+    margin: 0 auto;
+    width: 90px;
+    height: 90px;
+    background-image: url(/img/download-app.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.download-app-title{
+    margin-top: 14px;
+    font-size: 14px;
+    line-height: 1;
+    text-align: center;
+    color: #333;
+}
+.download-app:hover::after,
+.download-app:hover .download-app-main{
+    visibility: visible;
+}
+.topbar-info{
+    float: right;
+    height: 40px;
+    line-height: 40px;
+    font-size: 0;
+}
+.topbar-info > a{
+    padding: 0 5px;
+    vertical-align: top;
+}
+.topbar-info-message{
+    display: inline-block;
+    /* height: 40px; */
+    line-height: 40px;
+    padding: 0 10px;
+    vertical-align: top;
+}
+.topbar-info .sep{
+    margin: 0;
+    vertical-align: top;
+}
+
+/* 购物车 */
+.topbar-cart-wrapper{
+    float: right;
+    position: relative;
+    height: 40px;
+    width: 120px;
+    margin-left: 15px;
+    text-align: center;
+    color: #b0b0b0;
+    background-color: #424242;
+    font-size: 0;
+    transition: all .1s .33s;
+}
+.topbar-cart-wrapper > a{
+    width: 100%;
+    height: 100%;
+}
+.topbar-cart-icon{
+    display: inline-block;
+    font-size: 1.5em;
+    line-height: 40px;
+    font-weight: 200;
+    vertical-align: middle;
+    margin-right: 4px;
+    transition: all 0.1s .33s;
+}
+.topbar-cart{
+    display: inline-block;
+    font-size: 12px;
+    line-height: 40px;
+    vertical-align: middle;
+    transition: all 0.1s .33s;
+}
+/**这一段处理的非常差，各种元素叠加问题，以及隐藏的问题，都是很勉强，没有彻底解决 */
+.cart-nav{
+    position: absolute;
+    top: 100%;
+    right: 0;
+    padding: 15px 0 0;
+    width: 316px;
+    height: 0px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    background-color: #fff;
+    color: #424242;
+    z-index: -8;
+    transition: height .2s .1s ease-in,top .2s,z-index .1s .2s;
+    overflow: hidden;
+}
+.cart-isEmpty{
+    margin: 5px 20px 20px;
+    padding: 20px 0 ;
+    text-align: center;
+    font-size: 12px;
+}
+.topbar-cart-wrapper:hover{
+    /* color: #ff6700; */
+    background-color: #fff;
+    transition:  .2s;
+}
+.topbar-cart-wrapper:hover .topbar-cart-icon,
+.topbar-cart-wrapper:hover .topbar-cart{
+    color: #ff6700;
+    transition: .2s;
+}
+.topbar-cart-wrapper:hover .cart-nav{
+    /* top: 100%; */
+    height: 98px;
+    z-index: 99;
+    transition: height .2s ease-in;
+}
+
+/* 导航下的头部区域 */
+.site-header{
+    position: relative;
+    height: 100px;
+    width: 100%;
+    background-color: #fff;
+}
+/* 小米顶部logo */
+.header-logo{
+    float: left;
+    margin-top: 22px;
+    width: 62px;
+}
+.header-logo-link{
+    position: relative;
+    display: block;
+    width: 55px;
+    height: 55px;
+    background-color: #ff6700;
+    overflow: hidden;
+    text-indent: -999em;
+}
+/* 加个小动画 */
+.header-logo-link::before,.header-logo-link::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 55px;
+    height: 55px;
+    transform-origin: 50% 50%;
+    transition: all .2s;
+    z-index: 1;
+}
+.header-logo-link::before{
+    background: url(/img/mi-logo.png) no-repeat 50% 50%;
+    opacity: 1;
+}
+.header-logo-link::after{
+    background: url(/img/mi-home.png) no-repeat 50% 50%;;
+    margin-left: -55px;
+    opacity: 0;
+}
+.header-logo-link:hover::before{
+    transform: translate3d(55px,0,0);
+    opacity: 0;
+}
+.header-logo-link:hover::after{
+    transform: translate3d(55px,0,0);
+    opacity: 1;
+}
+/* 小米头部导航栏，搜索旁边 */
+.header-nav{
+    float: left;
+    width: 850px;
+}
+.header-nav-list{
+    /* position: relative; */
+    float: left;
+    width: 820px;
+    height: 88px;
+    margin: 0;
+    padding: 12px 0 0 172px;
+    list-style-type: none;
+    font-size: 0;
+}
+/* 这里它用的浮动 */
+.header-nav-list > li{
+    display: inline-block;
+}
+.header-nav-list > li > a{
+    display: block;
+    padding: 26px 10px 38px;
+    color: #333;
+    font-size: 16px;
+}
+.header-nav-list > li > a:hover{
+    color: #ff6700;
+}
+/* 不太好的解决，用的li标签，不应该是li的 */
+/**
+* 此处参考了1804-吴镇宇同学的做法
+*原本一开始我的结构就是这样的，但是我总想着通过opacity来实现顺畅的切换，确实效果很好。
+*但是通过一整天的实际效果，由于opacity属性的某些特性，导致页面出现很多意想不到的结果，最终只能放弃
+*看到吴镇宇同学与我的想法差不多，在他代码通过visibility延迟和background-color的遮盖实现，启发我终于完成了这个框框
+*/
+/*
+* 该结构巨大缺陷，在手机以外的区域hover会出现空白，这也是我昨天放弃这个结构的原因，，，现在就忘了，，，还是得改－ －|||| 
+*/
+.header-dropdown-wrapper{
+    position: absolute;
+    box-sizing: border-box;
+    top: 100%;
+    left: 0;
+    height: 0;
+    width: 100%;
+    height: 0;
+    margin-top: -1px;
+    border-top: 1px solid #e0e0e0;
+    background-color: #fff;
+    transition: height 0.2s 0.15s ease-in-out,box-shadow .2s .15s ease,z-index .05s .3s;
+    z-index: -8;
+    overflow: hidden;
+}
+.header-dropdown{
+    position: absolute;
+    display: block;
+    /* height: 230px; */
+    height: 230px;
+    width: 100%;
+    background-color: #fff;
+    overflow: hidden;
+    z-index: 800;
+    visibility: hidden;
+    transition: visibility 0.3s 0.1s;
+}
+.header-dropdown-list{
+    height: 201px;
+    font-size: 0;
+    background-color: #fff;
+}
+.header-dropdown-list > li:nth-child(n+2)::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 35px;
+    height: 100px;
+    width: 1px;
+    background-color:#e0e0e0;
+    z-index: 830;
+}
+/* 204.333 = 1226/6 */
+.header-dropdown-list > li{
+    position: relative;
+    display: inline-block;
+    width: 204.333333px;
+    height: 201px;
+    padding: 35px 12px 0;
+    text-align: center;
+    font-size: 12px;
+    vertical-align: top;
+}
+.header-dropdown-list > li a{
+    display: block;
+}
+.dropdown-list-image{
+    margin: 0 auto 16px;
+    width: 160px;
+    height: 110px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.dropdown-list-title,.dropdown-list-price{
+    font-size: 12px;
+    line-height: 20px;
+    color: #333;
+}
+.dropdown-list-price{
+    color: #ff6700;
+}
+/* 还是他的做法好一点，外面是div，里面inline-block，然后center就可以。。。 方便以后添加，所以还是改了*/
+.dropdown-list-attract{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+}
+/* 这里它是和外边框合并的，但是收起下拉框会出现边框的收缩，变得不完美 */
+.dropdown-list-attract > span{
+    display: inline-block;
+    border: 1px solid #ff6700;
+    padding: 1px 20px;
+    color: #ff6700;
+    font-style: 12px; 
+    text-align: center;
+    
+}
+
+.header-dropdown-on:hover ~ .header-dropdown-wrapper,
+.header-dropdown-wrapper:hover{
+    height: 230px;
+    z-index: 800;
+    box-shadow: 0 3px 4px rgba(0,0,0,0.18); 
+    transition: height 0.2s 0.15s linear,box-shadow .2s .15s ease,z-index .2s .15s;
+}
+.miphone-imge-1{
+    background-image: url(/img/dropdown-mix3-320.png);
+}
+.miphone-imge-2{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/qingchun-320.png);
+}
+.miphone-imge-3{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/pingmu-320.png);
+}
+.miphone-imge-4{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/pc-320-220-mi8.png);
+}
+.miphone-imge-5{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/pc-320-220-mi8se.png);
+}
+.miphone-imge-6{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/max3-320-220.png);
+}
+
+.redmiphone-imge-1{
+    background-image: url(/img/dropdown-redmi.png);
+}
+.redmiphone-imge-2{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/666320.png);
+}
+.redmiphone-imge-3{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/6A320.png);
+}
+.redmiphone-imge-4{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/note5-320-220.png);
+}
+.redmiphone-imge-5{
+    background-image: url(/img/dropdown-redmi.png);
+}
+.redmiphone-imge-6{
+    background-image: url(/img/dropdown-redmi.png);
+}
+
+.mitv-imge-1{
+    background-image: url(/img/mitv-list1.png);
+}
+.mitv-imge-2{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/32.png);
+}
+.mitv-imge-3{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/4a43.png);
+}
+.mitv-imge-4{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/50.png);
+}
+.mitv-imge-5{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/4A-55.jpg);
+}
+.mitv-imge-6{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/4a65555.png);
+}
+
+.milaptop-imge-1{
+    background-image: url(/img/milaptop-list1.jpg);
+}
+.milaptop-imge-2{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/daohang13.3.jpg);
+}
+.milaptop-imge-3{
+    background-image: url(https://i1.mifile.cn/f/i/g/320x220biiben.png);
+}
+.milaptop-imge-4{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/WechatIMG603.png);
+}
+.milaptop-imge-5{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/xinbijiben.png);
+}
+.milaptop-imge-6{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/pingbanok.png);
+}
+
+.appliances-imge-1{
+    background-image: url(/img/appliances-list1.jpg);
+}
+.appliances-imge-2{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/gif/kongqijinghuaqi.jpg);
+}
+.appliances-imge-3{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/xiaomijingshuiqi.jpg);
+}
+.appliances-imge-4{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/saodijiqiren320-220.jpg);
+}
+.appliances-imge-5{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/xinfeng.jpg);
+}
+.appliances-imge-6{
+    background-image: url(/img/appliances-list1.jpg);
+}
+
+.new-imge-1{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/qingchun-320.png);
+}
+.new-imge-2{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/pingmu-320.png);
+}
+.new-imge-3{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/gif/shouhuanNFC.jpg);
+}
+.new-imge-4{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/gif/shexiangjizengqiang.jpg);
+}
+.new-imge-5{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/gif/naozhong.jpg);
+}
+.new-imge-6{
+    background-image: url(/img/new-list6.png);
+}
+
+.router-imge-1{
+    background-image: url(/img/router-list1.png);
+}
+.router-imge-2{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/4Q.png);
+}
+.router-imge-3{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/3A.png);
+}
+.router-imge-4{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/3G.png);
+}
+.router-imge-5{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/PRO.png);
+}
+.router-imge-6{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/quanbuluyouqi.png);
+}
+
+.intelligent-imge-1{
+    background-image: url(/img/intelligent-list11.jpg);
+}
+.intelligent-imge-2{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/xishouj.jpg);
+}
+.intelligent-imge-3{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/airdots.jpg);
+}
+.intelligent-imge-4{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/xiaoaimini.jpg);
+}
+.intelligent-imge-5{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/gif/tixudao.jpg);
+}
+.intelligent-imge-6{
+    background-image: url(https://i1.mifile.cn/f/i/g/2015/gif/shouhuanNFC.jpg);
+}
+
+.header-list-miphone:hover ~ .header-dropdown-wrapper .miphone-list,.miphone-list:hover,
+.header-list-redmiphone:hover ~ .header-dropdown-wrapper .redmiphone-list,.redmiphone-list:hover,
+.header-list-mitv:hover ~ .header-dropdown-wrapper .mitv-list,.mitv-list:hover,
+.header-list-milaptop:hover ~ .header-dropdown-wrapper .milaptop-list,.milaptop-list:hover,
+.header-list-appliances:hover ~ .header-dropdown-wrapper .appliances-list,.appliances-list:hover,
+.header-list-new:hover ~ .header-dropdown-wrapper .new-list,.new-list:hover,
+.header-list-router:hover ~ .header-dropdown-wrapper .router-list,.router-list:hover,
+.header-list-intelligent:hover ~ .header-dropdown-wrapper .intelligent-list,.intelligent-list:hover
+{
+    visibility: visible;
+    z-index: 830;
+}
+
+.header-search{
+    float: right;
+    width: 296px;
+    margin-top: 25px;
+}
+/* 搜索框区域 */
+.header-search-form{
+    position: relative;
+    width: 296px;
+    height: 50px;
+    font-size: 0;
+    vertical-align: top;
+    /* 直接在外层加border会无法控制好button的border */
+    /* border: 1px solid #e0e0e0; */
+}
+.header-search .search-text{
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0;
+    width: 245px;
+    height: 50px;
+    border: 1px solid #e0e0e0;
+    border-right: none;
+    padding: 0 10px;
+    font-size: 14px;
+    /* 为什么是48px XD */
+    line-height: 48px;
+    outline: 0;
+    background-color: #fff;
+    transition: all .2s;
+    vertical-align: top;
+}
+.header-search .search-btn{
+    display: inline-block;
+    box-sizing: border-box;
+    width: 51px;
+    height: 50px;
+    /* font-size为了对齐，具体是行内元素对齐的问题 */
+    font-size: 14px;
+    margin: 0;
+    border: 1px solid #e0e0e0;
+    background-color: #fff;
+    outline: none;
+    transition: all .2s;
+    vertical-align: top;
+    text-align: center;
+    cursor: pointer;
+}
+.search-btn > i{
+    line-height: 50px;
+    font-weight: 900;
+}
+.header-search .search-btn:hover{
+    background-color: #ff6700;
+    border: none;
+}
+.header-search .search-btn:hover > i{
+    color: #fff;
+}
+.search-hotword{
+    position: absolute;
+    /* 16才会是刚好 */
+    top: 16px;
+    right: 62px;
+    font-size: 0;
+    z-index: 10;
+    transition: all .2s;
+    visibility: visible;
+    opacity: 1;
+}
+.search-hotword > a {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 0 5px;
+    color: #757575;
+    background-color: #eee;
+    font-size: 12px;
+    transition: .2s;
+}
+.search-hotword > a:hover{
+    color: #fff;
+    background-color: #ff6700;
+}
+/* 小导航页面，没有确定高度，非常适合添加一行 */
+.search-keywordlist{
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 246px;
+    /* height: 300px; */
+    border: 1px solid#ff6700;
+    border-top: none;
+    /* transition: all .2s; */
+    visibility: hidden;
+    z-index: 50;
+    /* 下面这条是为了最后一行被hover时保留border，不清楚原理，讲过 */
+    overflow: hidden;
+}
+.result-list{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    /* background-color: #fff; */
+}
+/* 这里他基本上都是定位，感觉没必要 */
+.result-list > li > a{
+    display: block;
+    width: 100%;
+    padding: 6px 15px;
+    color: #424242;
+    font-size: 12px;
+    background-color: #fff;
+    /* cursor: pointer; */
+}
+.result-list > li > a:hover{
+    background-color: #fafafa;
+}
+.result-list > li > a > span{
+    float: right;
+    font-size: 12px; 
+    color: #b0b0b0;
+}
+.header-search-form:hover .search-text{
+    border-color: #b0b0b0;
+}
+.header-search-form:hover .search-btn{
+    border-color: #b0b0b0;
+}
+.header-search .header-search-form .search-text:focus{
+    border-color: #ff6700;
+}
+.header-search-form .search-text:focus ~ .search-btn{
+    border-color: #ff6700;
+}
+.header-search-form .search-text:focus ~ .search-hotword{
+    visibility: hidden;
+    opacity: 0;
+}
+.header-search-form .search-text:focus ~ .search-keywordlist{
+    visibility: visible;
+    /* z-index: 300; */
+}
+
+/* 首屏的主要区域，轮播图 */
+.home-hero-container{
+    height: 1272px;
+    /* width: 100%; */
+}
+
+/* 轮播区域 */
+.home-hero-slider{
+    position: relative;
+    height: 460px;
+    width: 100%;
+    /* background: url(/img/hero-bg1.jpg); */
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* opacity: 1; */
+}
+.slider-bg{
+    position: absolute;
+    height: 460px;
+    width: 1226px;
+    overflow: hidden;
+    z-index: 10;
+}
+.slider-bg > div{
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .25s .1s linear;
+}
+.silider-bg a {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+.slider-bg-img{
+    width: 100%;
+    height: 100%;
+}
+/* 轮播控制按钮 */
+.hero-slider{
+   position: relative; 
+}
+.hero-slider-ctrol{
+    position: absolute;
+    top: 0;
+    left: 234px;
+    height: 460px;
+    width: 992px;
+    /* z-index: 9; */
+    visibility: hidden;
+}
+/* z轮播两边的控制按钮 */
+.slider-ctrol-left,.slider-ctrol-right{
+    position: absolute;
+    display: block;
+    top: calc(50% - 35px);
+    left: 0;
+    width: 41px;
+    height: 70px;
+    /* background-color: goldenrod; */
+    cursor: pointer;
+    z-index: 400;
+}
+.slider-ctrol-right{
+    left: auto;
+    right: 0;
+    transform: rotate(180deg);
+}
+.slider-ctrol-icon{
+    line-height: 70px;
+    font-size: 1.8em;
+    font-weight: 100;
+    color: #e1e1e1;
+    margin-left: 5px;
+    transition: color .1s;
+}
+.slider-ctrol-left:hover,.slider-ctrol-right:hover{
+    background-color: rgba(0,0,0,0.6);
+}
+.slider-ctrol-icon:hover{
+    color: #fff;
+}
+/* 轮播控制的小圆点部分 */
+.hero-slider-dot{
+    position: absolute;
+    top: 420px;
+    right: 30px;
+    height: 20px;
+    /* width: 100px; */
+    z-index: 50;
+    font-size: 0;
+    overflow: hidden;
+    text-align: right;
+}
+.hero-slider-dot > label{
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 5px 5px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 10px;
+    background-color:rgba(0,0,0,0.4);
+    cursor: pointer;
+    overflow: hidden;
+    transition: all .2s;
+}
+
+#slider-ctrol1:checked ~ .home-hero-slider .hero-slider-dot .slider-dot-1,
+#slider-ctrol2:checked ~ .home-hero-slider .hero-slider-dot .slider-dot-2,
+#slider-ctrol3:checked ~ .home-hero-slider .hero-slider-dot .slider-dot-3,
+#slider-ctrol4:checked ~ .home-hero-slider .hero-slider-dot .slider-dot-4,
+#slider-ctrol5:checked ~ .home-hero-slider .hero-slider-dot .slider-dot-5,
+.hero-slider-dot > label:hover
+{
+    background: #fff;
+    border-color: rgba(0,0,0,0.4);
+}
+
+#slider-ctrol1:checked ~ .home-hero-slider .hero-slider .slider-ctrol-1,
+#slider-ctrol2:checked ~ .home-hero-slider .hero-slider .slider-ctrol-2,
+#slider-ctrol3:checked ~ .home-hero-slider .hero-slider .slider-ctrol-3,
+#slider-ctrol4:checked ~ .home-hero-slider .hero-slider .slider-ctrol-4,
+#slider-ctrol5:checked ~ .home-hero-slider .hero-slider .slider-ctrol-5
+{
+    visibility: visible;
+}
+#slider-ctrol1:checked ~ .slider-bg .slider-bg1,
+#slider-ctrol2:checked ~ .slider-bg .slider-bg2,
+#slider-ctrol3:checked ~ .slider-bg .slider-bg3,
+#slider-ctrol4:checked ~ .slider-bg .slider-bg4,
+#slider-ctrol5:checked ~ .slider-bg .slider-bg5
+{
+    visibility: visible;
+    opacity: 1;
+}
+
+/* 这里它是定位 */
+/* 今日更新，好吧，定位还是很有优点 主要这里太多东西需要用到定位*/
+.hero-slider-category{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 234px;
+    height: 100%;
+    padding: 20px 0;
+    background-color: rgba(0,0,0,0.6);
+    z-index: 400;
+}
+
+.slider-category-list > li > a{
+    position: relative;
+    display: block;
+    height: 42px;
+    padding-left: 30px;
+    font-size: 14px;
+    line-height: 42px;
+    color: #fff;
+}
+.slider-category-list > li > a:hover{
+    background-color: #ff6700;
+}
+.slider-category-list .icon-arrow-right-copy-copy-copy{
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 1.25em;
+    line-height: 16px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.5);
+}
+
+.category-list{
+    position: absolute;
+    display: flex;
+    top: 0;
+    left: 234px;
+    margin: 0;
+    padding: 0;
+    height: 460px;
+    width: min-content;
+    max-width: 992px;
+    /* border: 1px solid #e0e0e0; */
+    border-left: none;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    z-index: 500;
+    /* box-shadow: 0 0 5px rgba(0,0,0,0.2); */
+    filter: drop-shadow(8px 8px 6px rgba(0,0,0,0.18));
+    visibility: hidden;
+    /* overflow: hidden; */
+}
+
+/* 76.6666 = 460 / 6 */
+.category-list-link{
+    display: block;
+    width: 248px;
+    height: 76.333333333px;
+    margin: 0;
+    padding: 18px 20px;
+    color: #333;
+    writing-mode: horizontal-tb;
+    background-color: #fff;
+    text-align: left;
+    font-size: 0;
+    overflow: hidden;
+}
+.category-list-link > img{
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    vertical-align: middle;
+    margin-right: 12px;
+}
+.category-list-link > span{
+    line-height: 40px;
+    font-size: 14px;
+    vertical-align: middle;
+}
+.category-list-fill{
+    margin: 0;
+    background-color: #fff;
+    flex-grow: 1;
+}
+.category-list > li:nth-child(6n+1){
+    border-top: 1px solid #e0e0e0;
+}
+.category-list > li:nth-child(6n+6),
+.category-list-fill
+{
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.category-phone:hover ~ .category-list,
+.category-tv:hover ~ .category-list,
+.category-laptop:hover ~ .category-list,
+.category-appliance:hover ~ .category-list,
+.category-travel:hover ~ .category-list,
+.category-router:hover ~ .category-list,
+.category-accessories:hover ~ .category-list,
+.category-health:hover ~ .category-list,
+.category-headset:hover ~ .category-list,
+.category-life:hover ~ .category-list,
+.category-list:hover{
+    visibility: visible;
+}
+
+/* 六宫格区域 */
+.home-hero-sub{
+    width: 100%;
+    height: 170px;
+    margin-top: 14px;
+    /* border: 1px solid #ff6700; */
+    font-size: 0;
+}
+.sub-purchase{
+    display: inline-block;
+    width: 234px;
+    height: 170px;
+    padding: 3px;
+    background-color: #5f5750;
+    font-size: 0;
+    vertical-align: top;
+}
+.sub-purchase > li{
+    display: inline-block;
+    position: relative;
+    font-size: 12px;
+}
+.sub-purchase > li > a{
+    display: block;
+    padding: 18px 3px 0 3px;
+    height: 82px;
+    width: 76px;
+    text-align: center;
+    color: rgba(255,255,255,0.7);
+}
+.sub-purchase > li:nth-child(n+4)::before{
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 6px;
+    width: 64px;
+    height: 1px;
+    background-color: #665e57;
+}
+.sub-purchase > li::after{
+    content: "";
+    position: absolute;
+    top: 6px;
+    right: 0;
+    height: 70px;
+    width: 1px;
+    background-color: #665e57;
+}
+.sub-purchase > li > a .iconfont{
+    display: block;
+    height: 24px;
+    margin-bottom: 4px;
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: 600;
+}
+.sub-purchase > li > a:hover{
+    color: #fff;
+}
+.hero-sub-list{
+    display:inline-block;
+    width: calc(100% - 234px);
+    font-size: 0;
+    height: 170px;
+    /* border: #ff6700 1px solid; */
+    vertical-align: top;
+}
+
+/* 这里316.66是手动计算，不能用padding，用的背景图 */
+.hero-sub-list > li{
+    display: inline-block;
+    height: 100%;
+    width: 316.666px;
+    margin-left: 14px;
+    font-size: -999em;
+    background-color:#fff;
+}
+.hero-sub-list > li > a{
+    display: block;
+    height: 100%;
+    width: 100%;
+    background-image: url(/img/exposure1.jpg);
+    background-size: cover;
+    transition: all .2s ease;
+}
+.hero-sub-list > li:nth-child(2) > a{
+    background-image: url(https://i1.mifile.cn/a4/xmad_15410029988871_TdzPQ.jpg);
+}
+.hero-sub-list > li:nth-child(3) > a{
+    background-image: url(https://i1.mifile.cn/a4/xmad_15216851889979_XatQS.jpg);
+}
+/* 加了个margin，可能破坏美感，但是更容易产生交互，（只是我的实验，之前没真的做过  XD）*/
+.hero-sub-list > li > a:hover{
+    margin-top: -1px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+/* 小米闪购区域 */
+.sales-carousel-container{
+    position: relative;
+    margin-top: 30px;
+    height: 438px;
+    width: 100%;
+    /* border:1px solid red; */
+}
+.sales-title{
+    /* float: left; */
+    margin: 0;
+    height: 58px;
+    line-height: 58px;
+    font-size: 22px;
+    font-weight: 200;
+    color: #333;
+}
+.sales-ctrol{
+    position: absolute;
+    top: 24px;
+    right: 0;
+    /* margin-top: 24px; */
+    /* width: 70px; */
+    height: 25px;
+    font-size: 0;
+    overflow: hidden;
+    visibility: hidden;
+    /* background-color: rgba(0,0,0,0.1); */
+}
+.sales-ctrol > label{
+    display: inline-block;
+    box-sizing: border-box;
+    height: 25px;
+    width: 36px;
+    padding: 3px 5px;
+    border: 1px solid #e0e0e0;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    transform: rotate(180deg);
+    /* vertical-align: middle; */
+}
+.sales-ctrol > label:nth-child(2){
+    margin-left: -1px;
+    transform: rotate(0deg);
+}
+.sales-ctrol .iconfont{
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    line-height: 17px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #b0b0b0;
+    overflow: hidden;
+}
+.sales-ctrol .iconfont:hover{
+    color: #ff6700;
+}
+.sales-ctrol > label:nth-child(2) .iconfont{
+    margin-top: 2px;
+    vertical-align: auto;
+}
+.sales-ctrol > label[class="disable-click"] > .iconfont{
+    color: #e0e0e0;
+}
+.carousel-ctrol1{
+    visibility: visible;
+    /* border: 1px solid red; */
+}
+.ctrol-1:checked ~ .sales-hd-box > .sales-carousel-ctrol1,
+.ctrol-2:checked ~ .sales-hd-box > .carousel-ctrol2,
+.ctrol-3:checked ~ .sales-hd-box > .carousel-ctrol3,
+.ctrol-4:checked ~ .sales-hd-box > .carousel-ctrol2
+{
+    visibility: visible;
+}
+
+/* 不太灵活，比较笨拙的办法，但是能完成功能。。。 */
+.ctrol-1:checked ~ .sales-carousel  .sales-carousel-list{
+    margin-left: 0;
+}
+.ctrol-2:checked ~ .sales-carousel  .sales-carousel-list{
+    margin-left: -992px;
+}
+.ctrol-3:checked ~ .sales-carousel  .sales-carousel-list{
+    margin-left: -1488px;
+}
+.ctrol-4:checked ~ .sales-carousel  .sales-carousel-list{
+    margin-left: -496px;
+}
+
+/* 不是循环播放 */
+.disable-click{
+    pointer-events: none;
+}
+
+.sales-carousel-countdown{
+    float: left;
+    height: 340px;
+    width: 234px;
+    margin-right: 14px;
+    border-top: 1px solid #e53935;
+    padding-top: 54px;
+    text-align: center;
+    background-color: rgba(240, 236, 236,1);
+}
+
+.carousel-countdown-title{
+    font-size: 21px;
+    color: #ef3a3b;
+}
+
+/* 这里没对上，不是31 */
+.carousel-countdown-flash{
+    width: 34px;
+    height: 53px;
+    margin: 25px auto 31px;
+    background-image: url(/img/flashpurchase.png);
+    background-repeat: no-repeat;
+}
+
+.carousel-countdown-description{
+    color: rgba(0,0,0,0.54);
+    font-size: 15px;
+}
+/* 倒计时区域 */
+.carousel-countdown-time{
+    margin: 28px auto 0;
+    width: 168px;
+    height: 46px;
+    overflow: hidden;
+}
+
+.carousel-countdown-time .time-date{
+    float: left;
+    width: 46px;
+    height: 46px;
+    font-size: 24px;
+    line-height: 46px;
+    text-align: center;
+    color: #fff;
+    background-color: #605751;
+    vertical-align: top;
+    overflow: hidden;
+}
+
+.ten{
+    float: left;
+    position: relative;
+    /* height: 100%; */
+    width: 23px;
+    text-align: right;
+    animation-timing-function: steps(1);
+    animation-iteration-count: infinite;
+}
+
+.bits{
+  float: left;
+  position: relative;
+  width: 23px;
+  text-align: left;
+  animation-timing-function: steps(1);
+  animation-iteration-count: infinite;
+}
+
+.ten > span,.bits > span{
+    display: block;
+}
+
+.carousel-countdown-time .countdown-time-symbol{
+    float: left;
+    width: 15px;
+    line-height: 46px;
+    color: #605751;
+    font-size: 28px;
+    text-align: center;
+}
+/* 倒计时效果代码 */
+.time-min .ten, .time-seconds .ten{
+    animation-name: ten-step;
+}
+
+.time-hour .bits,.time-min .bits,.time-seconds .bits{
+    animation-name: bits-step;
+}
+
+.time-seconds .bits{
+    animation-timing-function: linear;
+    animation-duration: 10s;
+}
+
+.time-seconds .ten{
+    animation-duration: 60s;
+}
+
+.time-min .bits{
+    animation-duration: 600s;
+}
+
+.time-min .ten{
+    animation-duration: 3600s;
+}
+
+.time-hour .bits{
+    animation-duration: 36000s;
+}
+/* 加上首位时间实在太长，而且要重新分配动画，暂时作罢 */
+/* .time-hour .ten{
+    animation-name: hour-step;
+    animation-duration: 72000s;
+} */
+@keyframes ten-step {
+    from { top: -276px; }
+    16.66666666666667%, 33% { top: -230px;}
+    33.33333333333334%, 48.33333333333333% { top: -184px;}
+    50%, 65% { top: -138px;}
+    66.66666666666668%, 83% { top: -92px;}
+    83.33333333333335%, 98.33333333333333% { top: -46px;}
+    to { top: 0;}
+}
+
+@keyframes bits-step{
+    9%{
+        top: -460px;
+    }
+    10%,19%{top:  -414px;}
+    20%,29%{top:  -368px;}
+    30%,39%{top:  -322px;}
+    40%,49%{top:  -276px;}
+    50%,59%{top:  -230px;}
+    60%,69%{top:  -184px;}
+    70%,79%{top:  -138px;}
+    80%,89%{top:  -92px;}
+    90%,99%{top:  -46px;}
+    to {top: 0;}
+}
+
+/* 轮播滑动区 */
+.sales-carousel-wrapper{
+    float: left;
+    width: calc(100% - 234px - 14px);
+    height: 340px;
+    background-color: #fff;
+    overflow: hidden;
+}
+/* 5952 = （234+14）*4*4 */
+.sales-carousel-list{
+    height: 340px;
+    width: 3968px;
+    font-size: 0;
+    margin-left: 0;
+    transition: margin-left 0.5s ease 0s;
+}
+/* 注：monkeybusiness意为耍猴 */
+.monkeybusiness{
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 234px;
+    height: 100%;
+    margin-right: 14px;
+    border-top: 1px solid #ffac13;
+    text-align: center;
+    vertical-align: top;
+    /* background-color: rgba(0,0,0,0.02); */
+    z-index: 10;
+}
+.monkeybusiness > a{
+    position: relative;
+    display: block; 
+    width: 100%;
+    height: 100%;
+    padding-top: 39px;
+    text-align: center;
+}
+.monkeybusiness-img{
+    margin: 0 auto 28px;
+    width: 160px;
+    height: 160px;
+    /* background-image: url(/img/sales-img-backpack.jpg); */
+    background-size: cover;
+}
+.monkeybusiness-name{
+    margin: 0 20px 3px;
+    text-align: center;
+    font-weight: 400;
+    font-size: 14px;
+    color: #212121;
+    white-space: nowrap;
+}
+.monkeybusiness-features{
+    margin: 0 20px 12px;
+    height: 18px;
+    font-size: 12px;
+    color: #b0b0b0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.monkeybusiness-price{
+    font-size: 14px;
+    color: #ff6709;
+}
+.monkeybusiness-price > del{
+    color: #b0b0b0;
+}
+/* 居中方式，left:50%再减去自身宽度的一半*/
+.monkeybusiness-monkeybusiness{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    height: 20px;
+    width: 64px;
+    margin-left: -32px;
+    font-size: 12px;
+    text-align: center;
+    line-height: 20px;
+    color: #fff;
+    background-color: #e53935;
+    z-index: 200;
+}
+.monkeybusiness .monkeybusiness-link{
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* color: #757575; */
+    z-index: 100;
+    background-color: rgba(0,0,0,0.02);
+}
+
+.sales-carousel-list .sales-list-2 {
+    border-top-color: #83c44e;
+}
+.sales-carousel-list .sales-list-3 {
+    border-top-color: #2196f3;
+}
+.sales-carousel-list .sales-list-4 {
+    border-top-color: #e53935;
+}
+.sales-carousel-list .sales-list-5 {
+    border-top-color: #00c0a5;
+}
+.sales-carousel-list .sales-list-6 {
+    border-top-color: #ffac13;
+}
+.sales-carousel-list .sales-list-7 {
+    border-top-color: #83c44e;
+}
+.sales-carousel-list .sales-list-8 {
+    border-top-color: #2196f3;
+}
+.sales-carousel-list .sales-list-9 {
+    border-top-color: #e53935;
+}
+.sales-carousel-list .sales-list-10 {
+    border-top-color: #00c0a5;
+}
+.sales-list-1 .monkeybusiness-img{
+    background-image: url(https://i8.mifile.cn/v1/a1/cfcc741c-ecbe-d99b-c2a9-822cd8c0135a.jpg);
+}
+.sales-list-2 .monkeybusiness-img{
+    background-image: url(/img/sales-img-backpack.jpg);
+}
+.sales-list-3 .monkeybusiness-img{
+    background-image: url(https://i8.mifile.cn/v1/a1/T1HPZgBTAv1RXrhCrK.jpg);
+}
+.sales-list-4 .monkeybusiness-img{
+    background-image: url(https://i8.mifile.cn/v1/a1/e02a6ba6-5ce8-da32-c3b5-b189909843c9.jpg);
+}
+.sales-list-5 .monkeybusiness-img{
+    background-image: url(https://i8.mifile.cn/a1/pms_1529030145.93145083.png);
+}
+.sales-list-6 .monkeybusiness-img{
+    background-image: url(https://i8.mifile.cn/v1/a1/d504434f-1751-95e3-83fc-73d464f486e9.jpg);
+}
+.sales-list-7 .monkeybusiness-img{
+    background-image: url(https://i8.mifile.cn/a1/pms_1521026663.07192206.jpg);
+}
+.sales-list-8 .monkeybusiness-img{
+    background-image: url(https://i8.mifile.cn/v1/a1/10f2e4c7-2672-4d94-d418-cc205745b511.jpg);
+}
+.sales-list-9 .monkeybusiness-img{
+    background-image: url(https://i8.mifile.cn/a1/pms_1515636932.4212763.jpg);
+}
+.sales-list-10 .monkeybusiness-img{
+    background-image: url(https://i8.mifile.cn/a1/pms_1528722956.26268932.jpg);
+}
+
+
+/* 黑鲨游戏手机广告 */
+.home-banner-ad{
+    height: 120px;
+    overflow: hidden;
+    background-color: skyblue;
+}
+.heisha-phone{
+    margin: 2px 0 42px 0;
+}
+.heisha-phone > a{
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-image: url(https://i1.mifile.cn/a4/xmad_15444404816837_VdZWU.jpg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    font-size: 20px;
+}
+
+/* 商品主要区域，各类区域分别详细介绍各类产品 */
+.home-main{
+    height: 6774px;
+    width: 100%;
+    border: 1px solid red;
+}
+/* 右侧入口按钮，返回顶部 */
+.home-right-bar{
+    display: none;
+}
+
+/* 底部，帮助信息 */
+.site-footer{
+    height: 272px;
+    width: 100%;
+}
+
+/* 网站其他相关信息 */
+.site-info{
+    width: 100%;
+    height: 182px;
+}
