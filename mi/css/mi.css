@@ -74,7 +74,7 @@
     margin: 0 auto;
     width: 90px;
     height: 90px;
-    background-image: url(/mi/img/download-app.png);
+    background-image: url(img/download-app.png);
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -217,11 +217,11 @@
     z-index: 1;
 }
 .header-logo-link::before{
-    background: url(/mi/img/mi-logo.png) no-repeat 50% 50%;
+    background: url(img/mi-logo.png) no-repeat 50% 50%;
     opacity: 1;
 }
 .header-logo-link::after{
-    background: url(/mi/img/mi-home.png) no-repeat 50% 50%;;
+    background: url(img/mi-home.png) no-repeat 50% 50%;;
     margin-left: -55px;
     opacity: 0;
 }
@@ -369,7 +369,7 @@
     transition: height 0.2s 0.15s linear,box-shadow .2s .15s ease,z-index .2s .15s;
 }
 .miphone-imge-1{
-    background-image: url(/mi/img/dropdown-mix3-320.png);
+    background-image: url(img/dropdown-mix3-320.png);
 }
 .miphone-imge-2{
     background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/qingchun-320.png);
@@ -388,7 +388,7 @@
 }
 
 .redmiphone-imge-1{
-    background-image: url(/mi/img/dropdown-redmi.png);
+    background-image: url(img/dropdown-redmi.png);
 }
 .redmiphone-imge-2{
     background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/666320.png);
@@ -400,14 +400,14 @@
     background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/note5-320-220.png);
 }
 .redmiphone-imge-5{
-    background-image: url(/mi/img/dropdown-redmi.png);
+    background-image: url(img/dropdown-redmi.png);
 }
 .redmiphone-imge-6{
-    background-image: url(/mi/img/dropdown-redmi.png);
+    background-image: url(img/dropdown-redmi.png);
 }
 
 .mitv-imge-1{
-    background-image: url(/mi/img/mitv-list1.png);
+    background-image: url(img/mitv-list1.png);
 }
 .mitv-imge-2{
     background-image: url(https://i1.mifile.cn/f/i/g/2015/cn-index/32.png);
@@ -426,7 +426,7 @@
 }
 
 .milaptop-imge-1{
-    background-image: url(/mi/img/milaptop-list1.jpg);
+    background-image: url(img/milaptop-list1.jpg);
 }
 .milaptop-imge-2{
     background-image: url(https://i1.mifile.cn/f/i/g/2015/daohang13.3.jpg);
@@ -445,7 +445,7 @@
 }
 
 .appliances-imge-1{
-    background-image: url(/mi/img/appliances-list1.jpg);
+    background-image: url(img/appliances-list1.jpg);
 }
 .appliances-imge-2{
     background-image: url(https://i1.mifile.cn/f/i/g/2015/gif/kongqijinghuaqi.jpg);
@@ -460,7 +460,7 @@
     background-image: url(https://i1.mifile.cn/f/i/g/2015/xinfeng.jpg);
 }
 .appliances-imge-6{
-    background-image: url(/mi/img/appliances-list1.jpg);
+    background-image: url(img/appliances-list1.jpg);
 }
 
 .new-imge-1{
@@ -479,11 +479,11 @@
     background-image: url(https://i1.mifile.cn/f/i/g/2015/gif/naozhong.jpg);
 }
 .new-imge-6{
-    background-image: url(/mi/img/new-list6.png);
+    background-image: url(img/new-list6.png);
 }
 
 .router-imge-1{
-    background-image: url(/mi/img/router-list1.png);
+    background-image: url(img/router-list1.png);
 }
 .router-imge-2{
     background-image: url(https://i1.mifile.cn/f/i/g/2015/4Q.png);
@@ -502,7 +502,7 @@
 }
 
 .intelligent-imge-1{
-    background-image: url(/mi/img/intelligent-list11.jpg);
+    background-image: url(img/intelligent-list11.jpg);
 }
 .intelligent-imge-2{
     background-image: url(https://i1.mifile.cn/f/i/g/2015/xishouj.jpg);
@@ -687,7 +687,7 @@
     position: relative;
     height: 460px;
     width: 100%;
-    /* background: url(/mi/img/hero-bg1.jpg); */
+    /* background: url(img/hero-bg1.jpg); */
     background-size: cover;
     background-repeat: no-repeat;
     /* opacity: 1; */
@@ -1006,7 +1006,7 @@
     display: block;
     height: 100%;
     width: 100%;
-    background-image: url(/mi/img/exposure1.jpg);
+    background-image: url(img/exposure1.jpg);
     background-size: cover;
     transition: all .2s ease;
 }
@@ -1139,7 +1139,7 @@
     width: 34px;
     height: 53px;
     margin: 25px auto 31px;
-    background-image: url(/mi/img/flashpurchase.png);
+    background-image: url(img/flashpurchase.png);
     background-repeat: no-repeat;
 }
 
@@ -1301,7 +1301,7 @@
     margin: 0 auto 28px;
     width: 160px;
     height: 160px;
-    /* background-image: url(/mi/img/sales-img-backpack.jpg); */
+    /* background-image: url(img/sales-img-backpack.jpg); */
     background-size: cover;
 }
 .monkeybusiness-name{
@@ -1385,7 +1385,7 @@
     background-image: url(https://i8.mifile.cn/v1/a1/cfcc741c-ecbe-d99b-c2a9-822cd8c0135a.jpg);
 }
 .sales-list-2 .monkeybusiness-img{
-    background-image: url(/mi/img/sales-img-backpack.jpg);
+    background-image: url(img/sales-img-backpack.jpg);
 }
 .sales-list-3 .monkeybusiness-img{
     background-image: url(https://i8.mifile.cn/v1/a1/T1HPZgBTAv1RXrhCrK.jpg);
