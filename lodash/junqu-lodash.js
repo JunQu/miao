@@ -12,9 +12,18 @@ var junqu = function(){
     return result;
   }
 
-  
+  const compact = function(array){
+    let result = [];
+    for (let i = 0; i < array.length; i++) {
+        if (array[i]){
+             result.push(array[i]);
+        }
+    }
+    return result;
+  }
   
   return {
     chunk: chunk,
+    compact: compact,
   }
 }()
