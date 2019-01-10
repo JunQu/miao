@@ -15,6 +15,6 @@ var junqu = function(){
   
   
   return {
-    chunk: chunk
+    chunk: chunk,
   }
 }()
