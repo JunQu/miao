@@ -1,5 +1,5 @@
-var USERNAME = function(){
-
+var junqu = function(){
+//array
   function chunk(ary, size = 1) {
     if (size < 1) return array;
     let result = [[]];
@@ -12,6 +12,8 @@ var USERNAME = function(){
     return result;
   }
 
+  
+  
   return {
     chunk: chunk
   }
