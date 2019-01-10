@@ -1,6 +1,6 @@
 var junqu = function(){
 //array
-  function chunk(ary, size = 1) {
+  function chunk(array, size = 1) {
     if (size < 1) return array;
     let result = [[]];
     for (let i = 0; i < array.length; i++) {
