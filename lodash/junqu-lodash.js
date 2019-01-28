@@ -6,7 +6,7 @@ var junqu = {
             if (result[result.length - 1].length >= size){ // 假如已经填满了，就往后移动
                 result.push([])
             }
-            result[result.length - 1].push(array[i]) // 进行元素分割
+            result[result.length - 1].push(array[i]) //进行元素分割
         }
         return result
     },
@@ -15,6 +15,26 @@ var junqu = {
         let result = []
         for (let i = 0; i < array.length; i++) {
             if (array[i]){
+                result.push(array[i])
+            }
+        }
+        return result
+    },
+
+    difference: function (array, values) {
+        let set = new Set()
+        let result = []
+        for (let i = 0; i < values.length; i++) {
+            if (Array.isArray(values[i])) {
+                for (let j = 0; j < values[i].length; j++) {
+                    set.add(values[i][j])
+                }
+            }else {
+                set.add(values[i])
+            }
+        }
+        for (let i = 0; i < array.length; i++) {
+            if (!set.has(array[i])) {
                 result.push(array[i])
             }
         }
@@ -50,9 +70,43 @@ var junqu = {
         }
         return ret
     },
+
+    fromPairs: function (pairs) {
+        let result = {}
+        if (pairs.length === 0) return  result
+        for (let i = 0; i < pairs.length; i++) {
+            if (typeof pairs[i][0] === 'string') {
+                result[pairs[i][0]] = pairs[i][1]
+            }
+        }
+        return result
+    },
+    
+    indexOf: function (array, value, formIndex=0) {
+        for (let i = formIndex; i < array.length; i++) {
+            if (array[i] === value) {
+                return i
+            }
+        }
+        return -1
+    },
+    
+    head: function (array) {
+        return array[0]
+    },
+    
+    initial: function (array) {
+        let result = []
+        for (let i = 0; i < array.length - 1; i++) {
+            result.push(array[i])
+        }
+        return result
+    },
+    
     identity: function (value) {
         return value
     },
+
     join: function (array, separator=',') {
         if (array.length === 0)  return ''
         let result = array[0].toString()
@@ -61,9 +115,11 @@ var junqu = {
         }
         return result
     },
+
     last: function (array) {
         return array[array.length - 1]
     },
+
     lastIndexOf: function (array, value, fromIndex=array.length-1) {
         for (let i = fromIndex; i >= 0; i--) {
             if (array[i] === value) {
@@ -72,13 +128,40 @@ var junqu = {
         }
         return -1
     },
+
     nth: function (array, n=0) {
         if (n >= 0) {
             return array[n]
         }
         return array[array.length+n]
     },
+    
+    pull: function (array, ...values) {
+        return junqu.remove(array,x=> values.includes(x))
+    },
+    pullAll:function (array, values) {
+        return junqu.remove(array,x=> values.includes(x))
+    },
+    remove: function (array, predicate = junqu.identity) {
+        let tmp = 0
+        let result = []
+        for (let i = 0; i < array.length - tmp; i++) { // 减去tmp的目的是最后一位已经移动，避免多余操作，即复杂度仍然是n
+            while (predicate(array[i+tmp])) {  // 这里不是if而是while是为了判断移动后的当前位置，避免遗漏
+                result.push(array[i+tmp])
+                tmp++
+            }
+            array[i] = array[i+tmp]
+        }
+        for (let i = 0; i < tmp; i++) {
+            array.pop()
+        }
+        return result
+    },
+
+
 };
+
+
 /* --------------------TEST--------------------------------------测试--------------------------------------------------*/
 // 便于与lodash联系
 let _ = junqu;
@@ -97,3 +180,11 @@ const tap = function (x, fn = x=>x) {
 // tap(_.last([]))
 // tap(_.lastIndexOf([1,2,1,2],2,0))
 // tap(_.nth([1,2,3,4,5],-10))
+// tap(_.difference([2,1,1],[2,3]))
+// tap(_.fromPairs([['a', 1], ['b', 2]]))
+// tap(_.head([1,2,3]))
+// tap(_.indexOf([1,2,1,2],2,2))
+// tap(_.initial([1,2,3]))
+// let arr = [1,2,2,2,2,3,4,9,4,4,5,61,72];tap(_.remove(arr,x=>x%2===0));tap(arr) // 方便统计
+// let arr = ['a','b','a','c','d',1,2,NaN];_.pull(arr,'a',1,NaN,'c');tap(arr) // 方便统计
+// let arr = ['a',2,3,4,'d',1,2,NaN];_.pullAll(arr,['a',1,NaN,'c']);tap(arr) // 方便统计
