@@ -53,6 +53,31 @@ var junqu = {
     identity: function (value) {
         return value
     },
+    join: function (array, separator=',') {
+        if (array.length === 0)  return ''
+        let result = array[0].toString()
+        for (let i = 1; i < array.length; i++) {
+            result = result.concat(separator).concat(array[i])
+        }
+        return result
+    },
+    last: function (array) {
+        return array[array.length - 1]
+    },
+    lastIndexOf: function (array, value, fromIndex=array.length-1) {
+        for (let i = fromIndex; i >= 0; i--) {
+            if (array[i] === value) {
+                return i
+            }
+        }
+        return -1
+    },
+    nth: function (array, n=0) {
+        if (n >= 0) {
+            return array[n]
+        }
+        return array[array.length+n]
+    },
 };
 /* --------------------TEST--------------------------------------测试--------------------------------------------------*/
 // 便于与lodash联系
@@ -67,4 +92,8 @@ const tap = function (x, fn = x=>x) {
 // tap(_.drop([1,2,3],-1))
 // tap(_.dropRight([1,2,3]))
 // tap(_.fill([4, 6, 8, 10], '*', 1, 3))
-tap(_.flatten([1,[2,[3,[4]]],5]))
+// tap(_.flatten([1,[2,[3,[4]]],5]))
+// tap(_.join([1,2,3,4],'-'))
+// tap(_.last([]))
+// tap(_.lastIndexOf([1,2,1,2],2,0))
+// tap(_.nth([1,2,3,4,5],-10))
