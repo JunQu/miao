@@ -137,10 +137,12 @@ var junqu = {
     },
     
     pull: function (array, ...values) {
-        return junqu.remove(array,x=> values.includes(x))
+        junqu.remove(array,x=> values.includes(x)) // 为了结果，上面才是lodash的结果
+        return array
     },
     pullAll:function (array, values) {
-        return junqu.remove(array,x=> values.includes(x))
+        junqu.remove(array,x=> values.includes(x))
+        return array
     },
     remove: function (array, predicate = junqu.identity) {
         let tmp = 0
@@ -157,8 +159,26 @@ var junqu = {
         }
         return result
     },
-
-
+    reverse: function (array) {
+        const length = array.length
+        for (let i = 0; i < length/2; i++) {
+            [array[i], array[length - 1 - i]] = [array[length - 1 - i],array[i]]
+        }
+        return array
+    },
+    slice: function (array,start=0,end=array.length) {
+        let length = array.length
+        let result = []
+        if (start < 0) {
+            start = -start > length ? 0 : start + length
+        }
+        end = end > length ? length : end
+        end = end < 0 ? end + length : end
+        for (let i = start; i < end; i++) {
+            result.push(array[i])
+        }
+        return result
+    },
 };
 
 
@@ -171,7 +191,10 @@ const tap = function (x, fn = x=>x) {
     return x
 };
 
-// tap(_.chunk([1,2,3,3,4,5],2));
+// tap(_.chunk(3
+//
+//
+// [1,2,3,3,4,5],2));
 // tap(_.drop([1,2,3],-1))
 // tap(_.dropRight([1,2,3]))
 // tap(_.fill([4, 6, 8, 10], '*', 1, 3))
@@ -186,5 +209,8 @@ const tap = function (x, fn = x=>x) {
 // tap(_.indexOf([1,2,1,2],2,2))
 // tap(_.initial([1,2,3]))
 // let arr = [1,2,2,2,2,3,4,9,4,4,5,61,72];tap(_.remove(arr,x=>x%2===0));tap(arr) // 方便统计
-// let arr = ['a','b','a','c','d',1,2,NaN];_.pull(arr,'a',1,NaN,'c');tap(arr) // 方便统计
+// let arr = ['a','b','a','c','d',1,2,NaN];tap(_.pull(arr,'a',1,NaN,'c'));tap(arr) // 方便统计
 // let arr = ['a',2,3,4,'d',1,2,NaN];_.pullAll(arr,['a',1,NaN,'c']);tap(arr) // 方便统计
+// tap(_.reverse([1,2,3,4]))
+// tap(_.slice([1,2,3,4,5,6],2,3))
+
