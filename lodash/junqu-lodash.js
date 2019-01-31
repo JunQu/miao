@@ -174,10 +174,45 @@ var junqu = {
         }
         end = end > length ? length : end
         end = end < 0 ? end + length : end
-        for (let i = start; i < end; i++) {
+        for (let i = start; i < end; i++) { // 这里lodash先申请空间，感觉更高效
             result.push(array[i])
         }
         return result
+    },
+    sortedIndex: function (array, value) {
+        if (array.length === 0) return 0
+        let length = array.length
+        let leftDigit = 0
+        let rightDigit = length - 1
+        if (value < array[leftDigit]) {
+            return 0
+        }
+        if (value > array[rightDigit]) {
+            return length
+        }
+        while (leftDigit - rightDigit > 1) {
+            let middle = Math.floor((leftDigit + rightDigit) / 2)
+            if (array[middle] > value) {
+                rightDigit = middle
+            } else {
+                leftDigit = middle
+            }
+        }
+        return leftDigit
+    },
+    tail: function (array) {
+        return junqu.slice(array,1)
+    },
+    take: function (array, n=1) {
+        return junqu.slice(array, 0, n)
+    },
+    takeRight: function (array, n=1) {
+        n = n > array.length ? array.length : n
+        return junqu.slice(array, array.length - n)
+    },
+    union: function (...arrays) {
+        let array = junqu.flatten(arrays)
+        return Array.from(new Set(array))
     },
 };
 
@@ -191,10 +226,7 @@ const tap = function (x, fn = x=>x) {
     return x
 };
 
-// tap(_.chunk(3
-//
-//
-// [1,2,3,3,4,5],2));
+// tap(_.chunk(3,[1,2,3,3,4,5],2));
 // tap(_.drop([1,2,3],-1))
 // tap(_.dropRight([1,2,3]))
 // tap(_.fill([4, 6, 8, 10], '*', 1, 3))
@@ -213,4 +245,7 @@ const tap = function (x, fn = x=>x) {
 // let arr = ['a',2,3,4,'d',1,2,NaN];_.pullAll(arr,['a',1,NaN,'c']);tap(arr) // 方便统计
 // tap(_.reverse([1,2,3,4]))
 // tap(_.slice([1,2,3,4,5,6],2,3))
-
+// tap(_.tail([1,2,3,4,5]))
+// tap(_.take([1,2,3],5))
+// tap(_.takeRight([1,2,3],3))
+// tap(_.union([2],[2,1],[1,2,3],[1,3]))
