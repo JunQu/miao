@@ -21,21 +21,36 @@ var junqu = {
         return result
     },
 
-    difference: function (array, values) {
-        let set = new Set()
-        let result = []
-        for (let i = 0; i < values.length; i++) {
-            if (Array.isArray(values[i])) {
-                for (let j = 0; j < values[i].length; j++) {
-                    set.add(values[i][j])
+    concat: function (array, ...values) {
+        let result = Array.isArray(array)?[...array]:[array] // 其他不是数组的情况
+        for (let val of values) {
+            if (Array.isArray(val)) {
+                for (let arrayVal of val) {
+                    result.push(arrayVal)
                 }
-            }else {
-                set.add(values[i])
+            } else {
+                result.push(val) // 添加的是一些东西和lodash不一样，例如function foo(){}
             }
         }
-        for (let i = 0; i < array.length; i++) {
-            if (!set.has(array[i])) {
-                result.push(array[i])
+        return result
+    },
+
+    difference: function (array, ...values) {
+        if (!array.length) return []
+        let set = new Set()
+        let result = []
+        for (let val of values) {
+            if (Array.isArray(val)) {
+                for (let arrVal of val) {
+                    set.add(arrVal)
+                }
+            }else {
+                set.add(val)
+            }
+        }
+        for (let val of array) {
+            if (!set.has(val)) {
+                result.push(val)
             }
         }
         return result
@@ -214,6 +229,16 @@ var junqu = {
         let array = junqu.flatten(arrays)
         return Array.from(new Set(array))
     },
+    without: function (array, ...values) {
+        if (!array.length) return []
+        let reuslt = []
+        for (let val of array) {
+            if (!values.includes(val)) {
+                reuslt.push(val)
+            }
+        }
+        return reuslt
+    }
 };
 
 
@@ -235,17 +260,19 @@ const tap = function (x, fn = x=>x) {
 // tap(_.last([]))
 // tap(_.lastIndexOf([1,2,1,2],2,0))
 // tap(_.nth([1,2,3,4,5],-10))
-// tap(_.difference([2,1,1],[2,3]))
+// tap(_.difference([1,2,3,4],[2,3,4,5]))
 // tap(_.fromPairs([['a', 1], ['b', 2]]))
 // tap(_.head([1,2,3]))
 // tap(_.indexOf([1,2,1,2],2,2))
 // tap(_.initial([1,2,3]))
 // let arr = [1,2,2,2,2,3,4,9,4,4,5,61,72];tap(_.remove(arr,x=>x%2===0));tap(arr) // 方便统计
-// let arr = ['a','b','a','c','d',1,2,NaN];tap(_.pull(arr,'a',1,NaN,'c'));tap(arr) // 方便统计
-// let arr = ['a',2,3,4,'d',1,2,NaN];_.pullAll(arr,['a',1,NaN,'c']);tap(arr) // 方便统计
+// let arr = ['a','b','a','c','d',1,2,NaN];tap(_.pull(arr,'a',1,NaN,'c'));tap(arr)
+// let arr = ['a',2,3,4,'d',1,2,NaN];_.pullAll(arr,['a',1,NaN,'c']);tap(arr)
 // tap(_.reverse([1,2,3,4]))
 // tap(_.slice([1,2,3,4,5,6],2,3))
 // tap(_.tail([1,2,3,4,5]))
 // tap(_.take([1,2,3],5))
 // tap(_.takeRight([1,2,3],3))
 // tap(_.union([2],[2,1],[1,2,3],[1,3]))
+// tap(_.concat(1,[1],2,[[3]],function () {}))
+// tap(_.without([1,2,3,4],2,{3:1},4))
