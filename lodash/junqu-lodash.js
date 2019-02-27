@@ -55,6 +55,23 @@ var junqu = {
         }
         return result
     },
+    
+    differenceBy: function (array, ...values) {
+        const length = values.length
+        let result = []
+        let iteratee = x=>x
+        if (!array.length) return result
+        if (!length) return Array.from(array)
+        if(typeof values[length - 1] === "function"){
+            iteratee = values.pop()
+        } else if (values[length - 1] !== null && typeof values[length - 1] === "object") {
+
+        } else {
+
+        }
+        const s = new Set(values.map(iteratee))
+        return array.filter(x => !s.has(iteratee(x)))
+    },
 
     drop: function (array, n=1) {
         if (n <= 0) return array
@@ -132,6 +149,7 @@ var junqu = {
     },
 
     last: function (array) {
+        if (!array.length) return undefined
         return array[array.length - 1]
     },
 
@@ -155,10 +173,12 @@ var junqu = {
         junqu.remove(array,x=> values.includes(x)) // 为了结果，上面才是lodash的结果
         return array
     },
+
     pullAll:function (array, values) {
         junqu.remove(array,x=> values.includes(x))
         return array
     },
+
     remove: function (array, predicate = junqu.identity) {
         let tmp = 0
         let result = []
@@ -174,6 +194,7 @@ var junqu = {
         }
         return result
     },
+
     reverse: function (array) {
         const length = array.length
         for (let i = 0; i < length/2; i++) {
@@ -181,6 +202,7 @@ var junqu = {
         }
         return array
     },
+
     slice: function (array,start=0,end=array.length) {
         let length = array.length
         let result = []
@@ -194,6 +216,7 @@ var junqu = {
         }
         return result
     },
+
     sortedIndex: function (array, value) {
         if (array.length === 0) return 0
         let length = array.length
@@ -215,16 +238,20 @@ var junqu = {
         }
         return leftDigit
     },
+
     tail: function (array) {
         return junqu.slice(array,1)
     },
+
     take: function (array, n=1) {
         return junqu.slice(array, 0, n)
     },
+
     takeRight: function (array, n=1) {
         n = n > array.length ? array.length : n
         return junqu.slice(array, array.length - n)
     },
+
     union: function (...arrays) {
         let array = junqu.flatten(arrays)
         return Array.from(new Set(array))
@@ -238,7 +265,70 @@ var junqu = {
             }
         }
         return reuslt
-    }
+    },
+    
+    eq: function (value, other) {
+        return value === other || Number.isNaN(value) && Number.isNaN(other)
+    },
+
+    gt: function (value, other) {
+        if (!(typeof value === "string" && typeof  other === "string")) {
+            value = parseInt(value)
+            other = parseInt(other)
+        }
+        return value > other
+    },
+    gte: function (value, other) {
+        if (!(typeof value === "string" && typeof  other === "string")) {
+            value = parseInt(value)
+            other = parseInt(other)
+        }
+        return value >= other
+    },
+
+    // 后一段的判断函数是只针对IE9以下的判断。在严格模式下，第5版 ECMAScript (ES5) 禁止使用 arguments.callee()
+    isArguments: function (value) {
+        return junqu.isObject(value) && Object.prototype.toString.call(value) === '[object Arguments]'|| function (value) {
+            return Object.hasOwnProperty.call(value, 'callee') && !Object.propertyIsEnumerable.call(value, 'callee')
+        }(value)
+    },
+
+    isArray: function (value) {
+        return Array.isArray ? Array.isArray(value) : Object.prototype.toString.call(value) === '[object Array]'
+    },
+
+    // lodash对node方面处理更多
+    isArrayBuffer: function (value) {
+        return Object.prototype.toString.call(value) === '[object ArrayBuffer]'
+    },
+    
+    isArrayLike: function (value) {
+        
+    },
+    /*
+    * Uses the Object constructor to create an object wrapper for the given value.
+    * If the value is null or undefined, create and return an empty object.
+    * Οtherwise, return an object of a type that corresponds to the given value.
+    * */
+    isObject: value => value === Object(value),
+
+    isObjectLike: value => value !== null && typeof value === 'object',
+
+    /*
+    * 全局自带的isNaN坑点：先用Number转换，Number对于非数字字符串返回NaN
+    * Number.isNAN 缺陷 Number.isNAN（new Number(NaN)）,虽然这种NaN很奇怪
+    * lodah修复了，加个Number判断，后面+号的原因是把Number类型进行转换
+    * 这里必须用==而不用===，原因在lodash源码有特别的解释
+    * */
+    isNaN: function (value) {
+        return junqu.isNumber(value) && value != +value
+    },
+
+    // 加上原型判断是为了判断new Number()创建的对象，前部分仅仅可以判断基本的number类型
+    isNumber: function (value) {
+        return typeof value === 'number' || junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object Number]'
+    },
+
 };
 
 
@@ -276,3 +366,10 @@ const tap = function (x, fn = x=>x) {
 // tap(_.union([2],[2,1],[1,2,3],[1,3]))
 // tap(_.concat(1,[1],2,[[3]],function () {}))
 // tap(_.without([1,2,3,4],2,{3:1},4))
+// tap(_.differenceBy([{ 'x': 2 }, { 'x': 1 }], [{ 'x': 1 }], 'x')
+// tap(_.isObject(new String('')))
+// tap(_.isObjectLike(function() { return arguments; }()))
+// tap(_.isArguments(function() { return arguments; }()))
+// tap(_.isNumber(new Number('abc')))
+// tap(_.isNaN(new Number('abc')))
+// tap(_.isArrayBuffer(new ArrayBuffer()))
