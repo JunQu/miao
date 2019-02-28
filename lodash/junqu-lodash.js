@@ -308,10 +308,6 @@ var junqu = {
         return junqu.isArrayLike(value) && junqu.isObjectLike(value)
     },
 
-    isFunction: function (value) {
-        return typeof value === 'function'
-    },
-
     isBoolean: function (value) {
         return typeof value === 'boolean' || value === true || value === false || (junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object Boolean]')
     },
@@ -366,7 +362,22 @@ var junqu = {
         return Object.prototype.toString.call(value) === '[object Error]' || Object.prototype.toString.call(value) === '[object DOMException]' ||
             (typeof value.message === 'string' && typeof value.name === 'string' && !junqu.isPlainObject(value))
     },
-    
+
+    // 判断他是不是可数的，与isNaN情况太类似了
+    isFinite: function (value) {
+        return typeof  value === 'number' && Number.isFinite(value)
+    },
+
+    isFunction: function (value) {
+        return typeof value === 'function'
+    },
+
+    // 基于Number.isInteger()
+    isInteger: function (value) {
+        return junqu.isFinite(value) && value === Math.floor(value)
+    },
+
+    // 安全的，属于自然数的
     isLength: function (value) {
         return typeof value === 'number' && value % 1 === 0 && value >= 0 && value <= Number.MAX_SAFE_INTEGER
     },
@@ -379,6 +390,22 @@ var junqu = {
     * */
     isNaN: function (value) {
         return junqu.isNumber(value) && value != +value
+    },
+    
+    isMap: function (value) {
+        return junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object Map]'
+    },
+
+    isMatch: function (object, source) {
+
+    },
+    
+    isNil: function (value) {
+        return value === null || value === undefined
+    },
+
+    isNull: function (value) {
+        return value === null
     },
 
     // 加上原型判断是为了判断new Number()创建的对象，前部分仅仅可以判断基本的number类型
@@ -394,7 +421,8 @@ var junqu = {
     isObject: value => value === Object(value),
 
     isObjectLike: value => value !== null && typeof value === 'object',
-    
+
+    // 使用原生Object构造器(constructor)构建的对象
     isPlainObject: function (value) {
         return junqu.isObjectLike(value) && value.constructor === Object || junqu.isObjectLike(value) && Object.getPrototypeOf(value) === null
     },
@@ -406,7 +434,30 @@ var junqu = {
         let proto = typeof constructor === 'function' && constructor.prototype || Object.prototype // 这一段也不懂它的意义
         return value === proto
     },
+
+    isRegExp: function (value) {
+        return junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object RegExp]'
+    },
+
+    // 直接使用 Number.isSafeInteger
+    isSafeInteger: function (value) {
+        return typeof value === 'number' && value <= Number.MAX_SAFE_INTEGER && value >= Number.MIN_SAFE_INTEGER
+    },
+
+    isSet: function (value) {
+        return junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object Set]'
+    },
+
+    // 这里它(Lodash)为什么还需要检查不是数组呢？
+    isString: function (value) {
+        return typeof value === 'string' || junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object String]'
+    },
     
+    isSymbol: function (value) {
+        return typeof value === 'symbol' || junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object Symbol]'
+    },
+
+    // TypedArray是缓存数据的一种结构，具体的查询MDN。但是Lodash多了一类型Uint8ClampedArray，我也不了解，但是我也把他加上了
     isTypedArray: function (value) {
         let typedArrayTag = {}
         typedArrayTag['[object Int8Array]'] = true
@@ -420,6 +471,41 @@ var junqu = {
         typedArrayTag['[object Float64Array]'] = true
         return junqu.isObjectLike(value) && !!typedArrayTag[Object.prototype.toString.call(value)]
     },
+
+    isUndefined: function (value) {
+        return value === undefined
+    },
+    
+    isWeakMap: function (value) {
+        return junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object WeakMap]'
+    },
+
+    isWeakSet: function (value) {
+        return junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object WeakSet]'
+    },
+
+    // Lodash还对不同的处理，但由于该函数没太多作用就不弄了 less than => lt
+    lt: function (value, other) {
+        return value < other
+    },
+
+    lte: function (value, other) {
+        return value <= other
+    },
+    
+    toArray: function (value) {
+        let result = []
+        if (junqu.isObjectLike(value)) {
+            return result
+        }
+    },
+    
+    toFinite: function (value) {
+        if (junqu.isFinite(value)) {
+            return value
+        }
+
+    },
 };
 
 
@@ -431,6 +517,13 @@ const tap = function (x, fn = x=>x) {
     console.log(fn(x));
     return x
 };
+// tap(function (value) {
+//     let c = []
+//     for (let key in value) {
+//          c.push(key)
+//     }
+//     return c
+// }(_))
 
 // tap(_.chunk(3,[1,2,3,3,4,5],2));
 // tap(_.drop([1,2,3],-1))
@@ -472,3 +565,12 @@ const tap = function (x, fn = x=>x) {
 // tap(_.isError(new Error()))
 // tap(_.isTypedArray(new Int32Array()))
 // tap(_.isEmpty([]))
+// tap(_.isFinite('123'))
+// tap(_.isNil(NaN))
+// tap(_.isRegExp(/a/))
+// tap(_.isSafeInteger(12))
+// tap(_.isSet(new Set()))
+// tap(_.isString(new Array('123')))
+// tap(_.isSymbol(Symbol(123)))
+// tap(_.isWeakMap(new WeakMap()))
+// tap(_.isWeakSet(new WeakSet()))
