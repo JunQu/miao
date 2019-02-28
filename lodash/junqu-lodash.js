@@ -302,20 +302,77 @@ var junqu = {
         return Object.prototype.toString.call(value) === '[object ArrayBuffer]'
     },
     
-    isArrayLike: function (value) {
-        
+    isArrayLike: value => value !== null && typeof value[Symbol.iterator] === 'function',
+
+    isArrayLikeObject: function (value) {
+        return junqu.isArrayLike(value) && junqu.isObjectLike(value)
     },
-    /*
-    * Uses the Object constructor to create an object wrapper for the given value.
-    * If the value is null or undefined, create and return an empty object.
-    * Οtherwise, return an object of a type that corresponds to the given value.
-    * */
-    isObject: value => value === Object(value),
 
-    isObjectLike: value => value !== null && typeof value === 'object',
+    isFunction: function (value) {
+        return typeof value === 'function'
+    },
+
+    isBoolean: function (value) {
+        return typeof value === 'boolean' || value === true || value === false || (junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object Boolean]')
+    },
+    
+    isBuffer: function (value) {
+        return Buffer.isBuffer(value)
+    },
+    
+    isDate: function (value) {
+        return junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object Date]'
+    },
+
+    isElement: function (value) {
+        return junqu.isObjectLike(value) && value.nodeType === 1 && !junqu.isPlainObject(value)
+    },
+
+    // Checks if value is an empty object, collection, map, or set.
+    isEmpty: function (value) {
+        if (value === null) return true
+
+        // 这一段估计来自Lodash的修补，于是我也加上了
+        if (junqu.isArrayLike(value) && (junqu.isArray(value) || typeof value == 'string' || typeof value.splice == 'function' ||
+            junqu.isBuffer(value) || junqu.isTypedArray(value) || junqu.isArguments(value))) {
+            return !value.length
+        }
+        // 判断属性
+        if (junqu.isPrototype(value)) {
+            for (let key in value) {
+                if (Object.hasOwnProperty.call(value, key) && key !== 'constructor') {
+                    return false
+                }
+            }
+        }
+        // 判断Set和Map
+        if (Object.prototype.toString.call(value) === '[object Set]'||Object.prototype.toString.call(value) === '[object Map]') {
+            return !value.size
+        }
+        // 对象判断
+        for(let key in value){
+            if (Object.hasOwnProperty.call(value, key)){
+                return false
+            }
+        }
+        return true
+    },
+
+    // 最后判断是Error对象为数不多的两个属性，具体可查MDN关于Error对象介绍页面
+    isError: function (value) {
+        if (!junqu.isObjectLike(value)) {
+            return false
+        }
+        return Object.prototype.toString.call(value) === '[object Error]' || Object.prototype.toString.call(value) === '[object DOMException]' ||
+            (typeof value.message === 'string' && typeof value.name === 'string' && !junqu.isPlainObject(value))
+    },
+    
+    isLength: function (value) {
+        return typeof value === 'number' && value % 1 === 0 && value >= 0 && value <= Number.MAX_SAFE_INTEGER
+    },
 
     /*
-    * 全局自带的isNaN坑点：先用Number转换，Number对于非数字字符串返回NaN
+    * 全局自带的isNaN坑点：先用ToNumber转换，ToNumber对于非数字字符串返回NaN
     * Number.isNAN 缺陷 Number.isNAN（new Number(NaN)）,虽然这种NaN很奇怪
     * lodah修复了，加个Number判断，后面+号的原因是把Number类型进行转换
     * 这里必须用==而不用===，原因在lodash源码有特别的解释
@@ -329,6 +386,40 @@ var junqu = {
         return typeof value === 'number' || junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object Number]'
     },
 
+    /*
+    * Uses the Object constructor to create an object wrapper for the given value.
+    * If the value is null or undefined, create and return an empty object.
+    * Οtherwise, return an object of a type that corresponds to the given value.
+    * */
+    isObject: value => value === Object(value),
+
+    isObjectLike: value => value !== null && typeof value === 'object',
+    
+    isPlainObject: function (value) {
+        return junqu.isObjectLike(value) && value.constructor === Object || junqu.isObjectLike(value) && Object.getPrototypeOf(value) === null
+    },
+
+    // Checks if `value` is likely a prototype object.
+    // 该函数的目的我目前不是很懂，本段代码均来自源码
+    isPrototype: function (value) {
+        let constructor = value && value.constructor // 竟然需要的是falsely
+        let proto = typeof constructor === 'function' && constructor.prototype || Object.prototype // 这一段也不懂它的意义
+        return value === proto
+    },
+    
+    isTypedArray: function (value) {
+        let typedArrayTag = {}
+        typedArrayTag['[object Int8Array]'] = true
+        typedArrayTag['[object Uint8Array]'] = true
+        typedArrayTag['[object Uint8ClampedArray]'] = true
+        typedArrayTag['[object Int16Array]'] = true
+        typedArrayTag['[object Uint16Array]'] = true
+        typedArrayTag['[object Int32Array]'] = true
+        typedArrayTag['[object Uint32Array]'] = true
+        typedArrayTag['[object Float32Array]'] = true
+        typedArrayTag['[object Float64Array]'] = true
+        return junqu.isObjectLike(value) && !!typedArrayTag[Object.prototype.toString.call(value)]
+    },
 };
 
 
@@ -367,9 +458,17 @@ const tap = function (x, fn = x=>x) {
 // tap(_.concat(1,[1],2,[[3]],function () {}))
 // tap(_.without([1,2,3,4],2,{3:1},4))
 // tap(_.differenceBy([{ 'x': 2 }, { 'x': 1 }], [{ 'x': 1 }], 'x')
-// tap(_.isObject(new String('')))
+// tap(_.isObject(function(){}))
 // tap(_.isObjectLike(function() { return arguments; }()))
 // tap(_.isArguments(function() { return arguments; }()))
 // tap(_.isNumber(new Number('abc')))
 // tap(_.isNaN(new Number('abc')))
 // tap(_.isArrayBuffer(new ArrayBuffer()))
+// tap(_.isBoolean(''))
+// tap(_.isBuffer(new Buffer(12)))
+// tap(_.isDate(new Date()))
+// tap(_.isPlainObject(Object.create(null)))
+// tap(_.isElement(document.body))
+// tap(_.isError(new Error()))
+// tap(_.isTypedArray(new Int32Array()))
+// tap(_.isEmpty([]))
