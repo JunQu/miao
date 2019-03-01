@@ -1,3 +1,4 @@
+
 var junqu = {
     chunk: function(array, size = 1) {
         if (size < 1) return array
@@ -256,6 +257,8 @@ var junqu = {
         let array = junqu.flatten(arrays)
         return Array.from(new Set(array))
     },
+
+
     without: function (array, ...values) {
         if (!array.length) return []
         let reuslt = []
@@ -266,7 +269,18 @@ var junqu = {
         }
         return reuslt
     },
+
+    // 求出极值（最大值和最小值）
+    baseExtremum: (array, iteratee, comparator) => array.reduce((p, v) => comparator(iteratee(p) , iteratee(v)) ? p : v),
+
+    min: value => value && value.length ? junqu.baseExtremum(value, junqu.identity, (x,y)=>x<y) : undefined,
     
+    minBy: (value, iteratee=junqu.identity) => value && value.length ? junqu.baseExtremum(value, iteratee, (x, y)=>x<y) : undefined,
+
+    max: value => value && value.length ? junqu.baseExtremum(value, junqu.identity, (x,y)=>x>y) : undefined,
+
+    maxBy: (value, iteratee=junqu.identity) => value && value.length ? junqu.baseExtremum(value, iteratee, (x,y)=>x>y) : undefined,
+
     eq: function (value, other) {
         return value === other || Number.isNaN(value) && Number.isNaN(other)
     },
@@ -278,6 +292,7 @@ var junqu = {
         }
         return value > other
     },
+
     gte: function (value, other) {
         if (!(typeof value === "string" && typeof  other === "string")) {
             value = parseInt(value)
@@ -494,18 +509,62 @@ var junqu = {
     },
     
     toArray: function (value) {
-        let result = []
-        if (junqu.isObjectLike(value)) {
-            return result
+        if (!value) return []
+        
+        if (junqu.isArrayLike(value)) {
+            return junqu.isString(value) ? junqu.stringToArray(value) : junqu.copyArray(value)
         }
+        if (value[Symbol.iterator]) {
+
+        }
+        if (junqu.isMap(value) || junqu.isSet(value)) {
+            return [...value]
+        }
+        return
     },
     
     toFinite: function (value) {
         if (junqu.isFinite(value)) {
             return value
         }
-
     },
+    
+    // toInteger: function (value) {
+    //
+    // },
+    //
+    // toLength: function (value) {
+    //
+    // },
+    //
+    // toNumber: function (value) {
+    //
+    // },
+    //
+    // toPlainObject: function (value) {
+    //
+    // },
+    //
+    // toSafeInteger: function (value) {
+    //
+    // },
+    
+    mapToArray: map=>[...map],
+
+    // 把非空的字符存入数组
+    stringToArray: string => string.match(/[\S]/gu),
+    
+    setToArray: set=>[...set],
+
+    
+    copyArray: function (source, array=[]) {
+        for (let i = 0; i < source.length; i++) {
+            array[i] = source[i]
+        }
+        return array
+    },
+    
+
 };
 
 
@@ -574,3 +633,9 @@ const tap = function (x, fn = x=>x) {
 // tap(_.isSymbol(Symbol(123)))
 // tap(_.isWeakMap(new WeakMap()))
 // tap(_.isWeakSet(new WeakSet()))
+// let m = new Map() m.set('s',1) m.set('t',2) tap(_.mapToArray(m))
+// tap(_.stringToArray('   fdasfad   sada146&&*()_+=dsa    '))
+// tap(Array.from(null))
+// tap(_.min([1,5,3,2,3,9]))
+// var objects = [{ 'n': 1 }, { 'n': 2 }, { 'n': 0 }, { 'n': 4 },{'n':3}]
+// tap(_.maxBy(objects, function(o) { return o.n;}))
