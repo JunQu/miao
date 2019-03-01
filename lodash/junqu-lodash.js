@@ -1,10 +1,10 @@
 
 var junqu = {
-    chunk: function(array, size = 1) {
+    chunk: function (array, size = 1) {
         if (size < 1) return array
         let result = [[]]
         for (let i = 0; i < array.length; i++) {
-            if (result[result.length - 1].length >= size){ // 假如已经填满了，就往后移动
+            if (result[result.length - 1].length >= size) { // 假如已经填满了，就往后移动
                 result.push([])
             }
             result[result.length - 1].push(array[i]) //进行元素分割
@@ -12,10 +12,10 @@ var junqu = {
         return result
     },
 
-    compact: function(array){
+    compact: function (array) {
         let result = []
         for (let i = 0; i < array.length; i++) {
-            if (array[i]){
+            if (array[i]) {
                 result.push(array[i])
             }
         }
@@ -23,7 +23,7 @@ var junqu = {
     },
 
     concat: function (array, ...values) {
-        let result = Array.isArray(array)?[...array]:[array] // 其他不是数组的情况
+        let result = Array.isArray(array) ? [...array] : [array] // 其他不是数组的情况
         for (let val of values) {
             if (Array.isArray(val)) {
                 for (let arrayVal of val) {
@@ -45,7 +45,7 @@ var junqu = {
                 for (let arrVal of val) {
                     set.add(arrVal)
                 }
-            }else {
+            } else {
                 set.add(val)
             }
         }
@@ -56,14 +56,14 @@ var junqu = {
         }
         return result
     },
-    
+
     differenceBy: function (array, ...values) {
         const length = values.length
         let result = []
-        let iteratee = x=>x
+        let iteratee = x => x
         if (!array.length) return result
         if (!length) return Array.from(array)
-        if(typeof values[length - 1] === "function"){
+        if (typeof values[length - 1] === "function") {
             iteratee = values.pop()
         } else if (values[length - 1] !== null && typeof values[length - 1] === "object") {
 
@@ -74,17 +74,17 @@ var junqu = {
         return array.filter(x => !s.has(iteratee(x)))
     },
 
-    drop: function (array, n=1) {
+    drop: function (array, n = 1) {
         if (n <= 0) return array
         return array.slice(n)
     },
 
-    dropRight: function (array, n=1) {
+    dropRight: function (array, n = 1) {
         if (n <= 0) return array
         if (n > array.length) return []
-        return array.slice(array,array.length - n)
+        return array.slice(array, array.length - n)
     },
-    fill: function (array, value, start=0, end=array.length) {
+    fill: function (array, value, start = 0, end = array.length) {
         for (let i = start; i < end; i++) {
             array[i] = value
         }
@@ -106,7 +106,7 @@ var junqu = {
 
     fromPairs: function (pairs) {
         let result = {}
-        if (pairs.length === 0) return  result
+        if (pairs.length === 0) return result
         for (let i = 0; i < pairs.length; i++) {
             if (typeof pairs[i][0] === 'string') {
                 result[pairs[i][0]] = pairs[i][1]
@@ -114,8 +114,8 @@ var junqu = {
         }
         return result
     },
-    
-    indexOf: function (array, value, formIndex=0) {
+
+    indexOf: function (array, value, formIndex = 0) {
         for (let i = formIndex; i < array.length; i++) {
             if (array[i] === value) {
                 return i
@@ -123,11 +123,11 @@ var junqu = {
         }
         return -1
     },
-    
+
     head: function (array) {
         return array[0]
     },
-    
+
     initial: function (array) {
         let result = []
         for (let i = 0; i < array.length - 1; i++) {
@@ -135,13 +135,13 @@ var junqu = {
         }
         return result
     },
-    
+
     identity: function (value) {
         return value
     },
 
-    join: function (array, separator=',') {
-        if (array.length === 0)  return ''
+    join: function (array, separator = ',') {
+        if (array.length === 0) return ''
         let result = array[0].toString()
         for (let i = 1; i < array.length; i++) {
             result = result.concat(separator).concat(array[i])
@@ -154,7 +154,7 @@ var junqu = {
         return array[array.length - 1]
     },
 
-    lastIndexOf: function (array, value, fromIndex=array.length-1) {
+    lastIndexOf: function (array, value, fromIndex = array.length - 1) {
         for (let i = fromIndex; i >= 0; i--) {
             if (array[i] === value) {
                 return i
@@ -163,20 +163,20 @@ var junqu = {
         return -1
     },
 
-    nth: function (array, n=0) {
+    nth: function (array, n = 0) {
         if (n >= 0) {
             return array[n]
         }
-        return array[array.length+n]
+        return array[array.length + n]
     },
-    
+
     pull: function (array, ...values) {
-        junqu.remove(array,x=> values.includes(x)) // 为了结果，上面才是lodash的结果
+        junqu.remove(array, x => values.includes(x)) // 为了结果，上面才是lodash的结果
         return array
     },
 
-    pullAll:function (array, values) {
-        junqu.remove(array,x=> values.includes(x))
+    pullAll: function (array, values) {
+        junqu.remove(array, x => values.includes(x))
         return array
     },
 
@@ -184,11 +184,11 @@ var junqu = {
         let tmp = 0
         let result = []
         for (let i = 0; i < array.length - tmp; i++) { // 减去tmp的目的是最后一位已经移动，避免多余操作，即复杂度仍然是n
-            while (predicate(array[i+tmp])) {  // 这里不是if而是while是为了判断移动后的当前位置，避免遗漏
-                result.push(array[i+tmp])
+            while (predicate(array[i + tmp])) {  // 这里不是if而是while是为了判断移动后的当前位置，避免遗漏
+                result.push(array[i + tmp])
                 tmp++
             }
-            array[i] = array[i+tmp]
+            array[i] = array[i + tmp]
         }
         for (let i = 0; i < tmp; i++) {
             array.pop()
@@ -198,13 +198,13 @@ var junqu = {
 
     reverse: function (array) {
         const length = array.length
-        for (let i = 0; i < length/2; i++) {
-            [array[i], array[length - 1 - i]] = [array[length - 1 - i],array[i]]
+        for (let i = 0; i < length / 2; i++) {
+            [array[i], array[length - 1 - i]] = [array[length - 1 - i], array[i]]
         }
         return array
     },
 
-    slice: function (array,start=0,end=array.length) {
+    slice: function (array, start = 0, end = array.length) {
         let length = array.length
         let result = []
         if (start < 0) {
@@ -241,14 +241,14 @@ var junqu = {
     },
 
     tail: function (array) {
-        return junqu.slice(array,1)
+        return junqu.slice(array, 1)
     },
 
-    take: function (array, n=1) {
+    take: function (array, n = 1) {
         return junqu.slice(array, 0, n)
     },
 
-    takeRight: function (array, n=1) {
+    takeRight: function (array, n = 1) {
         n = n > array.length ? array.length : n
         return junqu.slice(array, array.length - n)
     },
@@ -270,23 +270,12 @@ var junqu = {
         return reuslt
     },
 
-    // 求出极值（最大值和最小值）
-    baseExtremum: (array, iteratee, comparator) => array.reduce((p, v) => comparator(iteratee(p) , iteratee(v)) ? p : v),
-
-    min: value => value && value.length ? junqu.baseExtremum(value, junqu.identity, (x,y)=>x<y) : undefined,
-    
-    minBy: (value, iteratee=junqu.identity) => value && value.length ? junqu.baseExtremum(value, iteratee, (x, y)=>x<y) : undefined,
-
-    max: value => value && value.length ? junqu.baseExtremum(value, junqu.identity, (x,y)=>x>y) : undefined,
-
-    maxBy: (value, iteratee=junqu.identity) => value && value.length ? junqu.baseExtremum(value, iteratee, (x,y)=>x>y) : undefined,
-
     eq: function (value, other) {
         return value === other || Number.isNaN(value) && Number.isNaN(other)
     },
 
     gt: function (value, other) {
-        if (!(typeof value === "string" && typeof  other === "string")) {
+        if (!(typeof value === "string" && typeof other === "string")) {
             value = parseInt(value)
             other = parseInt(other)
         }
@@ -294,7 +283,7 @@ var junqu = {
     },
 
     gte: function (value, other) {
-        if (!(typeof value === "string" && typeof  other === "string")) {
+        if (!(typeof value === "string" && typeof other === "string")) {
             value = parseInt(value)
             other = parseInt(other)
         }
@@ -303,7 +292,7 @@ var junqu = {
 
     // 后一段的判断函数是只针对IE9以下的判断。在严格模式下，第5版 ECMAScript (ES5) 禁止使用 arguments.callee()
     isArguments: function (value) {
-        return junqu.isObject(value) && Object.prototype.toString.call(value) === '[object Arguments]'|| function (value) {
+        return junqu.isObject(value) && Object.prototype.toString.call(value) === '[object Arguments]' || function (value) {
             return Object.hasOwnProperty.call(value, 'callee') && !Object.propertyIsEnumerable.call(value, 'callee')
         }(value)
     },
@@ -316,7 +305,7 @@ var junqu = {
     isArrayBuffer: function (value) {
         return Object.prototype.toString.call(value) === '[object ArrayBuffer]'
     },
-    
+
     isArrayLike: value => value !== null && typeof value[Symbol.iterator] === 'function',
 
     isArrayLikeObject: function (value) {
@@ -326,11 +315,11 @@ var junqu = {
     isBoolean: function (value) {
         return typeof value === 'boolean' || value === true || value === false || (junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object Boolean]')
     },
-    
+
     isBuffer: function (value) {
         return Buffer.isBuffer(value)
     },
-    
+
     isDate: function (value) {
         return junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object Date]'
     },
@@ -357,12 +346,12 @@ var junqu = {
             }
         }
         // 判断Set和Map
-        if (Object.prototype.toString.call(value) === '[object Set]'||Object.prototype.toString.call(value) === '[object Map]') {
+        if (Object.prototype.toString.call(value) === '[object Set]' || Object.prototype.toString.call(value) === '[object Map]') {
             return !value.size
         }
         // 对象判断
-        for(let key in value){
-            if (Object.hasOwnProperty.call(value, key)){
+        for (let key in value) {
+            if (Object.hasOwnProperty.call(value, key)) {
                 return false
             }
         }
@@ -380,7 +369,7 @@ var junqu = {
 
     // 判断他是不是可数的，与isNaN情况太类似了
     isFinite: function (value) {
-        return typeof  value === 'number' && Number.isFinite(value)
+        return typeof value === 'number' && Number.isFinite(value)
     },
 
     isFunction: function (value) {
@@ -406,7 +395,7 @@ var junqu = {
     isNaN: function (value) {
         return junqu.isNumber(value) && value != +value
     },
-    
+
     isMap: function (value) {
         return junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object Map]'
     },
@@ -414,7 +403,7 @@ var junqu = {
     isMatch: function (object, source) {
 
     },
-    
+
     isNil: function (value) {
         return value === null || value === undefined
     },
@@ -467,7 +456,7 @@ var junqu = {
     isString: function (value) {
         return typeof value === 'string' || junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object String]'
     },
-    
+
     isSymbol: function (value) {
         return typeof value === 'symbol' || junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object Symbol]'
     },
@@ -490,7 +479,7 @@ var junqu = {
     isUndefined: function (value) {
         return value === undefined
     },
-    
+
     isWeakMap: function (value) {
         return junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object WeakMap]'
     },
@@ -507,10 +496,10 @@ var junqu = {
     lte: function (value, other) {
         return value <= other
     },
-    
+
     toArray: function (value) {
         if (!value) return []
-        
+
         if (junqu.isArrayLike(value)) {
             return junqu.isString(value) ? junqu.stringToArray(value) : junqu.copyArray(value)
         }
@@ -522,13 +511,13 @@ var junqu = {
         }
         return
     },
-    
+
     toFinite: function (value) {
         if (junqu.isFinite(value)) {
             return value
         }
     },
-    
+
     // toInteger: function (value) {
     //
     // },
@@ -548,22 +537,81 @@ var junqu = {
     // toSafeInteger: function (value) {
     //
     // },
-    
-    mapToArray: map=>[...map],
+
+    mapToArray: map => [...map],
 
     // 把非空的字符存入数组
     stringToArray: string => string.match(/[\S]/gu),
-    
-    setToArray: set=>[...set],
 
-    
-    copyArray: function (source, array=[]) {
+    setToArray: set => [...set],
+
+
+    copyArray: function (source, array = []) {
         for (let i = 0; i < source.length; i++) {
             array[i] = source[i]
         }
         return array
     },
+
+    /*
+    *
+    * “Math” Methods
+    * 这些方法在Lodash里都有判断具体可见createMathOperation方法，
+    * 但是它也是一些类型判断，这次我练习的时候，会假设它符合规范的传参数
+    * */
+
+    add: (augend, addend) => augend + addend,
+
+    // 这个函数没看懂
+    ceil: function (number, precision = 0) {
+        let prec = 10 ** precision
+        let num = number * prec
+        num = num % 1 ? Math.trunc(num) + 1 : Math.trunc(num)
+        return num / prec
+    },
+
+    divide:  (dividend, divisor) => dividend / divisor,
+
+    floor: function (number, precision = 0) {
+        let prec = 10 ** precision
+        return Math.trunc(number * prec) / prec
+    },
+
+    // 求出极值（最大值和最小值）
+    baseExtremum: (array, iteratee, comparator) => array.reduce((p, v) => comparator(iteratee(p), iteratee(v)) ? p : v),
+
+    max: value => value && value.length ? junqu.baseExtremum(value, junqu.identity, (x, y) => x > y) : undefined,
+
+    maxBy: (value, iteratee = junqu.identity) => value && value.length ? junqu.baseExtremum(value, iteratee, (x, y) => x > y) : undefined,
+
+    mean: array => junqu.meanBy(array, junqu.identity),
+
+    meanBy: function (array, iteratee = junqu.identity) {
+        if (!array || !array.length) return NaN
+        return array.reduce((sum, a, i, arr) => {
+            sum += iteratee(a)
+            return i === arr.length - 1 ? sum / arr.length : sum
+        }, 0)
+    },
+
+    min: value => value && value.length ? junqu.baseExtremum(value, junqu.identity, (x, y) => x < y) : undefined,
+
+    minBy: (value, iteratee = junqu.identity) => value && value.length ? junqu.baseExtremum(value, iteratee, (x, y) => x < y) : undefined,
+
+    multiply: (multiplier, multiplicand) => multiplier * multiplicand,
     
+    round: function (number, precision=0) {
+        let prec = 10 ** precision
+        return Math.round(number * prec) / prec
+    },
+
+    subtract:  (minuend, subtrahend) => minuend - subtrahend,
+
+    sum: array => array && array.length ? array.reduce((x, y) => x + y) : 0,
+
+    sumBy: (array, iteratee) => array && array.length ? array.reduce((x, y) => x + iteratee(y), 0) : 0,
+    
+    now:  () => Date.now(),
 
 };
 
@@ -582,7 +630,7 @@ const tap = function (x, fn = x=>x) {
 //          c.push(key)
 //     }
 //     return c
-// }(_))
+// }(_).length)
 
 // tap(_.chunk(3,[1,2,3,3,4,5],2));
 // tap(_.drop([1,2,3],-1))
@@ -639,3 +687,10 @@ const tap = function (x, fn = x=>x) {
 // tap(_.min([1,5,3,2,3,9]))
 // var objects = [{ 'n': 1 }, { 'n': 2 }, { 'n': 0 }, { 'n': 4 },{'n':3}]
 // tap(_.maxBy(objects, function(o) { return o.n;}))
+// tap(_.ceil(6040, -2))
+// tap(_.divide(-6,0))
+// tap(_.floor(4060, -2))
+// tap(_.meanBy([{ 'n': 4 }, { 'n': 2 }, { 'n': 8 }, { 'n': 6 }], o=> o.n))
+// tap(_.sum([1,2,3,4,5]))
+// tap(_.sumBy([{ 'n': 4 }, { 'n': 2 }, { 'n': 8 }, { 'n': 6 }], o=> o.n))
+// tap(_.round(4060, -2))
