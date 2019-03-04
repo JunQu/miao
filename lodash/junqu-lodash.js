@@ -1,5 +1,6 @@
 
 var junqu = {
+    /*--------------------------------------Array------------------------------------------------------*/
     chunk: function (array, size = 1) {
         if (size < 1) return array
         let result = [[]]
@@ -84,12 +85,14 @@ var junqu = {
         if (n > array.length) return []
         return array.slice(array, array.length - n)
     },
+
     fill: function (array, value, start = 0, end = array.length) {
         for (let i = start; i < end; i++) {
             array[i] = value
         }
         return array
     },
+
     flatten: function (array) {
         let ret = []
         for (let i = 0; i < array.length; i++) {
@@ -115,6 +118,10 @@ var junqu = {
         return result
     },
 
+    head: function (array) {
+        return array[0]
+    },
+
     indexOf: function (array, value, formIndex = 0) {
         for (let i = formIndex; i < array.length; i++) {
             if (array[i] === value) {
@@ -124,20 +131,12 @@ var junqu = {
         return -1
     },
 
-    head: function (array) {
-        return array[0]
-    },
-
     initial: function (array) {
         let result = []
         for (let i = 0; i < array.length - 1; i++) {
             result.push(array[i])
         }
         return result
-    },
-
-    identity: function (value) {
-        return value
     },
 
     join: function (array, separator = ',') {
@@ -258,7 +257,6 @@ var junqu = {
         return Array.from(new Set(array))
     },
 
-
     without: function (array, ...values) {
         if (!array.length) return []
         let reuslt = []
@@ -269,6 +267,8 @@ var junqu = {
         }
         return reuslt
     },
+
+    /*-------------------------------Lang--------------------------------------------------------*/
 
     eq: function (value, other) {
         return value === other || Number.isNaN(value) && Number.isNaN(other)
@@ -401,9 +401,15 @@ var junqu = {
     },
 
     isMatch: function (object, source) {
-
+        return object === source || Object.keys(source).every(key=>object.hasOwnProperty(key)&&object[key]===source[key])
     },
 
+    isMatchWith: function (object, source, customizer) {
+        customizer = typeof customizer === 'function' ? customizer : undefined
+        // 这里采用==
+        return Object.keys(source).every(key=>(object.hasOwnProperty(key) && customizer) ? customizer(object[key], source[key], key, object, source):object[key]==source[key])
+    },
+    
     isNil: function (value) {
         return value === null || value === undefined
     },
@@ -553,6 +559,7 @@ var junqu = {
         return array
     },
 
+    /*---------------------------Math----------------------------------------------------------*/
     /*
     *
     * “Math” Methods
@@ -599,7 +606,7 @@ var junqu = {
     minBy: (value, iteratee = junqu.identity) => value && value.length ? junqu.baseExtremum(value, iteratee, (x, y) => x < y) : undefined,
 
     multiply: (multiplier, multiplicand) => multiplier * multiplicand,
-    
+
     round: function (number, precision=0) {
         let prec = 10 ** precision
         return Math.round(number * prec) / prec
@@ -610,9 +617,96 @@ var junqu = {
     sum: array => array && array.length ? array.reduce((x, y) => x + y) : 0,
 
     sumBy: (array, iteratee) => array && array.length ? array.reduce((x, y) => x + iteratee(y), 0) : 0,
-    
+
+    /*----------------------------------Date----------------------------------------------------*/
+
     now:  () => Date.now(),
 
+    /*-----------------------------------Number---------------------------------------------------*/
+
+    clamp: function () {
+
+    },
+
+    inRange: function () {
+
+    },
+
+    random: function () {
+
+    },
+
+    /*--------------------------------------Util------------------------------------------------*/
+    identity: function (value) {
+        return value
+    },
+
+
+    /*
+    *iteratee的几种情况
+    * */
+    iteratee: function (value) {
+        // 是函数则直接可以返回
+        if (typeof value === 'function') {
+            return value
+        }
+
+        // 后面的情况是Object，所以先把null处理了
+        if (value === null) {
+            return junqu.identity
+        }
+
+        // 是Object情况的处理
+        if (typeof value === 'object') {
+            if (Array.isArray(value)) {
+
+            }
+        }
+
+        //  以上都不是，那就是基本类型和Symbol类型，都是可以作为对象属性，转化为寻找属性的函数
+        return junqu.property(value)
+    },
+
+    property: function (value) {
+        // 它只是是key，那就直接去对象里寻找
+       if (typeof value === 'string' && !(/\./.test(value))|| typeof value === 'number' || typeof value === 'boolean' || junqu.isSymbol(value) || value === null) {
+           return  (object) => object === null ? undefined : object[value]
+       } else {
+           // 遇到a[0].b.c之类取值，进行额外处理，这里lodash封装了方法_.get(),进行路径查找
+           return obj => junqu.baseGet(obj, value)
+       }
+    },
+
+    get: function (obj, path, defaultValue) {
+        let result = junqu.baseGet(obj, path)
+        return result ? result : defaultValue
+    },
+
+    baseGet: function (obj, path) {
+        if (!obj) return undefined
+        // 为了转为数组，先转String
+        // 这里Lodash也有很多处理的，比如对Symbol对象，但是这里只过过简单测试
+        let newPath = path.toString()
+        // 转为数组
+        if (!Array.isArray(path)) {
+            //这里处理的非常随意，大概原理是这样。需要的就是把'a[0].b.c' 转为[ 'a', '0', 'b', 'c' ]。
+            path = newPath.split(/\W+/)
+        }
+        let i = 0
+        for (; i < path.length && obj !== undefined && obj !== null; i++) {
+            obj = obj[path[i]] // 层层剥开
+        }
+        return i && i === path.length ? obj : undefined
+    },
+
+    // lodash这里健壮很多
+    // 较为深度的比较source是否被object包含
+    matches: function (source) {
+        return object => junqu.isObjectLike(object)?Object.keys(source).every(key => object[key] === source[key]):false
+    },
+    matchesProperty: function (path, srcValue) {
+        
+    },
 };
 
 
@@ -694,3 +788,26 @@ const tap = function (x, fn = x=>x) {
 // tap(_.sum([1,2,3,4,5]))
 // tap(_.sumBy([{ 'n': 4 }, { 'n': 2 }, { 'n': 8 }, { 'n': 6 }], o=> o.n))
 // tap(_.round(4060, -2))
+// var object = { 'a': [{ 'b': { 'c': 3 } }] };
+// tap(_.get(object, 'a[0].b.c'))
+// tap(_.get(object, ['a', '0', 'b', 'c']))
+// tap(_.get(object, 'a.b.c', 'default'))
+// var objects = [
+//     { 'a': { 'b': 2 } },
+//     { 'a': { 'b': 1 } }
+// ];
+// tap(objects.map(_.property(['a','b'])))
+// const objects = [{ 'a': 1, 'b': 2, 'c': 3 }, { 'a': 4, 'b': 5, 'c': 6 }];
+// tap(objects.filter(_.matches({ 'a': 4, 'c': 6 })))
+// tap(_.isMatch({ a: 1, b: 2 }, { b: 1 }))
+// function isGreeting(value) {
+//     return /^h(?:i|ello)$/.test(value);
+// }
+// function customizer(objValue, srcValue) {
+//     if (isGreeting(objValue) && isGreeting(srcValue)) {
+//         return true;
+//     }
+// }
+// var object = { 'greeting': 'hello' };
+// var source = { 'greeting': 'hi' };
+// tap(_.isMatchWith(object, source, customizer))
