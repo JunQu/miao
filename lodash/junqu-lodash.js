@@ -37,25 +37,18 @@ var junqu = {
     return result;
   },
 
+    baseDifference: function (array, values, iteratee, comparator) {
+        let valSet = new Set(values.map(iteratee))
+        return array.filter(arr => comparator ? iteratee(arr) : !valSet.has(iteratee(arr)))
+    },
+
   difference: function(array, ...values) {
-    if (!array.length) return [];
-    let set = new Set();
-    let result = [];
-    for (let val of values) {
-      if (Array.isArray(val)) {
-        for (let arrVal of val) {
-          set.add(arrVal);
-        }
-      } else {
-        set.add(val);
+      if (!array || !array.length) {
+          return []
       }
-    }
-    for (let val of array) {
-      if (!set.has(val)) {
-        result.push(val);
-      }
-    }
-    return result;
+      let iteratee = junqu.identity
+
+      return junqu.baseDifference(array, junqu.flatten(values), iteratee)
   },
 
   differenceBy: function(array, ...values) {
@@ -94,19 +87,16 @@ var junqu = {
     return array;
   },
 
-  flatten: function(array) {
-    let ret = [];
-    for (let i = 0; i < array.length; i++) {
-      if (Array.isArray(array[i])) {
-        for (let j = 0; j < array[i].length; j++) {
-          ret.push(array[i][j]);
-        }
-      } else {
-        ret.push(array[i]);
-      }
-    }
-    return ret;
-  },
+
+    flatten: array => !array || !array.length ? [] : junqu.flattenDepth(array, 1),
+
+    // 这里如果把flattenDepth的path改为Infinity就可以，但是假如为了练习，就用了30S的代码
+    flattenDeep: function flattenDeep(array) { [].concat(...array.map(v => Array.isArray(v)?flattenDeep(v) : v)) },
+
+    flattenDepth: function flattenDepth (array, path=1) {
+      return !array || !array.length ? [] : array.reduce((arr, val) => arr.concat(Array.isArray(val) && path > 1 ? flattenDepth(val, path-1) : val),[])
+    },
+
 
   fromPairs: function(pairs) {
     let result = {};
@@ -924,3 +914,5 @@ const tap = function(x, fn = x => x) {
 //     }
 //     return c
 // }(_).length)
+
+tap(_.flattenDepth([1, [2, [3, [4]], [[4],6],3]],))
