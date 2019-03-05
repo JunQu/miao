@@ -400,8 +400,26 @@ var junqu = {
         return junqu.isObjectLike(value) && Object.prototype.toString.call(value) === '[object Map]'
     },
 
-    isMatch: function (object, source) {
-        return object === source || Object.keys(source).every(key=>object.hasOwnProperty(key)&&object[key]===source[key])
+
+    isMatch: function isMatch(object, source) {
+        if (object === source) {
+            return true
+        }
+        // 这里并没有修复那些存在的问题，比如数组对比，但是过测试，，
+        for (let key of Object.keys(source)) {
+            if (object.hasOwnProperty(key)) {
+                if (typeof object[key] === 'object' && typeof source[key] === 'object') {
+                    isMatch(object[key], source[key])
+                }else {
+                    if (object[key] !== source[key]) {
+                        return false
+                    }
+                }
+            } else {
+                return false
+            }
+        }
+        return true
     },
 
     isMatchWith: function (object, source, customizer) {
@@ -589,11 +607,15 @@ var junqu = {
 
     max: value => value && value.length ? junqu.baseExtremum(value, junqu.identity, (x, y) => x > y) : undefined,
 
-    maxBy: (value, iteratee = junqu.identity) => value && value.length ? junqu.baseExtremum(value, iteratee, (x, y) => x > y) : undefined,
+    maxBy: (value, iteratee = junqu.identity) => {
+        iteratee = junqu.getIteratee(iteratee)
+        return  value && value.length ? junqu.baseExtremum(value, iteratee, (x, y) => x > y) : undefined
+    },
 
     mean: array => junqu.meanBy(array, junqu.identity),
 
     meanBy: function (array, iteratee = junqu.identity) {
+        iteratee = junqu.getIteratee(iteratee)
         if (!array || !array.length) return NaN
         return array.reduce((sum, a, i, arr) => {
             sum += iteratee(a)
@@ -603,7 +625,10 @@ var junqu = {
 
     min: value => value && value.length ? junqu.baseExtremum(value, junqu.identity, (x, y) => x < y) : undefined,
 
-    minBy: (value, iteratee = junqu.identity) => value && value.length ? junqu.baseExtremum(value, iteratee, (x, y) => x < y) : undefined,
+    minBy: (value, iteratee = junqu.identity) => {
+        iteratee = junqu.getIteratee(iteratee)
+        return value && value.length ? junqu.baseExtremum(value, iteratee, (x, y) => x < y) : undefined
+    },
 
     multiply: (multiplier, multiplicand) => multiplier * multiplicand,
 
@@ -616,7 +641,10 @@ var junqu = {
 
     sum: array => array && array.length ? array.reduce((x, y) => x + y) : 0,
 
-    sumBy: (array, iteratee) => array && array.length ? array.reduce((x, y) => x + iteratee(y), 0) : 0,
+    sumBy: (array, iteratee=junqu.identity) => {
+        iteratee = junqu.iteratee(iteratee)
+        return array && array.length ? array.reduce((x, y) => x + iteratee(y), 0) : 0
+    },
 
     /*----------------------------------Date----------------------------------------------------*/
 
@@ -652,21 +680,23 @@ var junqu = {
         }
 
         // 后面的情况是Object，所以先把null处理了
-        if (value === null) {
+        if (value === null || value === undefined) {
             return junqu.identity
         }
 
-        // 是Object情况的处理
-        if (typeof value === 'object') {
-            if (Array.isArray(value)) {
-
-            }
-        }
+        // 是Object情况的处理,进行Object的深度对比
+      if (typeof value === 'object') {
+          return Array.isArray(value) ? junqu.matchesProperty(value[0],value[1]) : junqu.matches(value)
+      }
 
         //  以上都不是，那就是基本类型和Symbol类型，都是可以作为对象属性，转化为寻找属性的函数
         return junqu.property(value)
     },
 
+    getIteratee: function () {
+        return arguments.length ? junqu.iteratee(arguments[0], arguments[1]) : junqu.identity
+    },
+    
     property: function (value) {
         // 它只是是key，那就直接去对象里寻找
        if (typeof value === 'string' && !(/\./.test(value))|| typeof value === 'number' || typeof value === 'boolean' || junqu.isSymbol(value) || value === null) {
@@ -700,12 +730,26 @@ var junqu = {
     },
 
     // lodash这里健壮很多
-    // 较为深度的比较source是否被object包含
+    // 比较source是否被object包含,没有深度比较，当key不是基本类型就无法比较
     matches: function (source) {
         return object => junqu.isObjectLike(object)?Object.keys(source).every(key => object[key] === source[key]):false
     },
+
     matchesProperty: function (path, srcValue) {
-        
+        // 这里lodash封装了isKey,我这里是不完善的
+        if (typeof path === 'string' || typeof path === 'number' || typeof path === 'symbol' || typeof path === 'boolean') {
+            return obj => obj ? obj[path] === srcValue && (srcValue !== undefined || path in Object(obj)) : false
+        }
+        return obj => {
+            let value = junqu.get(obj, path)
+             if (value === srcValue && value === undefined) {
+                 // 不做处理了
+                 return false
+             } else {
+                 // 没有深度对比，无法比较非基本类型
+                 return value === srcValue
+             }
+        }
     },
 };
 
@@ -810,4 +854,10 @@ const tap = function (x, fn = x=>x) {
 // }
 // var object = { 'greeting': 'hello' };
 // var source = { 'greeting': 'hi' };
+// tap(_.isMatch({a:1,b:{c:2}},{b:{c:2}}))
 // tap(_.isMatchWith(object, source, customizer))
+// var objs = [
+//     { 'a': 1, 'b': {c:{d:5}}, 'c': 3 },
+//     { 'a': 4, 'b': 5, 'c': 6 }
+// ];
+// tap(objs.filter(_.matchesProperty(['b','c','d'],5)))
