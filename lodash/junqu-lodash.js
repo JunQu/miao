@@ -37,37 +37,32 @@ var junqu = {
     return result;
   },
 
-    baseDifference: function (array, values, iteratee, comparator) {
-        let valSet = new Set(values.map(iteratee))
-        return array.filter(arr => comparator ? iteratee(arr) : !valSet.has(iteratee(arr)))
-    },
-
-  difference: function(array, ...values) {
-      if (!array || !array.length) {
-          return []
-      }
-      let iteratee = junqu.identity
-
-      return junqu.baseDifference(array, junqu.flatten(values), iteratee)
+  baseDifference: function(array, values, iteratee, comparator) {
+    let valSet = new Set(values.map(iteratee));
+    return array.filter(arr =>
+      comparator ? iteratee(arr) : !valSet.has(iteratee(arr))
+    );
   },
+
+  difference: (array, ...values) =>
+    !array || !array.length
+      ? []
+      : junqu.baseDifference(array, junqu.flatten(values), junqu.identity),
 
   differenceBy: function(array, ...values) {
-    const length = values.length;
-    let result = [];
-    let iteratee = x => x;
-    if (!array.length) return result;
-    if (!length) return Array.from(array);
-    if (typeof values[length - 1] === "function") {
-      iteratee = values.pop();
-    } else if (
-      values[length - 1] !== null &&
-      typeof values[length - 1] === "object"
-    ) {
-    } else {
+      // 由于没有深度比较以及选择错误(pop)，代码存在巨大缺陷，但是我不改了
+    if (!array || !array.length) {
+      return [];
     }
-    const s = new Set(values.map(iteratee));
-    return array.filter(x => !s.has(iteratee(x)));
+    if (!values.length) {
+      return array;
+    }
+    let iteratee =
+      values.length > 1 && !Array.isArray(values[values.length - 1]) ? junqu.getIteratee(values.pop()): junqu.identity;
+    return junqu.baseDifference(array, junqu.flatten(values), iteratee);
   },
+
+  differenceWith: function(array, ...values) {},
 
   drop: function(array, n = 1) {
     if (n <= 0) return array;
@@ -87,16 +82,27 @@ var junqu = {
     return array;
   },
 
+  flatten: array =>
+    !array || !array.length ? [] : junqu.flattenDepth(array, 1),
 
-    flatten: array => !array || !array.length ? [] : junqu.flattenDepth(array, 1),
+  // 这里如果把flattenDepth的path改为Infinity就可以，但是假如为了练习，就用了30S的代码
+  flattenDeep: function flattenDeep(array) {
+    return [].concat(
+      ...array.map(v => (Array.isArray(v) ? flattenDeep(v) : v))
+    );
+  },
 
-    // 这里如果把flattenDepth的path改为Infinity就可以，但是假如为了练习，就用了30S的代码
-    flattenDeep: function flattenDeep(array) { [].concat(...array.map(v => Array.isArray(v)?flattenDeep(v) : v)) },
-
-    flattenDepth: function flattenDepth (array, path=1) {
-      return !array || !array.length ? [] : array.reduce((arr, val) => arr.concat(Array.isArray(val) && path > 1 ? flattenDepth(val, path-1) : val),[])
-    },
-
+  flattenDepth: function flattenDepth(array, path = 1) {
+    return !array || !array.length
+      ? []
+      : array.reduce(
+          (arr, val) =>
+            arr.concat(
+              Array.isArray(val) && path > 1 ? flattenDepth(val, path - 1) : val
+            ),
+          []
+        );
+  },
 
   fromPairs: function(pairs) {
     let result = {};
@@ -914,5 +920,3 @@ const tap = function(x, fn = x => x) {
 //     }
 //     return c
 // }(_).length)
-
-tap(_.flattenDepth([1, [2, [3, [4]], [[4],6],3]],))
