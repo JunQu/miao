@@ -39,7 +39,7 @@ var junqu = {
 
   baseDifference: function(array, values, iteratee, comparator) {
     let valSet;
-    if (comparator) {
+    if (!comparator) {
       valSet = new Set(values.map(iteratee));
     }
     return array.filter(arr =>
