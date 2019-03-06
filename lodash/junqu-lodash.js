@@ -139,16 +139,18 @@ var junqu = {
     let result = {};
     if (pairs.length === 0) return result;
     for (let i = 0; i < pairs.length; i++) {
-      if (typeof pairs[i][0] === "string") {
         result[pairs[i][0]] = pairs[i][1];
-      }
     }
     return result;
   },
 
-  head: array => Array.isArray(array) && array.length ? array[0] : [],
+  head: array => Array.isArray(array) && array.length ? array[0] : undefined,
 
   indexOf: function(array, value, formIndex = 0) {
+    if (!array || !array.length) {
+      return -1
+    }
+    formIndex = !formIndex || formIndex < 0 ? 0 : Math.trunc(formIndex)
     for (let i = formIndex; i < array.length; i++) {
       if (array[i] === value) {
         return i;
@@ -157,12 +159,69 @@ var junqu = {
     return -1;
   },
 
-  initial: function(array) {
-    let result = [];
-    for (let i = 0; i < array.length - 1; i++) {
-      result.push(array[i]);
+  initial: array => array && array.length ? array.slice(0,array.length):[] ,
+
+  intersection: function (...arrays) {
+    if (!arrays || !arrays.length) {
+      return []
     }
-    return result;
+    let  arrayMapped = arrays.map(value => Array.isArray(value)?value:[])
+    // 对于不是元素的判断
+    if (arrayMapped.length === 1) {
+      return arrayMapped[0].length ? arrayMapped[0] : []
+    }
+    // 随便取出一个基准
+    let result = arrayMapped[0]
+    for (let i = 1; i < arrayMapped.length; i++) {
+      if (!result.length) {
+        return result
+      }
+      let arraySet = new Set(arrayMapped[i])
+      result = result.filter(val=>arraySet.has(val)) // 对比，过滤不是共同的元素
+    }
+    return result
+  },
+
+  intersectionBy: function (...arrays) {
+    if (!arrays || !arrays.length) {
+      return []
+    }
+    let iteratee = Array.isArray(arrays[arrays.length - 1]) ? junqu.identity : junqu.getIteratee(arrays.pop())
+    let  arrayMapped = arrays.map(arr => Array.isArray(arr)? arr:[])
+    // 对于不是元素的判断
+    if (arrayMapped.length === 1) {
+      return arrayMapped[0].length ? arrayMapped[0] : []
+    }
+    // 随便取出一个基准
+    let result = arrayMapped[0]
+    // 我的这个循环效率非常低，Lodash在这里做了大量的缓存
+    for (let i = 1; i < arrayMapped.length; i++) {
+      if (!result.length) {
+        return result
+      }
+      let arraySet = new Set(arrayMapped[i].map(iteratee))
+      result = result.filter(val=>arraySet.has(iteratee(val)))
+    }
+    return result
+  },
+
+  intersectionWith: function (...arrays) {
+    if (!arrays || !arrays.length) {
+      return []
+    }
+    let comparator =typeof arrays[arrays.length - 1] === 'function' ? arrays.pop() : undefined
+    if (!comparator){
+      return junqu.intersection(arrays)
+    }
+    let  arrayMapped = arrays.map(arr => Array.isArray(arr)? arr:[])
+    let result = arrayMapped[0]
+    for (let i = 1; i < arrayMapped.length; i++) {
+      if (!result.length) {
+        return result
+      }
+      result = result.filter(x=>arrayMapped[i].findIndex((y=>comparator(x,y))) !== -1)
+    }
+    return result
   },
 
   join: function(array, separator = ",") {
@@ -942,7 +1001,10 @@ const tap = function(x, fn = x => x) {
   return x;
 };
 
+// tap(_.intersectionWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0, 3.9], (a, b) => Math.round(a) === Math.round(b)))
+// tap(junqu.intersectionBy([{ 'x': 1 }], [{ 'x': 2 }, { 'x': 1 }], 'x'))
 // tap(_.castArray('abc'))
+// tap([[1,2],[2,3],1,2].map(value => Array.isArray(value)?value:[]))
 // tap(function (value) {
 //     let c = []
 //     for (let key in value) {
