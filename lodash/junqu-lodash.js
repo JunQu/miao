@@ -38,9 +38,14 @@ var junqu = {
   },
 
   baseDifference: function(array, values, iteratee, comparator) {
-    let valSet = new Set(values.map(iteratee));
+    let valSet;
+    if (comparator) {
+      valSet = new Set(values.map(iteratee));
+    }
     return array.filter(arr =>
-      comparator ? iteratee(arr) : !valSet.has(iteratee(arr))
+      comparator
+        ? values.findIndex(val => comparator(arr, val)) === -1
+        : !valSet.has(iteratee(arr))
     );
   },
 
@@ -50,7 +55,7 @@ var junqu = {
       : junqu.baseDifference(array, junqu.flatten(values), junqu.identity),
 
   differenceBy: function(array, ...values) {
-      // 由于没有深度比较以及选择错误(pop)，代码存在巨大缺陷，但是我不改了
+    // 由于没有深度比较以及选择错误(pop)，代码存在巨大缺陷，但是我不改了
     if (!array || !array.length) {
       return [];
     }
@@ -58,11 +63,30 @@ var junqu = {
       return array;
     }
     let iteratee =
-      values.length > 1 && !Array.isArray(values[values.length - 1]) ? junqu.getIteratee(values.pop()): junqu.identity;
+      values.length > 1 && !Array.isArray(values[values.length - 1])
+        ? junqu.getIteratee(values.pop())
+        : junqu.identity;
     return junqu.baseDifference(array, junqu.flatten(values), iteratee);
   },
 
-  differenceWith: function(array, ...values) {},
+  differenceWith: function(array, ...values) {
+    if (!array || !array.length) {
+      return [];
+    }
+    if (!values.length) {
+      return array;
+    }
+    let comparator =
+      values.length > 1 && !Array.isArray(values[values.length - 1])
+        ? values.pop()
+        : undefined;
+    return junqu.baseDifference(
+      array,
+      junqu.flatten(values),
+      junqu.identity,
+      comparator
+    );
+  },
 
   drop: function(array, n = 1) {
     if (n <= 0) return array;
@@ -453,9 +477,10 @@ var junqu = {
    * 全局自带的isNaN坑点：先用ToNumber转换，ToNumber对于非数字字符串返回NaN
    * Number.isNAN 缺陷 Number.isNAN（new Number(NaN)）,虽然这种NaN很奇怪
    * lodah修复了，加个Number判断，后面+号的原因是把Number类型进行转换
-   * 这里必须用==而不用===，原因在lodash源码有特别的解释
+   *
    * */
   isNaN: function(value) {
+    // 这里必须用==而不用===，原因在lodash源码有特别的解释
     return junqu.isNumber(value) && value != +value;
   },
 
@@ -492,7 +517,7 @@ var junqu = {
 
   isMatchWith: function(object, source, customizer) {
     customizer = typeof customizer === "function" ? customizer : undefined;
-    // 这里采用==
+    // 这里采用==不用全等
     return Object.keys(source).every(key =>
       object.hasOwnProperty(key) && customizer
         ? customizer(object[key], source[key], key, object, source)
@@ -920,3 +945,5 @@ const tap = function(x, fn = x => x) {
 //     }
 //     return c
 // }(_).length)
+
+// tap(junqu.differenceWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0], (a, b) => Math.round(a) === Math.round(b)))
