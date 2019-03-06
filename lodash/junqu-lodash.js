@@ -13,15 +13,7 @@ var junqu = {
     return result;
   },
 
-  compact: function(array) {
-    let result = [];
-    for (let i = 0; i < array.length; i++) {
-      if (array[i]) {
-        result.push(array[i]);
-      }
-    }
-    return result;
-  },
+  compact: array => array.filter(arr=>Boolean(arr)) ,
 
   concat: function(array, ...values) {
     let result = Array.isArray(array) ? [...array] : [array]; // 其他不是数组的情况
@@ -42,17 +34,10 @@ var junqu = {
     if (!comparator) {
       valSet = new Set(values.map(iteratee));
     }
-    return array.filter(arr =>
-      comparator
-        ? values.findIndex(val => comparator(arr, val)) === -1
-        : !valSet.has(iteratee(arr))
-    );
+    return array.filter(arr => comparator ? values.findIndex(val => comparator(arr, val)) === -1 : !valSet.has(iteratee(arr)));
   },
 
-  difference: (array, ...values) =>
-    !array || !array.length
-      ? []
-      : junqu.baseDifference(array, junqu.flatten(values), junqu.identity),
+  difference: (array, ...values) => !array || !array.length ? [] : junqu.baseDifference(array, junqu.flatten(values), junqu.identity),
 
   differenceBy: function(array, ...values) {
     // 由于没有深度比较以及选择错误(pop)，代码存在巨大缺陷，但是我不改了
@@ -88,15 +73,37 @@ var junqu = {
     );
   },
 
-  drop: function(array, n = 1) {
-    if (n <= 0) return array;
-    return array.slice(n);
-  },
+  drop: (array, n = 1) => n <= 0 ?array:array.slice(n),
 
   dropRight: function(array, n = 1) {
     if (n <= 0) return array;
-    if (n > array.length) return [];
-    return array.slice(array, array.length - n);
+    if (n >= array.length) return [];
+    n = Math.trunc(n);
+    return array.slice(0, array.length - n);
+  },
+
+  dropRightWhile: function(array, predicate=junqu.identity){
+    if (!array || !array.length) return []
+    predicate = junqu.getIteratee(predicate, 3)
+    for (let i = array.length - 1; i >= 0; i--) {
+      if (!predicate(array[i], i, array)) { // 只需要一个为false,就把前面的元素去除
+        return array.slice(0, i+1)
+      }
+    }
+    return []
+  },
+
+  // The predicate is invoked with three arguments: (value, index, array).
+  // 函数是目的是去除遇到第一个falsely值前的所有元素
+  dropWhile: function (array, predicate) {
+    if (!array || !array.length) return []
+    predicate = junqu.getIteratee(predicate, 3)
+    for (let i = 0; i < array.length; i++) {
+      if (!predicate(array[i], i, array)) { // 只需要一个为false,就把前面的元素去除
+        return array.slice(i)
+      }
+    }
+    return []
   },
 
   fill: function(array, value, start = 0, end = array.length) {
@@ -139,9 +146,7 @@ var junqu = {
     return result;
   },
 
-  head: function(array) {
-    return array[0];
-  },
+  head: array => Array.isArray(array) && array.length ? array[0] : [],
 
   indexOf: function(array, value, formIndex = 0) {
     for (let i = formIndex; i < array.length; i++) {
@@ -946,4 +951,6 @@ const tap = function(x, fn = x => x) {
 //     return c
 // }(_).length)
 
-// tap(junqu.differenceWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0], (a, b) => Math.round(a) === Math.round(b)))
+// tap(_.dropWhile([1,2,3,4,5], x=>x<3))
+
+// tap(junqSu.differenceWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0], (a, b) => Math.round(a) === Math.round(b)))
