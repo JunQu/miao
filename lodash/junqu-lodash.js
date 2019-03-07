@@ -311,8 +311,17 @@ var junqu = {
   pull: (array, ...values) => junqu.pullAll(array, values),
 
   basePullAll: function(array, values, iteratee, comparator) {
-    let valState = new Set(values.map(iteratee));
-    let pulled = array.filter(a => !valState.has(iteratee(a)));
+    let valState
+    let pulled
+    iteratee = iteratee ? iteratee : junqu.identity
+    if (comparator) {
+      valState = values.map(iteratee)
+      pulled = array.filter(a=>valState.findIndex(v=>comparator(a,v))===-1)
+    } else {
+      valState = new Set(values.map(iteratee));
+      pulled = array.filter(a => !valState.has(iteratee(a)));
+    }
+    // 强行改变数组
     array.length = 0;
     pulled.forEach(v => array.push(v));
     return array;
@@ -335,9 +344,28 @@ var junqu = {
     return junqu.basePullAll(array, junqu.flatten(values), iteratee);
   },
 
-  pullAllWith: function() {},
+  pullAllWith: function(array, ...values) {
+    let length = values.length;
+    if (!(Array.isArray(array) && array.length && values && length)) {
+      return array;
+    }
+    let comparator = typeof values[length - 1] === 'function' && length > 1 ? values.pop() : undefined
+    return junqu.basePullAll(array, junqu.flatten(values), junqu.identity, comparator)
+  },
 
-  pullAt: function() {},
+  // pullAtIndex 类似的有pullAtValue,但是这里没有
+  pullAt: function(array, ...indexes) {
+    if (!Array.isArray(array) || !array.length) {
+      return []
+    }
+    indexes = junqu.flatten(indexes)
+    let removed = []
+    array.forEach((v,i)=>indexes.includes(i)?removed.push(v):v)
+    let  pulled = array.filter((arr,i)=>!indexes.includes(i))
+    array.length = 0
+    pulled.forEach(v=>array.push(v))
+    return removed
+  },
 
   remove: function(array, predicate = junqu.identity) {
     let tmp = 0;
@@ -357,13 +385,7 @@ var junqu = {
     return result;
   },
 
-  reverse: function(array) {
-    const length = array.length;
-    for (let i = 0; i < length / 2; i++) {
-      [array[i], array[length - 1 - i]] = [array[length - 1 - i], array[i]];
-    }
-    return array;
-  },
+  reverse: array => array.reduce((a,b)=>[b, ...a],[]),
 
   slice: function(array, start = 0, end = array.length) {
     let length = array.length;
@@ -406,18 +428,66 @@ var junqu = {
     return junqu.slice(array, 1);
   },
 
-  take: function(array, n = 1) {
-    return junqu.slice(array, 0, n);
-  },
+  take: (array, n = 1) => array&&array.length?array.slice(0, n):[],
 
   takeRight: function(array, n = 1) {
+    if (!(array&&array.length)){
+      return []
+    }
     n = n > array.length ? array.length : n;
     return junqu.slice(array, array.length - n);
   },
 
-  union: function(...arrays) {
-    let array = junqu.flatten(arrays);
-    return Array.from(new Set(array));
+  takeRightWhile: function (array, predicate=junqu.identity) {
+    if (!(Array.isArray(array) && array.length)) {
+      return []
+    }
+    predicate = junqu.getIteratee(predicate, 3)
+    for (let i = array.length - 1; i >= 0; i--) {
+      if (!predicate(array[i], i, array)) {
+        return array.slice(i, array.length - 1)
+      }
+    }
+    return array.slice()
+  },
+  
+  takeWhile: function (array, predicate=junqu.identity) {
+    if (!(Array.isArray(array) && array.length)) {
+      return []
+    }
+    predicate = junqu.getIteratee(predicate, 3)
+    for (let [i, v] of array.entries()) { // entries()得到索引和值
+      if (!predicate(v,i,array)) {
+        return array.slice(0, i)
+      }
+    }
+    return array.slice()
+  }, 
+  
+  baseUnion: function (array, iteratee=junqu.identity, comparator) {
+    let arrState = new Set(array.map(iteratee))
+    tap(arrState)
+    return Array.from(new Set(array.filter(a=>!arrState.has(iteratee(a)))))
+  },
+  
+  union: (...arrays) => arrays.length ? junqu.baseUnion(junqu.flatten(arrays), junqu.identity) : [],
+
+  unionBy: function (...arrays) {
+    let length = arrays.length
+    if (!length) {
+      return []
+    }
+    let iteratee = !Array.isArray(arrays[length - 1]) && length > 1 ? junqu.getIteratee(arrays.pop(), 2) : junqu.identity
+    return junqu.baseUnion(junqu.flatten(arrays), iteratee)
+  },
+  
+  unionWith: function (...arrays) {
+    let length = arrays.length
+    if (!length) {
+      return []
+    }
+    let comparator = length > 1 && typeof arrays[length - 1] ? arrays.pop() : undefined
+    return junqu.baseUnion(junqu.flatten(arrays), junqu.identity, comparator)
   },
 
   without: function(array, ...values) {
@@ -430,6 +500,19 @@ var junqu = {
     }
     return reuslt;
   },
+
+  baseXor: function (array, values, iteratee, comparator) {
+    
+  },
+  
+  xor: function () {
+    
+  },
+  
+  xorBy: function () {
+    
+  },
+  
   /*---------------------------------------Array Last----------------------------------------------------------*/
 
   /*-------------------------------------Collection--------------------------------------------------------------*/
@@ -1088,9 +1171,10 @@ const tap = function(x, fn = x => x) {
 //     return c
 // }(_).length)
 
-var myArray = [{ x: 1 }, { x: 2 }, { x: 3 }, { x: 1 }];
-junqu.pullAllBy(myArray, [{ x: 1 }, { x: 3 }], o => o.x);
-tap(myArray);
-// tap(_.dropWhile([1,2,3,4,5], x=>x<3))
 
+// var myArray = [{ x: 1 }, { x: 2 }, { x: 3 }, { x: 1 }];
+// let arr = [1, 1.2, 1.5, 3, 0]
+// junqu.pullAllWith(arr, [1.9, 3, 0],(a,b)=> Math.round(a) === Math.round(b));
+// tap(arr);
+// tap(_.dropWhile([1,2,3,4,5], x=>x<3))
 // tap(junqSu.differenceWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0], (a, b) => Math.round(a) === Math.round(b)))
