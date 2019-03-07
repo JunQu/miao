@@ -13,7 +13,7 @@ var junqu = {
     return result;
   },
 
-  compact: array => array.filter(arr=>Boolean(arr)) ,
+  compact: array => array.filter(arr => Boolean(arr)),
 
   concat: function(array, ...values) {
     let result = Array.isArray(array) ? [...array] : [array]; // 其他不是数组的情况
@@ -34,10 +34,17 @@ var junqu = {
     if (!comparator) {
       valSet = new Set(values.map(iteratee));
     }
-    return array.filter(arr => comparator ? values.findIndex(val => comparator(arr, val)) === -1 : !valSet.has(iteratee(arr)));
+    return array.filter(arr =>
+      comparator
+        ? values.findIndex(val => comparator(arr, val)) === -1
+        : !valSet.has(iteratee(arr))
+    );
   },
 
-  difference: (array, ...values) => !array || !array.length ? [] : junqu.baseDifference(array, junqu.flatten(values), junqu.identity),
+  difference: (array, ...values) =>
+    !array || !array.length
+      ? []
+      : junqu.baseDifference(array, junqu.flatten(values), junqu.identity),
 
   differenceBy: function(array, ...values) {
     // 由于没有深度比较以及选择错误(pop)，代码存在巨大缺陷，但是我不改了
@@ -73,7 +80,7 @@ var junqu = {
     );
   },
 
-  drop: (array, n = 1) => n <= 0 ?array:array.slice(n),
+  drop: (array, n = 1) => (n <= 0 ? array : array.slice(n)),
 
   dropRight: function(array, n = 1) {
     if (n <= 0) return array;
@@ -82,28 +89,30 @@ var junqu = {
     return array.slice(0, array.length - n);
   },
 
-  dropRightWhile: function(array, predicate=junqu.identity){
-    if (!array || !array.length) return []
-    predicate = junqu.getIteratee(predicate, 3)
+  dropRightWhile: function(array, predicate = junqu.identity) {
+    if (!array || !array.length) return [];
+    predicate = junqu.getIteratee(predicate, 3);
     for (let i = array.length - 1; i >= 0; i--) {
-      if (!predicate(array[i], i, array)) { // 只需要一个为false,就把前面的元素去除
-        return array.slice(0, i+1)
+      if (!predicate(array[i], i, array)) {
+        // 只需要一个为false,就把前面的元素去除
+        return array.slice(0, i + 1);
       }
     }
-    return []
+    return [];
   },
 
   // The predicate is invoked with three arguments: (value, index, array).
   // 函数是目的是去除遇到第一个falsely值前的所有元素
-  dropWhile: function (array, predicate) {
-    if (!array || !array.length) return []
-    predicate = junqu.getIteratee(predicate, 3)
+  dropWhile: function(array, predicate) {
+    if (!array || !array.length) return [];
+    predicate = junqu.getIteratee(predicate, 3);
     for (let i = 0; i < array.length; i++) {
-      if (!predicate(array[i], i, array)) { // 只需要一个为false,就把前面的元素去除
-        return array.slice(i)
+      if (!predicate(array[i], i, array)) {
+        // 只需要一个为false,就把前面的元素去除
+        return array.slice(i);
       }
     }
-    return []
+    return [];
   },
 
   fill: function(array, value, start = 0, end = array.length) {
@@ -111,6 +120,30 @@ var junqu = {
       array[i] = value;
     }
     return array;
+  },
+
+  findIndex: function(array, predicate, fromIndex) {
+    fromIndex = fromIndex && fromIndex > 0 ? Math.trunc(fromIndex) : 0;
+    predicate = junqu.getIteratee(predicate);
+    for (let i = fromIndex; i < array.length; i++) {
+      if (predicate(array[i])) {
+        return i;
+      }
+    }
+    return -1;
+  },
+
+  findLastIndex: function(array, predicate, fromIndex) {
+    let length = array.length;
+    fromIndex =
+      fromIndex && fromIndex >= length ? Math.trunc(fromIndex) : length - 1;
+    predicate = junqu.getIteratee(predicate);
+    for (let i = fromIndex; i >= 0; i--) {
+      if (predicate(array[i])) {
+        return i;
+      }
+    }
+    return -1;
   },
 
   flatten: array =>
@@ -139,18 +172,18 @@ var junqu = {
     let result = {};
     if (pairs.length === 0) return result;
     for (let i = 0; i < pairs.length; i++) {
-        result[pairs[i][0]] = pairs[i][1];
+      result[pairs[i][0]] = pairs[i][1];
     }
     return result;
   },
 
-  head: array => Array.isArray(array) && array.length ? array[0] : undefined,
+  head: array => (Array.isArray(array) && array.length ? array[0] : undefined),
 
   indexOf: function(array, value, formIndex = 0) {
     if (!array || !array.length) {
-      return -1
+      return -1;
     }
-    formIndex = !formIndex || formIndex < 0 ? 0 : Math.trunc(formIndex)
+    formIndex = !formIndex || formIndex < 0 ? 0 : Math.trunc(formIndex);
     for (let i = formIndex; i < array.length; i++) {
       if (array[i] === value) {
         return i;
@@ -159,69 +192,77 @@ var junqu = {
     return -1;
   },
 
-  initial: array => array && array.length ? array.slice(0,array.length):[] ,
+  initial: array =>
+    array && array.length ? array.slice(0, array.length - 1) : [],
 
-  intersection: function (...arrays) {
+  intersection: function(...arrays) {
     if (!arrays || !arrays.length) {
-      return []
+      return [];
     }
-    let  arrayMapped = arrays.map(value => Array.isArray(value)?value:[])
+    let arrayMapped = arrays.map(value => (Array.isArray(value) ? value : []));
     // 对于不是元素的判断
     if (arrayMapped.length === 1) {
-      return arrayMapped[0].length ? arrayMapped[0] : []
+      return arrayMapped[0].length ? arrayMapped[0] : [];
     }
     // 随便取出一个基准
-    let result = arrayMapped[0]
+    let result = arrayMapped[0];
     for (let i = 1; i < arrayMapped.length; i++) {
       if (!result.length) {
-        return result
+        return result;
       }
-      let arraySet = new Set(arrayMapped[i])
-      result = result.filter(val=>arraySet.has(val)) // 对比，过滤不是共同的元素
+      let arraySet = new Set(arrayMapped[i]);
+      result = result.filter(val => arraySet.has(val)); // 对比，过滤不是共同的元素
     }
-    return result
+    return result;
   },
 
-  intersectionBy: function (...arrays) {
+  intersectionBy: function(...arrays) {
     if (!arrays || !arrays.length) {
-      return []
+      return [];
     }
-    let iteratee = Array.isArray(arrays[arrays.length - 1]) ? junqu.identity : junqu.getIteratee(arrays.pop())
-    let  arrayMapped = arrays.map(arr => Array.isArray(arr)? arr:[])
+    let iteratee = Array.isArray(arrays[arrays.length - 1])
+      ? junqu.identity
+      : junqu.getIteratee(arrays.pop(), 2);
+    let arrayMapped = arrays.map(arr => (Array.isArray(arr) ? arr : []));
     // 对于不是元素的判断
     if (arrayMapped.length === 1) {
-      return arrayMapped[0].length ? arrayMapped[0] : []
+      return arrayMapped[0].length ? arrayMapped[0] : [];
     }
     // 随便取出一个基准
-    let result = arrayMapped[0]
+    let result = arrayMapped[0];
     // 我的这个循环效率非常低，Lodash在这里做了大量的缓存
     for (let i = 1; i < arrayMapped.length; i++) {
       if (!result.length) {
-        return result
+        return result;
       }
-      let arraySet = new Set(arrayMapped[i].map(iteratee))
-      result = result.filter(val=>arraySet.has(iteratee(val)))
+      let arraySet = new Set(arrayMapped[i].map(iteratee));
+      result = result.filter(val => arraySet.has(iteratee(val)));
     }
-    return result
+    return result;
   },
 
-  intersectionWith: function (...arrays) {
+  intersectionWith: function(...arrays) {
     if (!arrays || !arrays.length) {
-      return []
+      return [];
     }
-    let comparator =typeof arrays[arrays.length - 1] === 'function' ? arrays.pop() : undefined
-    if (!comparator){
-      return junqu.intersection(arrays)
+    let comparator =
+      typeof arrays[arrays.length - 1] === "function"
+        ? arrays.pop()
+        : undefined;
+    if (!comparator) {
+      return junqu.intersection(junqu.flatten(arrays));
     }
-    let  arrayMapped = arrays.map(arr => Array.isArray(arr)? arr:[])
-    let result = arrayMapped[0]
+    let arrayMapped = arrays.map(arr => (Array.isArray(arr) ? arr : []));
+    let result = arrayMapped[0];
     for (let i = 1; i < arrayMapped.length; i++) {
       if (!result.length) {
-        return result
+        return result;
       }
-      result = result.filter(x=>arrayMapped[i].findIndex((y=>comparator(x,y))) !== -1)
+      result = result.filter(
+        x => arrayMapped[i].findIndex(y => comparator(x, y)) !== -1
+      );
     }
-    return result
+    return result;
   },
 
   join: function(array, separator = ",") {
@@ -238,7 +279,17 @@ var junqu = {
     return array[array.length - 1];
   },
 
-  lastIndexOf: function(array, value, fromIndex = array.length - 1) {
+  lastIndexOf: function(array, value, fromIndex) {
+    if (!array || !array.length) {
+      return -1;
+    }
+    if (!value) {
+      return -1;
+    }
+    fromIndex =
+      fromIndex && fromIndex < array.length
+        ? Math.trunc(fromIndex)
+        : array.length - 1;
     for (let i = fromIndex; i >= 0; i--) {
       if (array[i] === value) {
         return i;
@@ -248,21 +299,45 @@ var junqu = {
   },
 
   nth: function(array, n = 0) {
+    if (!array || !array.length) {
+      return undefined;
+    }
     if (n >= 0) {
       return array[n];
     }
     return array[array.length + n];
   },
 
-  pull: function(array, ...values) {
-    junqu.remove(array, x => values.includes(x)); // 为了结果，上面才是lodash的结果
+  pull: (array, ...values) => junqu.pullAll(array, values),
+
+  basePullAll: function(array, values, iteratee, comparator) {
+    let valState = new Set(values.map(iteratee));
+    let pulled = array.filter(a => !valState.has(iteratee(a)));
+    array.length = 0;
+    pulled.forEach(v => array.push(v));
     return array;
   },
 
-  pullAll: function(array, values) {
-    junqu.remove(array, x => values.includes(x));
-    return array;
+  pullAll: (array, values) =>
+    Array.isArray(array) && array.length && values && values.length
+      ? junqu.basePullAll(array, values, junqu.identity)
+      : array,
+
+  pullAllBy: function(array, ...values) {
+    let length = values.length;
+    if (!(Array.isArray(array) && array.length && values && length)) {
+      return array;
+    }
+    let iteratee =
+      Array.isArray(values[length - 1]) || length === 1
+        ? junqu.identity
+        : junqu.getIteratee(values.pop(), 2);
+    return junqu.basePullAll(array, junqu.flatten(values), iteratee);
   },
+
+  pullAllWith: function() {},
+
+  pullAt: function() {},
 
   remove: function(array, predicate = junqu.identity) {
     let tmp = 0;
@@ -917,7 +992,7 @@ var junqu = {
       junqu.isSymbol(value) ||
       value === null
     ) {
-      return object => (object === null ? undefined : object[value]);
+      return object => (!object ? undefined : object[value]);
     } else {
       // 遇到a[0].b.c之类取值，进行额外处理，这里lodash封装了方法_.get(),进行路径查找
       return obj => junqu.baseGet(obj, value);
@@ -1013,6 +1088,9 @@ const tap = function(x, fn = x => x) {
 //     return c
 // }(_).length)
 
+var myArray = [{ x: 1 }, { x: 2 }, { x: 3 }, { x: 1 }];
+junqu.pullAllBy(myArray, [{ x: 1 }, { x: 3 }], o => o.x);
+tap(myArray);
 // tap(_.dropWhile([1,2,3,4,5], x=>x<3))
 
 // tap(junqSu.differenceWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0], (a, b) => Math.round(a) === Math.round(b)))
