@@ -311,12 +311,14 @@ var junqu = {
   pull: (array, ...values) => junqu.pullAll(array, values),
 
   basePullAll: function(array, values, iteratee, comparator) {
-    let valState
-    let pulled
-    iteratee = iteratee ? iteratee : junqu.identity
+    let valState;
+    let pulled;
+    iteratee = iteratee ? iteratee : junqu.identity;
     if (comparator) {
-      valState = values.map(iteratee)
-      pulled = array.filter(a=>valState.findIndex(v=>comparator(a,v))===-1)
+      valState = values.map(iteratee);
+      pulled = array.filter(
+        a => valState.findIndex(v => comparator(a, v)) === -1
+      );
     } else {
       valState = new Set(values.map(iteratee));
       pulled = array.filter(a => !valState.has(iteratee(a)));
@@ -349,22 +351,30 @@ var junqu = {
     if (!(Array.isArray(array) && array.length && values && length)) {
       return array;
     }
-    let comparator = typeof values[length - 1] === 'function' && length > 1 ? values.pop() : undefined
-    return junqu.basePullAll(array, junqu.flatten(values), junqu.identity, comparator)
+    let comparator =
+      typeof values[length - 1] === "function" && length > 1
+        ? values.pop()
+        : undefined;
+    return junqu.basePullAll(
+      array,
+      junqu.flatten(values),
+      junqu.identity,
+      comparator
+    );
   },
 
   // pullAtIndex 类似的有pullAtValue,但是这里没有
   pullAt: function(array, ...indexes) {
     if (!Array.isArray(array) || !array.length) {
-      return []
+      return [];
     }
-    indexes = junqu.flatten(indexes)
-    let removed = []
-    array.forEach((v,i)=>indexes.includes(i)?removed.push(v):v)
-    let  pulled = array.filter((arr,i)=>!indexes.includes(i))
-    array.length = 0
-    pulled.forEach(v=>array.push(v))
-    return removed
+    indexes = junqu.flatten(indexes);
+    let removed = [];
+    array.forEach((v, i) => (indexes.includes(i) ? removed.push(v) : v));
+    let pulled = array.filter((arr, i) => !indexes.includes(i));
+    array.length = 0;
+    pulled.forEach(v => array.push(v));
+    return removed;
   },
 
   remove: function(array, predicate = junqu.identity) {
@@ -385,7 +395,7 @@ var junqu = {
     return result;
   },
 
-  reverse: array => array.reduce((a,b)=>[b, ...a],[]),
+  reverse: array => array.reduce((a, b) => [b, ...a], []),
 
   slice: function(array, start = 0, end = array.length) {
     let length = array.length;
@@ -428,91 +438,133 @@ var junqu = {
     return junqu.slice(array, 1);
   },
 
-  take: (array, n = 1) => array&&array.length?array.slice(0, n):[],
+  take: (array, n = 1) => (array && array.length ? array.slice(0, n) : []),
 
   takeRight: function(array, n = 1) {
-    if (!(array&&array.length)){
-      return []
+    if (!(array && array.length)) {
+      return [];
     }
     n = n > array.length ? array.length : n;
     return junqu.slice(array, array.length - n);
   },
 
-  takeRightWhile: function (array, predicate=junqu.identity) {
+  takeRightWhile: function(array, predicate = junqu.identity) {
     if (!(Array.isArray(array) && array.length)) {
-      return []
+      return [];
     }
-    predicate = junqu.getIteratee(predicate, 3)
+    predicate = junqu.getIteratee(predicate, 3);
     for (let i = array.length - 1; i >= 0; i--) {
       if (!predicate(array[i], i, array)) {
-        return array.slice(i, array.length - 1)
+        return array.slice(i + 1, array.length);
       }
     }
-    return array.slice()
+    return array.slice();
   },
-  
-  takeWhile: function (array, predicate=junqu.identity) {
+
+  takeWhile: function(array, predicate = junqu.identity) {
     if (!(Array.isArray(array) && array.length)) {
-      return []
+      return [];
     }
-    predicate = junqu.getIteratee(predicate, 3)
-    for (let [i, v] of array.entries()) { // entries()得到索引和值
-      if (!predicate(v,i,array)) {
-        return array.slice(0, i)
+    predicate = junqu.getIteratee(predicate, 3);
+    for (let [i, v] of array.entries()) {
+      // entries()得到索引和值
+      if (!predicate(v, i, array)) {
+        return array.slice(0, i);
       }
     }
-    return array.slice()
-  }, 
-  
-  baseUnion: function (array, iteratee=junqu.identity, comparator) {
-    let arrState = new Set(array.map(iteratee))
-    tap(arrState)
-    return Array.from(new Set(array.filter(a=>!arrState.has(iteratee(a)))))
-  },
-  
-  union: (...arrays) => arrays.length ? junqu.baseUnion(junqu.flatten(arrays), junqu.identity) : [],
-
-  unionBy: function (...arrays) {
-    let length = arrays.length
-    if (!length) {
-      return []
-    }
-    let iteratee = !Array.isArray(arrays[length - 1]) && length > 1 ? junqu.getIteratee(arrays.pop(), 2) : junqu.identity
-    return junqu.baseUnion(junqu.flatten(arrays), iteratee)
-  },
-  
-  unionWith: function (...arrays) {
-    let length = arrays.length
-    if (!length) {
-      return []
-    }
-    let comparator = length > 1 && typeof arrays[length - 1] ? arrays.pop() : undefined
-    return junqu.baseUnion(junqu.flatten(arrays), junqu.identity, comparator)
+    return array.slice();
   },
 
-  without: function(array, ...values) {
-    if (!array.length) return [];
-    let reuslt = [];
-    for (let val of array) {
-      if (!values.includes(val)) {
-        reuslt.push(val);
+  union: (...arrays) =>
+    arrays.length ? Array.from(new Set(junqu.flatten(arrays))) : [],
+
+  unionBy: function(...arrays) {
+    let length = arrays.length;
+    if (!length) {
+      return [];
+    }
+    let s = new Set(); // Set缓存
+    let valState; // 缓存处理后的
+    let result = []; // 存放结果
+    let iteratee =
+      !Array.isArray(arrays[length - 1]) && length > 1
+        ? junqu.getIteratee(arrays.pop(), 2)
+        : junqu.identity;
+    arrays = junqu.flatten(arrays);
+    arrays.forEach(value => {
+      valState = iteratee(value);
+      if (!s.has(valState)) {
+        // 与已经经过的值都不同
+        s.add(valState);
+        result.push(value);
       }
-    }
-    return reuslt;
+    });
+    return result;
   },
 
-  baseXor: function (array, values, iteratee, comparator) {
-    
+  unionWith: function(...arrays) {
+    let length = arrays.length;
+    let result = [];
+    if (!length) {
+      return [];
+    }
+    arrays = junqu.flatten(arrays);
+    let comparator =
+      length > 1 && typeof arrays[length - 1] ? arrays.pop() : undefined;
+    arrays.forEach(val =>
+      result.findIndex(reVal => comparator(val, reVal)) === -1
+        ? result.push(val)
+        : val
+    );
+    return result;
   },
-  
-  xor: function () {
-    
+
+  uniq: array => (array && array.length ? Array.from(new Set(array)) : []),
+
+  uniqBy: (array, iteratee) => {
+    let length = array.length;
+    if (!(array && length)) {
+      return [];
+    }
+    let s = new Set(); // Set缓存
+    let valState; // 缓存处理后的
+    let result = []; // 存放结果
+    iteratee = iteratee ? junqu.getIteratee(iteratee, 2) : junqu.identity;
+    array.forEach(value => {
+      valState = iteratee(value);
+      if (!s.has(valState)) {
+        // 与已经经过的值都不同
+        s.add(valState);
+        result.push(value);
+      }
+    });
+    return result;
   },
-  
-  xorBy: function () {
-    
+
+  uniqWith: (array, comparator) => {
+    let length = array.length;
+    let result = [];
+    if (!(array && length)) {
+      return [];
+    }
+    comparator = typeof comparator === "function" ? comparator : undefined;
+    array.forEach(val =>
+      result.findIndex(reVal => comparator(val, reVal)) === -1
+        ? result.push(val)
+        : val
+    );
+    return result;
   },
-  
+
+  without: (array, ...values) =>
+    array && array.length ? array.filter(v => !values.includes(v)) : [],
+
+  baseXor: function(array, values, iteratee, comparator) {},
+
+  xor: function() {},
+
+  xorBy: function() {},
+
   /*---------------------------------------Array Last----------------------------------------------------------*/
 
   /*-------------------------------------Collection--------------------------------------------------------------*/
@@ -1171,10 +1223,11 @@ const tap = function(x, fn = x => x) {
 //     return c
 // }(_).length)
 
-
+// tap(Math.round(1.2) === 1)
 // var myArray = [{ x: 1 }, { x: 2 }, { x: 3 }, { x: 1 }];
 // let arr = [1, 1.2, 1.5, 3, 0]
 // junqu.pullAllWith(arr, [1.9, 3, 0],(a,b)=> Math.round(a) === Math.round(b));
 // tap(arr);
 // tap(_.dropWhile([1,2,3,4,5], x=>x<3))
 // tap(junqSu.differenceWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0], (a, b) => Math.round(a) === Math.round(b)))
+// tap(_.unionWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0, 3.9], (a, b) => Math.round(a) === Math.round(b)))
