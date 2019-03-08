@@ -1,7 +1,6 @@
 var junqu = {
   /*--------------------------------------Array------------------------------------------------------*/
   chunk: function(array, size = 1) {
-    if (size < 1) return array;
     let result = [[]];
     for (let i = 0; i < array.length; i++) {
       if (result[result.length - 1].length >= size) {
@@ -556,14 +555,45 @@ var junqu = {
     return result;
   },
 
+  unzip: function (array) {
+    if (!(Array.isArray(array) && array.length)) return []
+    let arrTmp = Array.from({length: Math.max(...array.map(a=>a.length))}).map(x=>[])
+    // tap(arrTmp)
+    return array.reduce((pre, arr)=>(arr.forEach((val, i) => pre[i].push(val)), pre),arrTmp)
+    // 我感觉非常难懂这段,push()操作返回的是新数组长度，，，也就是说第二次以后的pre都是拥有两个参数?
+  },
+
+  unzipWith: function (array, iteratee) {
+    if (!(array&&array.length)) {
+      return []
+    }
+    iteratee = iteratee ? junqu.getIteratee(iteratee) : undefined
+    return junqu.zipWith(...array, iteratee)
+  },
+
   without: (array, ...values) =>
     array && array.length ? array.filter(v => !values.includes(v)) : [],
 
   baseXor: function(array, values, iteratee, comparator) {},
 
-  xor: function() {},
+  xor: function(...arrays) {
+
+  },
 
   xorBy: function() {},
+
+  zip:  (...arrays) => arrays.length ? junqu.zipWith(...arrays) : [],
+
+  // Array.from 竟然还有这种用法，以及...运算符的巧妙
+  zipWith: function (...arrays) {
+    if (!arrays.length) {
+      return [];
+    }
+    let length = arrays.length
+    let iteratee = length > 1 && typeof arrays[length - 1] === "function" ? arrays.pop() : undefined;
+    let maxLength = Math.max(...arrays.map(a => a.length));
+    return Array.from({ length: maxLength }, (_, i) => (iteratee ? iteratee(...arrays.map(a => a[i])) : arrays.map(a => a[i])));
+  },
 
   /*---------------------------------------Array Last----------------------------------------------------------*/
 
@@ -1222,8 +1252,6 @@ const tap = function(x, fn = x => x) {
 //     }
 //     return c
 // }(_).length)
-
-// tap(Math.round(1.2) === 1)
 // var myArray = [{ x: 1 }, { x: 2 }, { x: 3 }, { x: 1 }];
 // let arr = [1, 1.2, 1.5, 3, 0]
 // junqu.pullAllWith(arr, [1.9, 3, 0],(a,b)=> Math.round(a) === Math.round(b));
