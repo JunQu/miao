@@ -584,6 +584,37 @@ var junqu = {
 
   zip:  (...arrays) => arrays.length ? junqu.zipWith(...arrays) : [],
 
+  zipObject: function (props=[], values=[]) {
+    let result = {}
+    props.forEach((key,i)=>result[key]=values[i])
+    return result
+  },
+
+  zipObjectDeep: function (props=[], values=[]) {
+    let result = {};
+    // 粗略处理 目的是将'a.b[0].c' 转化为['a','b',0,'c']
+    let propsArr = props.map(val => typeof val === "string" ? val.split(/\W+/) : [val]);
+    // parseInt 大坑
+    propsArr = propsArr.map(arr => arr.map(v => parseInt(v, 10) || parseInt(v, 10) === 0 ? parseInt(v, 10) : v));
+
+    for (let i = 0; i < propsArr.length; i++) {
+      let value = values[i];
+      let path = propsArr[i];
+      let nested = result; // 暂存结果
+      for (let j = 0; j < path.length; j++) {
+        let key = path[j];
+        let newValue = value;
+        if (j !== path.length - 1) {
+          let objValue = nested && nested.hasOwnProperty(key) ? nested[key] : undefined;
+          newValue = junqu.isObject(objValue) ? objValue : typeof path[j + 1] === "number" ? [] : {};
+        }
+        nested[key] = newValue;
+        nested = nested[key]; // 指针后移，，这是这个函数中很久没弄好的(对对象的不熟悉，很多错误操作)，看了源码才知道的操作，
+      }
+    }
+    return result;
+  },
+
   // Array.from 竟然还有这种用法，以及...运算符的巧妙
   zipWith: function (...arrays) {
     if (!arrays.length) {
@@ -1258,4 +1289,4 @@ const tap = function(x, fn = x => x) {
 // tap(arr);
 // tap(_.dropWhile([1,2,3,4,5], x=>x<3))
 // tap(junqSu.differenceWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0], (a, b) => Math.round(a) === Math.round(b)))
-// tap(_.unionWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0, 3.9], (a, b) => Math.round(a) === Math.round(b)))
+// tap(_.zipObjectDeep(['a.body[0].cool','a.body[1].coll'], [1, 2]))
