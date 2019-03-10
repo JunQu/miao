@@ -1,3 +1,4 @@
+
 var junqu = {
   /*--------------------------------------Array------------------------------------------------------*/
   chunk: function(array, size = 1) {
@@ -28,8 +29,9 @@ var junqu = {
     return result;
   },
 
-  baseDifference: function(array, values, iteratee, comparator) {
+  baseDifference: function(array, values, iteratee=junqu.identity, comparator) {
     let valSet;
+    comparator = typeof comparator === 'function' ? comparator : undefined;
     if (!comparator) {
       valSet = new Set(values.map(iteratee));
     }
@@ -574,22 +576,52 @@ var junqu = {
   without: (array, ...values) =>
     array && array.length ? array.filter(v => !values.includes(v)) : [],
 
-  baseXor: function(array, values, iteratee, comparator) {},
-
-  xor: function(...arrays) {
-
-  },
-
-  xorBy: function() {},
-
-  zip:  (...arrays) => arrays.length ? junqu.zipWith(...arrays) : [],
-
-  zipObject: function (props=[], values=[]) {
-    let result = {}
-    props.forEach((key,i)=>result[key]=values[i])
+  baseXor: function(arrays, iteratee, comparator) {
+    let length = arrays.length
+    let result = Array(length)
+    for (let i = 0; i < length; i++) {
+      for (let j = 0; j < length; j++) {
+        if (j !== i) {
+          result[i] = junqu.baseDifference(result[i]||arrays[i], arrays[j], iteratee, comparator)
+        }
+      }
+    }
+    if (iteratee) {
+      result=junqu.unionBy(junqu.flatten(result), iteratee)
+    }
+    if (comparator) {
+      result = junqu.unionWith(junqu.flatten(result),comparator)
+    }
+    if (!iteratee && !comparator) {
+      result = junqu.union(junqu.flatten(result))
+    }
     return result
   },
 
+  // 交集，并集，差集，补集，，令人头秃
+  // 这个应该都不是，但是是处理最为麻烦的，考虑[[1,2,2,3],[4,5,1]]的情况
+  // 算了，这个处理过于麻烦，直接抄源码了，看源码它也有点束手无措，没有那种干净利落的处理掉
+  xor: function(...arrays) {
+    let arrs = arrays.map(a=>Array.isArray(a)?a:[])
+    return junqu.baseXor(arrs)
+  },
+
+  xorBy: function(...arrays) {
+    let iteratee = Array.isArray(arrays[arrays.length - 1]) ? junqu.identity : junqu.getIteratee(arrays.pop(), 2)
+    let arrs = arrays.map(a=>Array.isArray(a)?a:[])
+    return junqu.baseXor(arrs, iteratee)
+  },
+  xorWith: function (...arrays) {
+    let comparator = typeof arrays[arrays.length - 1] === 'function' ? arrays.pop() : undefined
+    let arrs = arrays.map(a=>Array.isArray(a)?a:[])
+    return junqu.baseXor(arrs, junqu.identity, comparator)
+  },
+
+  zip:  (...arrays) => arrays.length ? junqu.zipWith(...arrays) : [],
+
+  zipObject:  (props=[], values=[]) => props.reduce((obj, key,i)=>(obj[key]=values[i],obj), {}),
+
+  // 这个挺有意思
   zipObjectDeep: function (props=[], values=[]) {
     let result = {};
     // 粗略处理 目的是将'a.b[0].c' 转化为['a','b',0,'c']
@@ -605,7 +637,9 @@ var junqu = {
         let key = path[j];
         let newValue = value;
         if (j !== path.length - 1) {
+          // 是否已经存在属性
           let objValue = nested && nested.hasOwnProperty(key) ? nested[key] : undefined;
+          // 因为不能直接添加属性而不赋值，这一步是为了判断该添加值的类型
           newValue = junqu.isObject(objValue) ? objValue : typeof path[j + 1] === "number" ? [] : {};
         }
         nested[key] = newValue;
@@ -645,8 +679,12 @@ var junqu = {
 
   /*-------------------------------Lang--------------------------------------------------------*/
 
-  castArray: function(value) {
-    return Array.isArray(value) ? value : [value];
+  castArray: function() {
+    if (!arguments.length) {
+      return []
+    }
+    let val = arguments[0]
+    return Array.isArray(val) ? val : [val];
   },
 
   eq: function(value, other) {
