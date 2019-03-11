@@ -1,4 +1,3 @@
-
 var junqu = {
   /*--------------------------------------Array------------------------------------------------------*/
   chunk: function(array, size = 1) {
@@ -29,9 +28,14 @@ var junqu = {
     return result;
   },
 
-  baseDifference: function(array, values, iteratee=junqu.identity, comparator) {
+  baseDifference: function(
+    array,
+    values,
+    iteratee = junqu.identity,
+    comparator
+  ) {
     let valSet;
-    comparator = typeof comparator === 'function' ? comparator : undefined;
+    comparator = typeof comparator === "function" ? comparator : undefined;
     if (!comparator) {
       valSet = new Set(values.map(iteratee));
     }
@@ -557,77 +561,99 @@ var junqu = {
     return result;
   },
 
-  unzip: function (array) {
-    if (!(Array.isArray(array) && array.length)) return []
-    let arrTmp = Array.from({length: Math.max(...array.map(a=>a.length))}).map(x=>[])
+  unzip: function(array) {
+    if (!(Array.isArray(array) && array.length)) return [];
+    let arrTmp = Array.from({
+      length: Math.max(...array.map(a => a.length))
+    }).map(x => []);
     // tap(arrTmp)
-    return array.reduce((pre, arr)=>(arr.forEach((val, i) => pre[i].push(val)), pre),arrTmp)
+    return array.reduce(
+      (pre, arr) => (arr.forEach((val, i) => pre[i].push(val)), pre),
+      arrTmp
+    );
     // 我感觉非常难懂这段,push()操作返回的是新数组长度，，，也就是说第二次以后的pre都是拥有两个参数?
   },
 
-  unzipWith: function (array, iteratee) {
-    if (!(array&&array.length)) {
-      return []
+  unzipWith: function(array, iteratee) {
+    if (!(array && array.length)) {
+      return [];
     }
-    iteratee = iteratee ? junqu.getIteratee(iteratee) : undefined
-    return junqu.zipWith(...array, iteratee)
+    iteratee = iteratee ? junqu.getIteratee(iteratee) : undefined;
+    return junqu.zipWith(...array, iteratee);
   },
 
   without: (array, ...values) =>
     array && array.length ? array.filter(v => !values.includes(v)) : [],
 
   baseXor: function(arrays, iteratee, comparator) {
-    let length = arrays.length
-    let result = Array(length)
+    let length = arrays.length;
+    let result = Array(length);
     for (let i = 0; i < length; i++) {
       for (let j = 0; j < length; j++) {
         if (j !== i) {
-          result[i] = junqu.baseDifference(result[i]||arrays[i], arrays[j], iteratee, comparator)
+          result[i] = junqu.baseDifference(
+            result[i] || arrays[i],
+            arrays[j],
+            iteratee,
+            comparator
+          );
         }
       }
     }
     if (iteratee) {
-      result=junqu.unionBy(junqu.flatten(result), iteratee)
+      result = junqu.unionBy(junqu.flatten(result), iteratee);
     }
     if (comparator) {
-      result = junqu.unionWith(junqu.flatten(result),comparator)
+      result = junqu.unionWith(junqu.flatten(result), comparator);
     }
     if (!iteratee && !comparator) {
-      result = junqu.union(junqu.flatten(result))
+      result = junqu.union(junqu.flatten(result));
     }
-    return result
+    return result;
   },
 
   // 交集，并集，差集，补集，，令人头秃
   // 这个应该都不是，但是是处理最为麻烦的，考虑[[1,2,2,3],[4,5,1]]的情况
   // 算了，这个处理过于麻烦，直接抄源码了，看源码它也有点束手无措，没有那种干净利落的处理掉
   xor: function(...arrays) {
-    let arrs = arrays.map(a=>Array.isArray(a)?a:[])
-    return junqu.baseXor(arrs)
+    let arrs = arrays.map(a => (Array.isArray(a) ? a : []));
+    return junqu.baseXor(arrs);
   },
 
   xorBy: function(...arrays) {
-    let iteratee = Array.isArray(arrays[arrays.length - 1]) ? junqu.identity : junqu.getIteratee(arrays.pop(), 2)
-    let arrs = arrays.map(a=>Array.isArray(a)?a:[])
-    return junqu.baseXor(arrs, iteratee)
+    let iteratee = Array.isArray(arrays[arrays.length - 1])
+      ? junqu.identity
+      : junqu.getIteratee(arrays.pop(), 2);
+    let arrs = arrays.map(a => (Array.isArray(a) ? a : []));
+    return junqu.baseXor(arrs, iteratee);
   },
-  xorWith: function (...arrays) {
-    let comparator = typeof arrays[arrays.length - 1] === 'function' ? arrays.pop() : undefined
-    let arrs = arrays.map(a=>Array.isArray(a)?a:[])
-    return junqu.baseXor(arrs, junqu.identity, comparator)
+  xorWith: function(...arrays) {
+    let comparator =
+      typeof arrays[arrays.length - 1] === "function"
+        ? arrays.pop()
+        : undefined;
+    let arrs = arrays.map(a => (Array.isArray(a) ? a : []));
+    return junqu.baseXor(arrs, junqu.identity, comparator);
   },
 
-  zip:  (...arrays) => arrays.length ? junqu.zipWith(...arrays) : [],
+  zip: (...arrays) => (arrays.length ? junqu.zipWith(...arrays) : []),
 
-  zipObject:  (props=[], values=[]) => props.reduce((obj, key,i)=>(obj[key]=values[i],obj), {}),
+  zipObject: (props = [], values = []) =>
+    props.reduce((obj, key, i) => ((obj[key] = values[i]), obj), {}),
 
   // 这个挺有意思
-  zipObjectDeep: function (props=[], values=[]) {
+  zipObjectDeep: function(props = [], values = []) {
     let result = {};
     // 粗略处理 目的是将'a.b[0].c' 转化为['a','b',0,'c']
-    let propsArr = props.map(val => typeof val === "string" ? val.split(/\W+/) : [val]);
+    let propsArr = props.map(val =>
+      typeof val === "string" ? val.split(/\W+/) : [val]
+    );
     // parseInt 大坑
-    propsArr = propsArr.map(arr => arr.map(v => parseInt(v, 10) || parseInt(v, 10) === 0 ? parseInt(v, 10) : v));
+    propsArr = propsArr.map(arr =>
+      arr.map(v =>
+        parseInt(v, 10) || parseInt(v, 10) === 0 ? parseInt(v, 10) : v
+      )
+    );
 
     for (let i = 0; i < propsArr.length; i++) {
       let value = values[i];
@@ -638,9 +664,14 @@ var junqu = {
         let newValue = value;
         if (j !== path.length - 1) {
           // 是否已经存在属性
-          let objValue = nested && nested.hasOwnProperty(key) ? nested[key] : undefined;
+          let objValue =
+            nested && nested.hasOwnProperty(key) ? nested[key] : undefined;
           // 因为不能直接添加属性而不赋值，这一步是为了判断该添加值的类型
-          newValue = junqu.isObject(objValue) ? objValue : typeof path[j + 1] === "number" ? [] : {};
+          newValue = junqu.isObject(objValue)
+            ? objValue
+            : typeof path[j + 1] === "number"
+            ? []
+            : {};
         }
         nested[key] = newValue;
         nested = nested[key]; // 指针后移，，这是这个函数中很久没弄好的(对对象的不熟悉，很多错误操作)，看了源码才知道的操作，
@@ -650,21 +681,163 @@ var junqu = {
   },
 
   // Array.from 竟然还有这种用法，以及...运算符的巧妙
-  zipWith: function (...arrays) {
+  zipWith: function(...arrays) {
     if (!arrays.length) {
       return [];
     }
-    let length = arrays.length
-    let iteratee = length > 1 && typeof arrays[length - 1] === "function" ? arrays.pop() : undefined;
+    let length = arrays.length;
+    let iteratee =
+      length > 1 && typeof arrays[length - 1] === "function"
+        ? arrays.pop()
+        : undefined;
     let maxLength = Math.max(...arrays.map(a => a.length));
-    return Array.from({ length: maxLength }, (_, i) => (iteratee ? iteratee(...arrays.map(a => a[i])) : arrays.map(a => a[i])));
+    return Array.from({ length: maxLength }, (_, i) =>
+      iteratee ? iteratee(...arrays.map(a => a[i])) : arrays.map(a => a[i])
+    );
   },
 
   /*---------------------------------------Array Last----------------------------------------------------------*/
 
   /*-------------------------------------Collection--------------------------------------------------------------*/
-  countBy: function(collection, iteratee = junqu.identity) {},
+  countBy: function(collection, iteratee = junqu.identity) {
+    let obj = {};
+    if (!collection.length) {
+      return obj;
+    }
+    iteratee = junqu.getIteratee(iteratee, 2);
+    return collection.reduce((obj, val) => {
+      let valTmp = iteratee(val);
+      if (obj.hasOwnProperty(valTmp)) {
+        ++obj[valTmp];
+      } else {
+        obj[valTmp] = 1;
+      }
+      return obj;
+    }, obj);
+  },
 
+  every: function(collection, predicate = junqu.identity) {
+    let length = !collection ? 0 : collection.length;
+    predicate = junqu.getIteratee(predicate, 3);
+    for (let i = 0; i < length; i++) {
+      if (!predicate(collection[i], i, collection)) {
+        return false;
+      }
+    }
+    return true;
+  },
+
+  filter: function(collection, predicate = junqu.identity) {
+    let result = [];
+    let length = !collection ? 0 : collection.length;
+    predicate = junqu.getIteratee(predicate, 3);
+    for (let i = 0; i < length; i++) {
+      let val = collection[i];
+      if (predicate(val, i, collection)) {
+        result.push(val);
+      }
+    }
+    return result;
+  },
+
+  find: function(collection, predicate = junqu.identity, fromIndex = 0) {
+    if (!(collection && collection.length)) {
+      return undefined;
+    }
+    predicate = junqu.getIteratee(predicate, 3);
+    fromIndex =
+      typeof fromIndex === "number"
+        ? fromIndex < 0
+          ? 0
+          : Math.trunc(fromIndex)
+        : 0;
+    for (let i = fromIndex; i < collection.length; i++) {
+      let val = collection[i];
+      if (predicate(val, i, collection)) {
+        return val;
+      }
+    }
+    return undefined;
+  },
+
+  findLast: function(collection, predicate = junqu.identity, fromIndex = 0) {
+    if (!(collection && collection.length)) {
+      return undefined;
+    }
+    predicate = junqu.getIteratee(predicate, 3);
+    fromIndex =
+      typeof fromIndex === "number"
+        ? fromIndex >= collection.length
+          ? collection.length - 1
+          : Math.trunc(fromIndex)
+        : 0;
+    for (let i = fromIndex; i >= 0; i--) {
+      let val = collection[i];
+      if (predicate(val, i, collection)) {
+        return val;
+      }
+    }
+    return undefined;
+  },
+
+  reject: function(collection, predicate = junqu.identity) {
+    let result = [];
+    let length = !collection ? 0 : collection.length;
+    predicate = junqu.getIteratee(predicate, 3);
+    for (let i = 0; i < length; i++) {
+      let val = collection[i];
+      if (!predicate(val, i, collection)) {
+        result.push(val);
+      }
+    }
+    return result;
+  },
+
+  sample: function(collection) {
+    let arr;
+    if (junqu.isObjectLike(collection)) {
+      arr = Object.values(collection);
+    } else {
+      arr = collection;
+    }
+    return arr && arr.length
+      ? arr[~~((Math.random() * 100) % arr.length)]
+      : undefined;
+  },
+
+  size: function(collection) {
+    if (!collection) {
+      return 0;
+    }
+    // 某些特殊字符的长度可能不一样例如'𠮷𠮷' ，这里代码来自阮老师
+    if (typeof collection === "string") {
+      let re = collection.match(/[\s\S]/gu);
+      return re ? re.length : 0;
+    }
+    if (junqu.isObjectLike(collection)) {
+      return Object.keys(collection).length;
+    }
+    if (junqu.isMap(collection) || junqu.isSet(collection)) {
+      return collection.size;
+    }
+    if (junqu.isArrayLike(collection)) {
+      return collection.length;
+    }
+    return collection.length;
+  },
+
+  some: function(collection, predicate = junqu.identity) {
+    let length = !collection ? 0 : collection.length;
+    predicate = junqu.getIteratee(predicate, 3);
+    for (let i = 0; i < length; i++) {
+      if (predicate(collection[i], i, collection)) {
+        return true;
+      }
+    }
+    return falseS;
+  },
+
+  sortBy: function() {},
   /*-------------------------------------Collection Last--------------------------------------------------------------*/
 
   /*----------------------------------Date----------------------------------------------------*/
@@ -681,9 +854,9 @@ var junqu = {
 
   castArray: function() {
     if (!arguments.length) {
-      return []
+      return [];
     }
-    let val = arguments[0]
+    let val = arguments[0];
     return Array.isArray(val) ? val : [val];
   },
 
@@ -1328,3 +1501,4 @@ const tap = function(x, fn = x => x) {
 // tap(_.dropWhile([1,2,3,4,5], x=>x<3))
 // tap(junqSu.differenceWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0], (a, b) => Math.round(a) === Math.round(b)))
 // tap(_.zipObjectDeep(['a.body[0].cool','a.body[1].coll'], [1, 2]))
+// tap(_.countBy(['one', 'two', 'three'], 'length'))
