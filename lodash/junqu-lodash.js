@@ -731,6 +731,10 @@ var junqu = {
   filter: function(collection, predicate = junqu.identity) {
     let result = [];
     let length = !collection ? 0 : collection.length;
+    // 这算是没解决的遗留的问题，在match我没有去解决，就将就的用if解决一下
+    if (junqu.isRegExp(predicate)){
+      return collection
+    }
     predicate = junqu.getIteratee(predicate, 3);
     for (let i = 0; i < length; i++) {
       let val = collection[i];
@@ -761,17 +765,12 @@ var junqu = {
     return undefined;
   },
 
-  findLast: function(collection, predicate = junqu.identity, fromIndex = 0) {
+  findLast: function(collection, predicate = junqu.identity, fromIndex = collection.length-1) {
     if (!(collection && collection.length)) {
       return undefined;
     }
     predicate = junqu.getIteratee(predicate, 3);
-    fromIndex =
-      typeof fromIndex === "number"
-        ? fromIndex >= collection.length
-          ? collection.length - 1
-          : Math.trunc(fromIndex)
-        : 0;
+    fromIndex = typeof fromIndex === "number" ? (fromIndex >= collection.length ? collection.length - 1 : Math.trunc(fromIndex)) : collection.length-1;
     for (let i = fromIndex; i >= 0; i--) {
       let val = collection[i];
       if (predicate(val, i, collection)) {
@@ -781,8 +780,15 @@ var junqu = {
     return undefined;
   },
 
+  // 没有处理非类数组类型
   forEach: function (collection, iteratee=junqu.identity) {
-    let arr = Array.isArray(collection) ? collection : 1
+    if (!collection) {
+      return collection
+    }
+    if (Object.prototype.toString.call(collection) === '[object Object]') {
+      return junqu.forIn(collection, iteratee)
+    }
+    let arr = collection
     iteratee = junqu.getIteratee(iteratee, 3)
     let length = arr ? arr.length : 0
     for (let i = 0; i < length; i++) {
@@ -790,9 +796,27 @@ var junqu = {
         break
       }
     }
-    return arr
+    return collection
   },
-  
+
+  forEachRight: function (collection, iteratee=junqu.identity) {
+    if (!collection) {
+      return collection
+    }
+    if (Object.prototype.toString.call(collection) === '[object Object]') {
+      return junqu.forInRight(collection, iteratee)
+    }
+    let arr = collection
+    iteratee = junqu.getIteratee(iteratee, 3)
+    let length = arr ? arr.length : 0
+    for (let i = length - 1; i >= 0; i--) {
+      if (iteratee(arr[i], i, arr) === false) {
+        break
+      }
+    }
+    return collection
+  },
+
   groupBy: function (collection, iteratee=junqu.identity) {
     let arr = Array.isArray(collection) ? collection : (junqu.isObjectLike(collection) ? Object.values(collection):[value])
     iteratee = junqu.getIteratee(iteratee, 3)
@@ -800,7 +824,7 @@ var junqu = {
       let key = iteratee(val)
       return (obj.hasOwnProperty.call(obj, key)?obj[key].push(val):obj[key]=[val], obj)}, {})
   },
-  
+
   includes: function (collection, value, fromIndex=0) {
     collection = junqu.isArrayLike(collection)?collection:Object.values(collection)
     fromIndex = fromIndex >= 0 ? fromIndex : Math.max(fromIndex+collection.length, 0)
@@ -811,7 +835,23 @@ var junqu = {
     iteratee = junqu.getIteratee(iteratee, 3)
     return collection.reduce((obj, val)=>(obj[iteratee(val)]=val,obj), {})
   },
-  
+
+  map: function (collection, iteratee=junqu.identity) {
+    if (!collection) {
+      return []
+    }
+    iteratee = junqu.getIteratee(iteratee, 2)
+    let result = []
+    if(!junqu.isArrayLike(collection) || Object.prototype.toString.call(collection) === '[object Object]') {
+      junqu.forIn(collection, val=>result.push(iteratee(val)))
+    }else {
+      for (let i = 0; i < collection.length; i++) {
+        result.push(iteratee(collection[i], i, collection))
+      }
+    }
+    return result
+  },
+
   partition: function (collection, predicate=junqu.identity) {
     predicate = junqu.getIteratee(predicate, 2)
     let result =[[],[]]
@@ -884,7 +924,7 @@ var junqu = {
         return true;
       }
     }
-    return falseS;
+    return false;
   },
 
   sortBy: function() {},
@@ -1401,6 +1441,49 @@ var junqu = {
   /*----------------------------Object--------------------------------------*/
 
   assign: function(obj) {},
+  
+  forIn: function (object, iteratee=junqu.identity) {
+    if (!(object&&junqu.isObjectLike(object))) {
+      return object
+    }
+    iteratee = junqu.getIteratee(iteratee, 3)
+    let keys = []
+    for (let k in object) {
+      // 这个判断来自源码，我不太懂
+      if (!(k === 'constructor' && (junqu.isPrototype(object) || !Object.hasOwnProperty.call(object, k)))) {
+        keys.push(k)
+      }
+    }
+    for (let i = 0; i < keys.length; i++) {
+      let key = keys[i]
+      if (iteratee(object[key], key, object)===false) {
+        break
+      }
+    }
+    return object
+  },
+  
+  forInRight: function (object, iteratee=junqu.identity) {
+    if (!(object&&junqu.isObjectLike(object))) {
+      return object
+    }
+    object = Object(object)
+    iteratee = junqu.getIteratee(iteratee, 3)
+    let keys = []
+    for (let k in object) {
+      // 这个判断来自源码，我不太懂
+      if (!(k === 'constructor' && (junqu.isPrototype(object) || !Object.hasOwnProperty.call(object, k)))) {
+        keys.push(k)
+      }
+    }
+    for (let i = keys.length - 1; i >= 0; i--) {
+      let key = keys[i]
+      if (iteratee(object[key], key, object)===false) {
+        break
+      }
+    }
+    return object
+  },
 
   /*----------------------------Object Last--------------------------------------*/
 
