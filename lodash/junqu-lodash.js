@@ -627,6 +627,7 @@ var junqu = {
     let arrs = arrays.map(a => (Array.isArray(a) ? a : []));
     return junqu.baseXor(arrs, iteratee);
   },
+
   xorWith: function(...arrays) {
     let comparator =
       typeof arrays[arrays.length - 1] === "function"
@@ -780,6 +781,55 @@ var junqu = {
     return undefined;
   },
 
+  forEach: function (collection, iteratee=junqu.identity) {
+    let arr = Array.isArray(collection) ? collection : 1
+    iteratee = junqu.getIteratee(iteratee, 3)
+    let length = arr ? arr.length : 0
+    for (let i = 0; i < length; i++) {
+      if (iteratee(arr[i], i, arr) === false) {
+        break
+      }
+    }
+    return arr
+  },
+  
+  groupBy: function (collection, iteratee=junqu.identity) {
+    let arr = Array.isArray(collection) ? collection : (junqu.isObjectLike(collection) ? Object.values(collection):[value])
+    iteratee = junqu.getIteratee(iteratee, 3)
+    return arr.reduce((obj,val)=>{
+      let key = iteratee(val)
+      return (obj.hasOwnProperty.call(obj, key)?obj[key].push(val):obj[key]=[val], obj)}, {})
+  },
+  
+  includes: function (collection, value, fromIndex=0) {
+    collection = junqu.isArrayLike(collection)?collection:Object.values(collection)
+    fromIndex = fromIndex >= 0 ? fromIndex : Math.max(fromIndex+collection.length, 0)
+    return collection.includes(value,fromIndex)
+  },
+
+  keyBy: function (collection, iteratee=junqu.identity) {
+    iteratee = junqu.getIteratee(iteratee, 3)
+    return collection.reduce((obj, val)=>(obj[iteratee(val)]=val,obj), {})
+  },
+  
+  partition: function (collection, predicate=junqu.identity) {
+    predicate = junqu.getIteratee(predicate, 2)
+    let result =[[],[]]
+    let truely = result[0]
+    let falsely = result[1]
+    if (!(collection && collection.length)) {
+      return result
+    }
+    for (let val of collection) {
+      if (predicate(val)) {
+        truely.push(val)
+      }else {
+        falsely.push(val)
+      }
+    }
+    return result
+  },
+  
   reject: function(collection, predicate = junqu.identity) {
     let result = [];
     let length = !collection ? 0 : collection.length;
@@ -1502,3 +1552,7 @@ const tap = function(x, fn = x => x) {
 // tap(junqSu.differenceWith([1, 1.2, 1.5, 3, 0], [1.9, 3, 0], (a, b) => Math.round(a) === Math.round(b)))
 // tap(_.zipObjectDeep(['a.body[0].cool','a.body[1].coll'], [1, 2]))
 // tap(_.countBy(['one', 'two', 'three'], 'length'))
+// tap(_.filter(["abc","def"],/ef/))
+// _.forEach({ 'a': 1, 'b': 2 }, function(value, key) {
+//   console.log(key);
+// })
