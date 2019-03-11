@@ -780,6 +780,12 @@ var junqu = {
     return undefined;
   },
 
+  flatMap:  (collection, iteratee=junqu.identity) => junqu.flatten(junqu.map(collection, iteratee)),
+
+  flatMapDeep:  (collection, iteratee=junqu.identity) => junqu.flattenDeep(junqu.map(collection, iteratee)),
+
+  flatMapDepth:  (collection, iteratee=junqu.identity, depth) => junqu.flattenDepth(junqu.map(collection, iteratee),depth),
+
   // 没有处理非类数组类型
   forEach: function (collection, iteratee=junqu.identity) {
     if (!collection) {
@@ -829,6 +835,10 @@ var junqu = {
     collection = junqu.isArrayLike(collection)?collection:Object.values(collection)
     fromIndex = fromIndex >= 0 ? fromIndex : Math.max(fromIndex+collection.length, 0)
     return collection.includes(value,fromIndex)
+  },
+
+  invokeMap: function (collection, path, args) {
+
   },
 
   keyBy: function (collection, iteratee=junqu.identity) {
@@ -883,6 +893,10 @@ var junqu = {
     return result;
   },
 
+  reduce: function (collection, iteratee=junqu.identity, accumulator) {
+    
+  },
+  
   sample: function(collection) {
     let arr;
     if (junqu.isObjectLike(collection)) {
@@ -928,6 +942,15 @@ var junqu = {
   },
 
   sortBy: function() {},
+
+  shuffle: function([...arr]) {
+    let len = arr.length
+    while (len) {
+      const i = Math.floor(Math.random() * len--);
+      [arr[len], arr[i]] = [arr[i], arr[len]]
+    }
+    return arr
+  },
   /*-------------------------------------Collection Last--------------------------------------------------------------*/
 
   /*----------------------------------Date----------------------------------------------------*/
