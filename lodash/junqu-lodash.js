@@ -417,26 +417,104 @@ var junqu = {
     return result;
   },
 
+  //_.sortedIndex([30, 50], 40);
   sortedIndex: function(array, value) {
-    if (array.length === 0) return 0;
-    let length = array.length;
-    let leftDigit = 0;
-    let rightDigit = length - 1;
-    if (value < array[leftDigit]) {
-      return 0;
+    if (!(Array.isArray(array) && array.length)) {
+      return -1;
     }
-    if (value > array[rightDigit]) {
-      return length;
+    if (typeof value !== "number") {
+      return -1;
     }
-    while (leftDigit - rightDigit > 1) {
-      let middle = Math.floor((leftDigit + rightDigit) / 2);
-      if (array[middle] > value) {
-        rightDigit = middle;
+    let low = 0;
+    let high = array.length - 1;
+    let mid;
+    while (low < high) {
+      // 据说这样能防止溢出
+      mid = (high + low) >>> 1;
+      if (array[mid] < value) {
+        low = mid + 1;
       } else {
-        leftDigit = middle;
+        high = mid;
       }
     }
-    return leftDigit;
+    return high;
+  },
+
+  sortedIndexBy: function(array, value, iteratee = junqu.identity) {
+    iteratee = junqu.getIteratee(iteratee, 2);
+    let arr = array.map(iteratee);
+    let val = iteratee(value);
+    return junqu.sortedIndex(arr, val);
+  },
+
+  sortedIndexOf: function(array, value) {
+    if (!(array && array.length)) {
+      return -1;
+    }
+    let i = junqu.sortedIndex(array, value);
+    if (array[i] === value && i < array.length) {
+      return i;
+    }
+    return -1;
+  },
+
+  sortedLastIndex: function(array, value) {
+    if (!(Array.isArray(array) && array.length)) {
+      return -1;
+    }
+    if (typeof value !== "number") {
+      return -1;
+    }
+    let low = 0;
+    let high = array.length - 1;
+    while (low < high) {
+      let mid = (low + high) >>> 1;
+      if (array[mid] <= value) {
+        low = mid + 1;
+      } else {
+        high = mid;
+      }
+    }
+    return high;
+  },
+
+  sortedLastIndexBy: function(array, value, iteratee = junqu.identity) {
+    iteratee = junqu.getIteratee(iteratee, 2);
+    let arr = array.map(iteratee);
+    let val = iteratee(value);
+    return junqu.sortedLastIndex(arr, val);
+  },
+
+  sortedLastIndexOf: function(array, value) {
+    if (!(array && array.length)) {
+      return -1;
+    }
+    let i = junqu.sortedLastIndex(array, value) - 1;
+    if (array[i] === value && i < array.length) {
+      return i;
+    }
+    return -1;
+  },
+
+  sortedUniq: function(array) {
+    return junqu.sortedUniqBy(array, junqu.identity);
+  },
+
+  sortedUniqBy: function(array, iteratee = junqu.identity) {
+    if (!(array && array.length)) {
+      return [];
+    }
+    iteratee = junqu.getIteratee(iteratee, 2);
+    let result = [array[0]];
+    let tmp = iteratee(array[0]);
+    return array.reduce((ary, val) => {
+      let v = iteratee(val);
+      if (!junqu.eq(tmp, v)) {
+        result.push(val);
+        tmp = v;
+      }
+      return result;
+    }, result);
   },
 
   tail: function(array) {
@@ -732,8 +810,8 @@ var junqu = {
     let result = [];
     let length = !collection ? 0 : collection.length;
     // 这算是没解决的遗留的问题，在match我没有去解决，就将就的用if解决一下
-    if (junqu.isRegExp(predicate)){
-      return collection
+    if (junqu.isRegExp(predicate)) {
+      return collection;
     }
     predicate = junqu.getIteratee(predicate, 3);
     for (let i = 0; i < length; i++) {
@@ -765,12 +843,21 @@ var junqu = {
     return undefined;
   },
 
-  findLast: function(collection, predicate = junqu.identity, fromIndex = collection.length-1) {
+  findLast: function(
+    collection,
+    predicate = junqu.identity,
+    fromIndex = collection.length - 1
+  ) {
     if (!(collection && collection.length)) {
       return undefined;
     }
     predicate = junqu.getIteratee(predicate, 3);
-    fromIndex = typeof fromIndex === "number" ? (fromIndex >= collection.length ? collection.length - 1 : Math.trunc(fromIndex)) : collection.length-1;
+    fromIndex =
+      typeof fromIndex === "number"
+        ? fromIndex >= collection.length
+          ? collection.length - 1
+          : Math.trunc(fromIndex)
+        : collection.length - 1;
     for (let i = fromIndex; i >= 0; i--) {
       let val = collection[i];
       if (predicate(val, i, collection)) {
@@ -780,147 +867,171 @@ var junqu = {
     return undefined;
   },
 
-  flatMap:  (collection, iteratee=junqu.identity) => junqu.flatten(junqu.map(collection, iteratee)),
+  flatMap: (collection, iteratee = junqu.identity) =>
+    junqu.flatten(junqu.map(collection, iteratee)),
 
-  flatMapDeep:  (collection, iteratee=junqu.identity) => junqu.flattenDeep(junqu.map(collection, iteratee)),
+  flatMapDeep: (collection, iteratee = junqu.identity) =>
+    junqu.flattenDeep(junqu.map(collection, iteratee)),
 
-  flatMapDepth:  (collection, iteratee=junqu.identity, depth) => junqu.flattenDepth(junqu.map(collection, iteratee),depth),
+  flatMapDepth: (collection, iteratee = junqu.identity, depth) =>
+    junqu.flattenDepth(junqu.map(collection, iteratee), depth),
 
   // 没有处理非类数组类型
-  forEach: function (collection, iteratee=junqu.identity) {
+  forEach: function(collection, iteratee = junqu.identity) {
     if (!collection) {
-      return collection
+      return collection;
     }
-    if (Object.prototype.toString.call(collection) === '[object Object]') {
-      return junqu.forIn(collection, iteratee)
+    if (Object.prototype.toString.call(collection) === "[object Object]") {
+      return junqu.forIn(collection, iteratee);
     }
-    let arr = collection
-    iteratee = junqu.getIteratee(iteratee, 3)
-    let length = arr ? arr.length : 0
+    let arr = collection;
+    iteratee = junqu.getIteratee(iteratee, 3);
+    let length = arr ? arr.length : 0;
     for (let i = 0; i < length; i++) {
       if (iteratee(arr[i], i, arr) === false) {
-        break
+        break;
       }
     }
-    return collection
+    return collection;
   },
 
-  forEachRight: function (collection, iteratee=junqu.identity) {
+  forEachRight: function(collection, iteratee = junqu.identity) {
     if (!collection) {
-      return collection
+      return collection;
     }
-    if (Object.prototype.toString.call(collection) === '[object Object]') {
-      return junqu.forInRight(collection, iteratee)
+    if (Object.prototype.toString.call(collection) === "[object Object]") {
+      return junqu.forInRight(collection, iteratee);
     }
-    let arr = collection
-    iteratee = junqu.getIteratee(iteratee, 3)
-    let length = arr ? arr.length : 0
+    let arr = collection;
+    iteratee = junqu.getIteratee(iteratee, 3);
+    let length = arr ? arr.length : 0;
     for (let i = length - 1; i >= 0; i--) {
       if (iteratee(arr[i], i, arr) === false) {
-        break
+        break;
       }
     }
-    return collection
+    return collection;
   },
 
-  groupBy: function (collection, iteratee=junqu.identity) {
-    let arr = Array.isArray(collection) ? collection : (junqu.isObjectLike(collection) ? Object.values(collection):[value])
-    iteratee = junqu.getIteratee(iteratee, 3)
-    return arr.reduce((obj,val)=>{
-      let key = iteratee(val)
-      return (obj.hasOwnProperty.call(obj, key)?obj[key].push(val):obj[key]=[val], obj)}, {})
+  groupBy: function(collection, iteratee = junqu.identity) {
+    let arr = Array.isArray(collection)
+      ? collection
+      : junqu.isObjectLike(collection)
+      ? Object.values(collection)
+      : [value];
+    iteratee = junqu.getIteratee(iteratee, 3);
+    return arr.reduce((obj, val) => {
+      let key = iteratee(val);
+      return (
+        obj.hasOwnProperty.call(obj, key)
+          ? obj[key].push(val)
+          : (obj[key] = [val]),
+        obj
+      );
+    }, {});
   },
 
-  includes: function (collection, value, fromIndex=0) {
-    collection = junqu.isArrayLike(collection)?collection:Object.values(collection)
-    fromIndex = fromIndex >= 0 ? fromIndex : Math.max(fromIndex+collection.length, 0)
-    return collection.includes(value,fromIndex)
+  includes: function(collection, value, fromIndex = 0) {
+    collection = junqu.isArrayLike(collection)
+      ? collection
+      : Object.values(collection);
+    fromIndex =
+      fromIndex >= 0 ? fromIndex : Math.max(fromIndex + collection.length, 0);
+    return collection.includes(value, fromIndex);
   },
 
-  invokeMap: function (collection, path, args) {
+  invokeMap: function(collection, path, args) {},
 
+  keyBy: function(collection, iteratee = junqu.identity) {
+    iteratee = junqu.getIteratee(iteratee, 3);
+    return collection.reduce(
+      (obj, val) => ((obj[iteratee(val)] = val), obj),
+      {}
+    );
   },
 
-  keyBy: function (collection, iteratee=junqu.identity) {
-    iteratee = junqu.getIteratee(iteratee, 3)
-    return collection.reduce((obj, val)=>(obj[iteratee(val)]=val,obj), {})
-  },
-
-  map: function (collection, iteratee=junqu.identity) {
+  map: function(collection, iteratee = junqu.identity) {
     if (!collection) {
-      return []
+      return [];
     }
-    iteratee = junqu.getIteratee(iteratee, 2)
-    let result = []
-    if(!junqu.isArrayLike(collection) || Object.prototype.toString.call(collection) === '[object Object]') {
-      junqu.forIn(collection, val=>result.push(iteratee(val)))
-    }else {
+    iteratee = junqu.getIteratee(iteratee, 2);
+    let result = [];
+    if (
+      !junqu.isArrayLike(collection) ||
+      Object.prototype.toString.call(collection) === "[object Object]"
+    ) {
+      junqu.forIn(collection, val => result.push(iteratee(val)));
+    } else {
       for (let i = 0; i < collection.length; i++) {
-        result.push(iteratee(collection[i], i, collection))
+        result.push(iteratee(collection[i], i, collection));
       }
     }
-    return result
+    return result;
   },
 
-  partition: function (collection, predicate=junqu.identity) {
-    predicate = junqu.getIteratee(predicate, 2)
-    let result =[[],[]]
-    let truely = result[0]
-    let falsely = result[1]
+  partition: function(collection, predicate = junqu.identity) {
+    predicate = junqu.getIteratee(predicate, 2);
+    let result = [[], []];
+    let truely = result[0];
+    let falsely = result[1];
     if (!(collection && collection.length)) {
-      return result
+      return result;
     }
     for (let val of collection) {
       if (predicate(val)) {
-        truely.push(val)
-      }else {
-        falsely.push(val)
+        truely.push(val);
+      } else {
+        falsely.push(val);
       }
     }
-    return result
+    return result;
   },
 
-  reduce: function (collection, iteratee=junqu.identity, accumulator) {
+  reduce: function(collection, iteratee = junqu.identity, accumulator) {
     if (!(collection && junqu.isObject(collection))) {
-      return undefined
+      return undefined;
     }
-    iteratee = junqu.getIteratee(iteratee, 2)
+    iteratee = junqu.getIteratee(iteratee, 2);
     // 这个状态调整时看源码才加的，巧妙的
-    let accStatus = arguments.length >= 3
+    let accStatus = arguments.length >= 3;
     if (junqu.isArrayLike(collection)) {
-      let arr = collection
-      let i = 0
-      accumulator = accStatus || !arr.length ? accumulator : arr[i++]
+      let arr = collection;
+      let i = 0;
+      accumulator = accStatus || !arr.length ? accumulator : arr[i++];
       for (; i < arr.length; i++) {
-        accumulator = iteratee(accumulator, arr[i], i, collection)
+        accumulator = iteratee(accumulator, arr[i], i, collection);
       }
     } else {
-      junqu.forIn(collection, function (val, index, collection) {
-        accumulator = accStatus ? iteratee(accumulator, val, index, collection) : (accStatus=true, val)
-      })
+      junqu.forIn(collection, function(val, index, collection) {
+        accumulator = accStatus
+          ? iteratee(accumulator, val, index, collection)
+          : ((accStatus = true), val);
+      });
     }
-    return accumulator
+    return accumulator;
   },
 
-  reduceRight: function (collection, iteratee=junqu.identity, accumulator) {
+  reduceRight: function(collection, iteratee = junqu.identity, accumulator) {
     if (!(collection && junqu.isObject(collection))) {
-      return undefined
+      return undefined;
     }
-    iteratee = junqu.getIteratee(iteratee, 4)
-    let accStatus = arguments.length >= 3
+    iteratee = junqu.getIteratee(iteratee, 4);
+    let accStatus = arguments.length >= 3;
     if (junqu.isArrayLike(collection)) {
-      let arr = collection
-      let i = arr.length - 1
-      accumulator = accStatus || !arr.length ? accumulator : arr[i--]
+      let arr = collection;
+      let i = arr.length - 1;
+      accumulator = accStatus || !arr.length ? accumulator : arr[i--];
       for (; i >= 0; i--) {
-        accumulator = iteratee(accumulator, arr[i], i, collection)
+        accumulator = iteratee(accumulator, arr[i], i, collection);
       }
     } else {
-      junqu.forInRight(collection, function (val, index, collection) {
-        accumulator = accStatus ? iteratee(accumulator, val, index, collection) : (accStatus=true, val)
-      })
+      junqu.forInRight(collection, function(val, index, collection) {
+        accumulator = accStatus
+          ? iteratee(accumulator, val, index, collection)
+          : ((accStatus = true), val);
+      });
     }
-    return accumulator
+    return accumulator;
   },
 
   reject: function(collection, predicate = junqu.identity) {
@@ -948,31 +1059,35 @@ var junqu = {
       : undefined;
   },
 
-  sampleSize: function (collection, n=1) {
+  sampleSize: function(collection, n = 1) {
     if (!collection || n < 1) {
-      return []
+      return [];
     }
-    let arr = junqu.isArrayLike(collection) ? collection : Object.values(Object(collection))
-    let len = arr.length
+    let arr = junqu.isArrayLike(collection)
+      ? collection
+      : Object.values(Object(collection));
+    let len = arr.length;
     while (len) {
       const i = Math.floor(Math.random() * len--);
-      [arr[len], arr[i]] = [arr[i], arr[len]]
+      [arr[len], arr[i]] = [arr[i], arr[len]];
     }
-    return arr.slice(0,n)
+    return arr.slice(0, n);
   },
 
   // 这几个随机的代码都来自30s，数学太差想不出
   shuffle: function(collection) {
     if (!collection) {
-      return []
+      return [];
     }
-    let arr = junqu.isArrayLike(collection) ? collection : Object.values(Object(collection))
-    let len = arr.length
+    let arr = junqu.isArrayLike(collection)
+      ? collection
+      : Object.values(Object(collection));
+    let len = arr.length;
     while (len) {
       const i = Math.floor(Math.random() * len--);
-      [arr[len], arr[i]] = [arr[i], arr[len]]
+      [arr[len], arr[i]] = [arr[i], arr[len]];
     }
-    return arr
+    return arr;
   },
 
   size: function(collection) {
@@ -1007,11 +1122,11 @@ var junqu = {
     return false;
   },
 
-  sortBy: function(collection, iteratees=junqu.identity) {
+  sortBy: function(collection, iteratees = junqu.identity) {
     if (!collection) {
-      return []
+      return [];
     }
-    iteratees
+    iteratees;
   },
 
   /*-------------------------------------Collection Last--------------------------------------------------------------*/
@@ -1527,48 +1642,58 @@ var junqu = {
   /*----------------------------Object--------------------------------------*/
 
   assign: function(obj) {},
-  
-  forIn: function (object, iteratee=junqu.identity) {
-    if (!(object&&junqu.isObjectLike(object))) {
-      return object
+
+  forIn: function(object, iteratee = junqu.identity) {
+    if (!(object && junqu.isObjectLike(object))) {
+      return object;
     }
-    iteratee = junqu.getIteratee(iteratee, 3)
-    let keys = []
+    iteratee = junqu.getIteratee(iteratee, 3);
+    let keys = [];
     for (let k in object) {
       // 这个判断来自源码，我不太懂
-      if (!(k === 'constructor' && (junqu.isPrototype(object) || !Object.hasOwnProperty.call(object, k)))) {
-        keys.push(k)
+      if (
+        !(
+          k === "constructor" &&
+          (junqu.isPrototype(object) || !Object.hasOwnProperty.call(object, k))
+        )
+      ) {
+        keys.push(k);
       }
     }
     for (let i = 0; i < keys.length; i++) {
-      let key = keys[i]
-      if (iteratee(object[key], key, object)===false) {
-        break
+      let key = keys[i];
+      if (iteratee(object[key], key, object) === false) {
+        break;
       }
     }
-    return object
+    return object;
   },
-  
-  forInRight: function (object, iteratee=junqu.identity) {
-    if (!(object&&junqu.isObjectLike(object))) {
-      return object
+
+  forInRight: function(object, iteratee = junqu.identity) {
+    if (!(object && junqu.isObjectLike(object))) {
+      return object;
     }
-    object = Object(object)
-    iteratee = junqu.getIteratee(iteratee, 3)
-    let keys = []
+    object = Object(object);
+    iteratee = junqu.getIteratee(iteratee, 3);
+    let keys = [];
     for (let k in object) {
       // 这个判断来自源码，我不太懂
-      if (!(k === 'constructor' && (junqu.isPrototype(object) || !Object.hasOwnProperty.call(object, k)))) {
-        keys.push(k)
+      if (
+        !(
+          k === "constructor" &&
+          (junqu.isPrototype(object) || !Object.hasOwnProperty.call(object, k))
+        )
+      ) {
+        keys.push(k);
       }
     }
     for (let i = keys.length - 1; i >= 0; i--) {
-      let key = keys[i]
-      if (iteratee(object[key], key, object)===false) {
-        break
+      let key = keys[i];
+      if (iteratee(object[key], key, object) === false) {
+        break;
       }
     }
-    return object
+    return object;
   },
 
   /*----------------------------Object Last--------------------------------------*/
@@ -1722,7 +1847,3 @@ const tap = function(x, fn = x => x) {
 // tap(_.zipObjectDeep(['a.body[0].cool','a.body[1].coll'], [1, 2]))
 // tap(_.countBy(['one', 'two', 'three'], 'length'))
 // tap(_.filter(["abc","def"],/ef/))
-// _.forEach({ 'a': 1, 'b': 2 }, function(value, key) {
-//   console.log(key);
-// })
-// tap(_.reduce([1,2,3,4],(a,b)=>a+b, 5))
