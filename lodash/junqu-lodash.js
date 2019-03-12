@@ -879,7 +879,50 @@ var junqu = {
     }
     return result
   },
-  
+
+  reduce: function (collection, iteratee=junqu.identity, accumulator) {
+    if (!(collection && junqu.isObject(collection))) {
+      return undefined
+    }
+    iteratee = junqu.getIteratee(iteratee, 2)
+    // 这个状态调整时看源码才加的，巧妙的
+    let accStatus = arguments.length >= 3
+    if (junqu.isArrayLike(collection)) {
+      let arr = collection
+      let i = 0
+      accumulator = accStatus || !arr.length ? accumulator : arr[i++]
+      for (; i < arr.length; i++) {
+        accumulator = iteratee(accumulator, arr[i], i, collection)
+      }
+    } else {
+      junqu.forIn(collection, function (val, index, collection) {
+        accumulator = accStatus ? iteratee(accumulator, val, index, collection) : (accStatus=true, val)
+      })
+    }
+    return accumulator
+  },
+
+  reduceRight: function (collection, iteratee=junqu.identity, accumulator) {
+    if (!(collection && junqu.isObject(collection))) {
+      return undefined
+    }
+    iteratee = junqu.getIteratee(iteratee, 4)
+    let accStatus = arguments.length >= 3
+    if (junqu.isArrayLike(collection)) {
+      let arr = collection
+      let i = arr.length - 1
+      accumulator = accStatus || !arr.length ? accumulator : arr[i--]
+      for (; i >= 0; i--) {
+        accumulator = iteratee(accumulator, arr[i], i, collection)
+      }
+    } else {
+      junqu.forInRight(collection, function (val, index, collection) {
+        accumulator = accStatus ? iteratee(accumulator, val, index, collection) : (accStatus=true, val)
+      })
+    }
+    return accumulator
+  },
+
   reject: function(collection, predicate = junqu.identity) {
     let result = [];
     let length = !collection ? 0 : collection.length;
@@ -893,13 +936,9 @@ var junqu = {
     return result;
   },
 
-  reduce: function (collection, iteratee=junqu.identity, accumulator) {
-    
-  },
-  
   sample: function(collection) {
     let arr;
-    if (junqu.isObjectLike(collection)) {
+    if (!junqu.isArrayLike(collection)) {
       arr = Object.values(collection);
     } else {
       arr = collection;
@@ -907,6 +946,33 @@ var junqu = {
     return arr && arr.length
       ? arr[~~((Math.random() * 100) % arr.length)]
       : undefined;
+  },
+
+  sampleSize: function (collection, n=1) {
+    if (!collection || n < 1) {
+      return []
+    }
+    let arr = junqu.isArrayLike(collection) ? collection : Object.values(Object(collection))
+    let len = arr.length
+    while (len) {
+      const i = Math.floor(Math.random() * len--);
+      [arr[len], arr[i]] = [arr[i], arr[len]]
+    }
+    return arr.slice(0,n)
+  },
+
+  // 这几个随机的代码都来自30s，数学太差想不出
+  shuffle: function(collection) {
+    if (!collection) {
+      return []
+    }
+    let arr = junqu.isArrayLike(collection) ? collection : Object.values(Object(collection))
+    let len = arr.length
+    while (len) {
+      const i = Math.floor(Math.random() * len--);
+      [arr[len], arr[i]] = [arr[i], arr[len]]
+    }
+    return arr
   },
 
   size: function(collection) {
@@ -941,16 +1007,13 @@ var junqu = {
     return false;
   },
 
-  sortBy: function() {},
-
-  shuffle: function([...arr]) {
-    let len = arr.length
-    while (len) {
-      const i = Math.floor(Math.random() * len--);
-      [arr[len], arr[i]] = [arr[i], arr[len]]
+  sortBy: function(collection, iteratees=junqu.identity) {
+    if (!collection) {
+      return []
     }
-    return arr
+    iteratees
   },
+
   /*-------------------------------------Collection Last--------------------------------------------------------------*/
 
   /*----------------------------------Date----------------------------------------------------*/
@@ -1662,3 +1725,4 @@ const tap = function(x, fn = x => x) {
 // _.forEach({ 'a': 1, 'b': 2 }, function(value, key) {
 //   console.log(key);
 // })
+// tap(_.reduce([1,2,3,4],(a,b)=>a+b, 5))
