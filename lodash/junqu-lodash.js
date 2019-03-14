@@ -940,7 +940,11 @@ var junqu = {
     return collection.includes(value, fromIndex);
   },
 
-  invokeMap: function(collection, path, args) {},
+  //_.invokeMap([[5, 1, 7], [3, 2, 1]], 'sort');
+  // // => [[1, 5, 7], [1, 2, 3]]
+  invokeMap: function(collection, path, args) {
+
+  },
 
   keyBy: function(collection, iteratee = junqu.identity) {
     iteratee = junqu.getIteratee(iteratee, 3);
@@ -969,6 +973,21 @@ var junqu = {
     return result;
   },
 
+  orderBy: function (collection, iteratees=junqu.identity, orders) {
+    let coll = Array.isArray(collection) ? collection : Array.from(collection)
+    let iters = junqu.flatten([iteratees]).map(t=>junqu.getIteratee(t, 2))
+    orders = !orders ? undefined : (Array.isArray(orders) ? orders : [...orders])
+    return coll.sort((a,b)=>{
+      return iters.reduce((acc, iter, i)=>{
+        if (acc === 0) {
+          const [a1, a2] = orders&&orders[i]=== 'desc'?[iter(b),iter(a)]:[iter(a),iter(b)]
+          acc = a1 > a2 ? 1 : (a1 < a2 ? -1 : 0)
+        }
+        return acc
+      },0)
+    })
+  },
+  
   partition: function(collection, predicate = junqu.identity) {
     predicate = junqu.getIteratee(predicate, 2);
     let result = [[], []];
@@ -1126,7 +1145,7 @@ var junqu = {
     if (!collection) {
       return [];
     }
-    iteratees;
+    return junqu.orderBy(collection, iteratees, 'asc')
   },
 
   /*-------------------------------------Collection Last--------------------------------------------------------------*/
@@ -1492,14 +1511,18 @@ var junqu = {
   },
 
   toArray: function(value) {
-    if (!value) return [];
-
+    if (!value || typeof value === 'number') return [];
     if (junqu.isArrayLike(value)) {
       return junqu.isString(value)
         ? junqu.stringToArray(value)
         : junqu.copyArray(value);
     }
     if (value[Symbol.iterator]) {
+      let result = []
+      for (let v of value) {
+        result.push(v)
+      }
+      return result
     }
     if (junqu.isMap(value) || junqu.isSet(value)) {
       return [...value];
@@ -1847,3 +1870,5 @@ const tap = function(x, fn = x => x) {
 // tap(_.zipObjectDeep(['a.body[0].cool','a.body[1].coll'], [1, 2]))
 // tap(_.countBy(['one', 'two', 'three'], 'length'))
 // tap(_.filter(["abc","def"],/ef/))
+// const users = [{ name: 'fred', age: 48 }, { name: 'barney', age: 36 }, { name: 'fred', age: 40 }];
+
